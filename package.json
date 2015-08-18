@@ -1,0 +1,35 @@
+{
+  "name": "webtorrentapp",
+  "version": "1.0.0",
+  "description": "Webtorrent remote client",
+  "main": "index.js",
+  "directories": {
+    "example": "examples",
+    "test": "test"
+  },
+  "dependencies": {
+    "chai": "^3.2.0"
+  },
+  "devDependencies": {
+    "mocha": "^2.2.5"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Stiveknx/webtorrent-webapp.git"
+  },
+  "keywords": [
+    "webtorrent",
+    "torrent",
+    "remote",
+    "client"
+  ],
+  "author": "André Stein",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Stiveknx/webtorrent-webapp/issues"
+  },
+  "homepage": "https://github.com/Stiveknx/webtorrent-webapp#readme"
+}
