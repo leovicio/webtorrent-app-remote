@@ -10,14 +10,20 @@ Todo
 * Pause All Torrents / Resume All Torrents
 * Right sidebar: Torrent info with peers list and speed, download location, total size, file list
 * Global Download / Upload Speed
-* Global Ratio
 * Per-torrent ratio
 * Search Torrent
 * Time Remaining
 * Set file priority
 * Create torrent
+* Configure Tracker's when creating torrent
 * Import torrent from file
 * Create a tracker server
- 
+
+
+Known Bugs
+-------------
+
+
+* Upload Speed returns global speed, not torrent it self
 
 Thanks to @feross for @webtorrent project!

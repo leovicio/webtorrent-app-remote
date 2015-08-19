@@ -35,8 +35,12 @@
         </button>
         <button type="button" class="btn btn-default" aria-label="Left Align">
           <span class="glyphicon glyphicon-pause" aria-hidden="true"></span> Pause All
-        </button>        
-      </div>    
+        </button>
+        <div class="pull-right ratio">
+          Ratio: {{global.ratio}} 
+        </div>
+      </div>
+
     <div id="content">
       <ul>
         <li ng-repeat="torrent in torrents">

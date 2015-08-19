@@ -10,6 +10,7 @@ app.controller('WebTorrent', [
                 then(function(response) {
                     $scope.safeApply(function(){
                         $scope.torrents = response.data.torrents;
+                        $scope.global = response.data.global;
                     });
                 }, function(response) {
     
