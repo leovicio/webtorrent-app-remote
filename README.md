@@ -9,7 +9,6 @@ Todo
 * Remove Torrent
 * Pause All Torrents / Resume All Torrents
 * Right sidebar: Torrent info with peers list and speed, download location, total size, file list
-* Global Download / Upload Speed
 * Search Torrent
 * Time Remaining
 * Set file priority

@@ -15,15 +15,18 @@ router.get('/torrents', function(req, res, next) {
         torrent.name = client.torrents[i].name;
         torrent.progress = (100 * client.torrents[i].downloaded / client.torrents[i].parsedTorrent.length).toFixed(1);
         torrent.peers = client.torrents[i].swarm.wires.length;
-        torrent.d_speed = prettyBytes(client.downloadSpeed());
-        torrent.u_speed = prettyBytes(client.uploadSpeed());
-        torrent.ratio = client.torrents[i].swarm.ratio;
-        
+        torrent.d_speed = prettyBytes(client.torrents[i].swarm.downloadSpeed());
+        torrent.u_speed = prettyBytes(client.torrents[i].swarm.uploadSpeed());
+        torrent.ratio = Math.round(client.torrents[i].swarm.ratio * 100) / 100;
+
         torrents.push(torrent);
-        torrent = null
+        torrent = null;
     }
     
-    global.ratio = client.ratio;
+    global.ratio = Math.round(client.ratio * 100) / 100;
+    global.d_speed = prettyBytes(client.downloadSpeed());
+    global.u_speed = prettyBytes(client.uploadSpeed());
+    
     res.send({
         torrents: torrents,
         global: global,

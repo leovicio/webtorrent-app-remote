@@ -4,22 +4,26 @@ app.controller('WebTorrent', [
     '$scope',
     '$http',
     function($scope, $http) {
-
+        var $lock = false;
         $scope.updateTorrents = function() {
-            $http.get('/api/torrents').
+            if(!$lock){
+                $lock = true;
+            }
+            $http.get('/api/torrents', {timeout: 3000}).
                 then(function(response) {
+                    $lock = false;
                     $scope.safeApply(function(){
                         $scope.torrents = response.data.torrents;
                         $scope.global = response.data.global;
                     });
                 }, function(response) {
-    
+                    $lock = false;
                 });
         };
 
         $scope.updateTorrents();
         
-        setInterval($scope.updateTorrents, 10000);
+        setInterval($scope.updateTorrents, 4000);
         
         $scope.add = function(){
             var magnet = prompt("Magnet: ");
