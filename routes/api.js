@@ -9,42 +9,24 @@ router.get('/torrents', function(req, res, next) {
     var torrent = {};
     var fs = require('fs');
 
-    var cache = [];
-    var d = JSON.stringify(client.torrents, function(key, value) {
-        if (typeof value === 'object' && value !== null) {
-            if (cache.indexOf(value) !== -1) {
-                // Circular reference found, discard key
-                return;
-            }
-            // Store value in our collection
-            cache.push(value);
-        }
-        return value;
-    });
-    cache = null; // Enable garbage collection
-
-    var file = fs.createWriteStream('array.txt');
-    file.on('error', function(err) { /* error handling */ });
-    file.write(JSON.stringify(d));
-    file.end();
-
     for(var i in client.torrents){
+        torrent = {};
         torrent.name = client.torrents[i].name;
-        console.log(torrent.swarm);
-        if(torrent.parsedTorrent)
-            torrent.progress = (100 * torrent.downloaded / torrent.parsedTorrent.length).toFixed(1);
+
+        if(client.torrents[i].parsedTorrent)
+            torrent.progress = (100 * client.torrents[i].downloaded / client.torrents[i].parsedTorrent.length).toFixed(1);
         else
             torrent.progress = 0;
         
-        if(torrent.swarm && torrent.swarm.wires)
-            torrent.peers = torrent.swarm.wires.length;
+        if(client.torrents[i].swarm && client.torrents[i].swarm.wires)
+            torrent.peers = client.torrents[i].swarm.wires.length;
         else
             torrent.peers = 0;
             
         torrent.d_speed = prettyBytes(client.downloadSpeed());
         torrent.u_speed = prettyBytes(client.uploadSpeed());
         torrents.push(torrent);
-        console.log(torrent);
+        torrent = null
     }
     res.send({
         torrents: torrents,
