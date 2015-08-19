@@ -1,58 +1,76 @@
 <html>
-  <head>
-    <title>Webtorrent Remote Managment</title>
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.10/angular.min.js"></script>
-    <script src="app.js"></script>
-    <link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="/stylesheets/style.css" rel="stylesheet" type="text/css" />
-    <script type="text/javascript" src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
-    <!--<script type="text/javascript" src="/bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>-->
-    
-  </head>
-  <body ng-app="webtorrent" ng-controller="WebTorrent">
-    
-    <header>
-      <img class="logo" src="/images/logo.png" />
-      <h2>Web Torrent Client</h2>
-      <div style="clear:both"></div>
-    </header>
-      <div id="buttons">
-        <button ng-click="add()" type="button" class="btn btn-default" aria-label="Left Align">
-          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add Torrent
-        </button>
-        <button type="button" class="btn btn-default" aria-label="Left Align">
-          <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Remove Selected
-        </button>
-        <button type="button" class="btn btn-default" aria-label="Left Align">
-          <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Remove All
-        </button>
-        |
-        <button type="button" class="btn btn-default" aria-label="Left Align">
-          <span class="glyphicon glyphicon-play" aria-hidden="true"></span> Resume Selected
-        </button>        
-        <button type="button" class="btn btn-default" aria-label="Left Align">
-          <span class="glyphicon glyphicon-pause" aria-hidden="true"></span> Pause Selected
-        </button>
-        <button type="button" class="btn btn-default" aria-label="Left Align">
-          <span class="glyphicon glyphicon-pause" aria-hidden="true"></span> Pause All
-        </button>
-        <div class="pull-right ratio">
-          Speed: D: {{global.d_speed}} - U: {{global.u_speed}}  | Global ratio: {{global.ratio}} 
-        </div>
-      </div>
 
-    <div id="content">
-      <ul>
-        <li ng-repeat="torrent in torrents">
-          <div class="col-sm-12">{{::torrent.name}}</div>
-          <div class="col-sm-12"><progressbar value="torrent.progress">{{torrent.progress}}%</progressbar></div>
-          <div class="col-sm-12">Peers: {{torrent.peers}} | Speed: D: {{torrent.d_speed}}  U: {{torrent.u_speed}} | Ratio: {{torrent.ratio}}</div>
-          <div class="col-sm-12" ng-if="torrent.peers == 0">Finding Peers ...</div>
-        </li>
-      </ul>      
+<head>
+  <title>Webtorrent Remote Managment</title>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.10/angular.min.js"></script>
+  <script src="app.js"></script>
+  <link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+  <link href="/stylesheets/style.css" rel="stylesheet" type="text/css" />
+  <script type="text/javascript" src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+  <!--<script type="text/javascript" src="/bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>-->
+
+</head>
+
+<body ng-app="webtorrent" ng-controller="WebTorrent">
+
+  <header>
+    <img class="logo" src="/images/logo.png" />
+    <h2>Web Torrent Client</h2>
+    <div style="clear:both"></div>
+  </header>
+  <div id="buttons">
+    <button ng-click="add()" type="button" class="btn btn-default" aria-label="Left Align">
+      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add Torrent
+    </button>
+    <button type="button" class="btn btn-default" aria-label="Left Align">
+      <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Remove Selected
+    </button>
+    <button type="button" class="btn btn-default" aria-label="Left Align">
+      <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Remove All
+    </button>
+    |
+    <button type="button" class="btn btn-default" aria-label="Left Align">
+      <span class="glyphicon glyphicon-play" aria-hidden="true"></span> Resume Selected
+    </button>
+    <button type="button" class="btn btn-default" aria-label="Left Align">
+      <span class="glyphicon glyphicon-pause" aria-hidden="true"></span> Pause Selected
+    </button>
+    <button type="button" class="btn btn-default" aria-label="Left Align">
+      <span class="glyphicon glyphicon-pause" aria-hidden="true"></span> Pause All
+    </button>
+    <div class="pull-right ratio">
+      Speed: D: {{global.d_speed}} - U: {{global.u_speed}} | Global ratio: {{global.ratio}}
     </div>
-    <footer>
-      <span class="footer_msg">WebTorrent App is free and Open Source! Please Contribute! Visite Us on: <a href="https://github.com/Stiveknx/webtorrent-webapp">https://github.com/Stiveknx/webtorrent-webapp</a></span>
-    </footer>
-  </body>
+  </div>
+  <div id="filter">
+    <div class="row">
+      <form class="form-inline">
+        <div class="col-md-4"> 
+          <div class="form-group">
+            <div class="input-group">
+              <input type="text" class="form-control" ng-model="filter.name" type="text" placeholder="Filter torrent" />
+              <div class="input-group-addon"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div id="content">
+    <ul>
+      <li ng-repeat="torrent in torrents | filter: filter.name">
+        <div class="col-sm-12">{{::torrent.name}}</div>
+        <div class="col-sm-12">
+          <progressbar value="torrent.progress">{{torrent.progress}}%</progressbar>
+        </div>
+        <div class="col-sm-12">Peers: {{torrent.peers}} | Speed: D: {{torrent.d_speed}} U: {{torrent.u_speed}} | Ratio: {{torrent.ratio}}</div>
+        <div class="col-sm-12" ng-if="torrent.peers == 0">Finding Peers ...</div>
+      </li>
+    </ul>
+  </div>
+  <footer>
+    <span class="footer_msg">WebTorrent App is free and Open Source! Please Contribute! Visite Us on: <a href="https://github.com/Stiveknx/webtorrent-webapp">https://github.com/Stiveknx/webtorrent-webapp</a></span>
+  </footer>
+</body>
+
 </html>

@@ -4,6 +4,8 @@ app.controller('WebTorrent', [
     '$scope',
     '$http',
     function($scope, $http) {
+        $scope.filter = {};
+        
         var $lock = false;
         $scope.updateTorrents = function() {
             if(!$lock){

@@ -9,7 +9,7 @@ Todo
 * Remove Torrent
 * Pause All Torrents / Resume All Torrents
 * Right sidebar: Torrent info with peers list and speed, download location, total size, file list
-* Search Torrent
+* Tab To filter torrents by status: All | Downloading | Seeding
 * Time Remaining
 * Set file priority
 * Create torrent
