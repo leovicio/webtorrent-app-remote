@@ -9,7 +9,7 @@ Todo
 * Remove Torrent
 * Pause All Torrents / Resume All Torrents
 * Right sidebar: Torrent info with peers list and speed, download location, total size, file list
-* Total Download / Upload Speed
+* Global Download / Upload Speed
 * Global Ratio
 * Per-torrent ratio
 * Search Torrent
@@ -18,3 +18,6 @@ Todo
 * Create torrent
 * Import torrent from file
 * Create a tracker server
+ 
+
+Thanks to @feross for @webtorrent project!
