@@ -37,7 +37,7 @@
           <span class="glyphicon glyphicon-pause" aria-hidden="true"></span> Pause All
         </button>
         <div class="pull-right ratio">
-          Ratio: {{global.ratio}} 
+          Global ratio: {{global.ratio}} 
         </div>
       </div>
 
@@ -46,7 +46,7 @@
         <li ng-repeat="torrent in torrents">
           <div class="col-sm-12">{{::torrent.name}}</div>
           <div class="col-sm-12"><progressbar value="torrent.progress">{{torrent.progress}}%</progressbar></div>
-          <div class="col-sm-12">Peers: {{torrent.peers}} / Speed: D: {{torrent.d_speed}}  U: {{torrent.u_speed}}</div>
+          <div class="col-sm-12">Peers: {{torrent.peers}} | Speed: D: {{torrent.d_speed}}  U: {{torrent.u_speed}} | Ratio: {{torrent.ratio}}</div>
           <div class="col-sm-12" ng-if="torrent.peers == 0">Finding Peers ...</div>
         </li>
       </ul>      

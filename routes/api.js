@@ -17,6 +17,8 @@ router.get('/torrents', function(req, res, next) {
         torrent.peers = client.torrents[i].swarm.wires.length;
         torrent.d_speed = prettyBytes(client.downloadSpeed());
         torrent.u_speed = prettyBytes(client.uploadSpeed());
+        torrent.ratio = client.torrents[i].swarm.ratio;
+        
         torrents.push(torrent);
         torrent = null
     }
@@ -43,11 +45,13 @@ router.post('/add', function(req, res, next) {
 router.get('/torrent/', function(req, res, next){
     var torrent = client.get(req.body.infoHash);
     var return_info = {}
-    return_info.name=torrent.name;
+    return_info.name = torrent.name;
     return_info.progress = (100 * torrent.downloaded / torrent.parsedTorrent.length).toFixed(1);
     return_info.peers = torrent.swarm.wires.length;
     return_info.d_speed = prettyBytes(client.downloadSpeed());
-    return_info.u_speed = prettyBytes(client.uploadSpeed());    
+    return_info.u_speed = prettyBytes(client.uploadSpeed());
+    torrent.ratio = torrent.swarm.ratio;
+    return_info.peers = [];
 });
 
 
