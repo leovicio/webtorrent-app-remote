@@ -1,45 +1,43 @@
-var app = angular.module('webtorrent', ['ui.bootstrap']);
+var app = angular.module('webtorrent', ['btford.socket-io', 'ui.bootstrap']);
 
+app.factory('webSocket', function(socketFactory) {
+    var myIoSocket = io.connect('wss://62.75.213.174:3001/', {
+        'transports': ['websocket', 'polling']
+    });
+    var mySocket = socketFactory({
+        ioSocket: myIoSocket
+    });
+    return mySocket;
+
+})
 app.controller('WebTorrent', [
     '$scope',
     '$http',
-    function($scope, $http) {
+    'webSocket',
+    function($scope, $http, webSocket) {
         $scope.filter = {};
 
         var $lock = false;
-        $scope.updateTorrents = function() {
-            if (!$lock) {
-                $lock = true;
-            }
-            $http.get('/api/torrents', {
-                timeout: 3000
-            }).
-            then(function(response) {
-                $lock = false;
-                $scope.safeApply(function() {
-                    $scope.torrents = response.data.torrents;
-                    $scope.global = response.data.global;
-                });
-            }, function(response) {
-                $lock = false;
-            });
-        };
 
-        $scope.updateTorrents();
+        /* Update torrent list */
+        webSocket.on('torrents', function(message) {
+            console.log(message);
+            $scope.torrents = message.data.torrents;
+            $scope.global = message.data.global;
+        });
 
-        setInterval($scope.updateTorrents, 10000);
 
+        /* Add new torrent to download*/
         $scope.add = function() {
             var magnet = prompt("Magnet: ", "magnet:?xt=urn:btih:1619ecc9373c3639f4ee3e261638f29b33a6cbd6&dn=Ubuntu+14.10+i386+%28Desktop+ISO%29&tr=udp%3A%2F%2Ftracker.openbittorrent.com%3A80&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969");
             if (magnet) {
-                $http.post('/api/add', {
+                webSocket.emit('torrent:download', {
                     magnet: magnet
-                }).
-                then(function(response) {
-                    $scope.torrent = response.torrent;
-                    $scope.updateTorrents();
-                }, function(response) {
-
+                }, function(result) {
+                    console.log('Waiting torrent to Add');
+                });
+                webSocket.on('torrent:added', function(message) {
+                    console.log('Torrent Added');
                 });
             }
         };
@@ -57,7 +55,7 @@ app.controller('WebTorrent', [
         };
 
         $scope.selectTorrent = function(torrent) {
-            if($scope.active !== torrent.infoHash)
+            if ($scope.active !== torrent.infoHash)
                 $scope.active = torrent.infoHash;
             else
                 $scope.active = false;

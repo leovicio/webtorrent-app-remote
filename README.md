@@ -11,8 +11,8 @@ Useful for seedboxes or similars.
 
 Todo
 -------------
-* Remove Torrents
 * Use Socket.io for realtimeapp
+* Remove Torrents
 * Remove All Torrent
 * New window to add torrents, with an option to upload a .torrent file, add custom trackers, and other @webtorrent options
 * HTTP Auth
