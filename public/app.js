@@ -8,7 +8,6 @@ app.factory('webSocket', function(socketFactory) {
         ioSocket: myIoSocket
     });
     return mySocket;
-
 })
 app.controller('WebTorrent', [
     '$scope',
@@ -21,7 +20,6 @@ app.controller('WebTorrent', [
 
         /* Update torrent list */
         webSocket.on('torrents', function(message) {
-            console.log(message);
             $scope.torrents = message.data.torrents;
             $scope.global = message.data.global;
         });
@@ -42,6 +40,34 @@ app.controller('WebTorrent', [
             }
         };
 
+        $scope.remove = function(torrentHash){
+            if(!torrentHash){
+                alert('Please select a torrent from the list');
+                return false;
+            }
+            if(confirm('Remove torrent?')){
+                webSocket.emit('torrent:download', {
+                    infoHash: torrentHash
+                }, function(result) {
+                    console.log('Waiting torrent to remove');
+                });
+                webSocket.on('torrent:removed', function(message) {
+                    console.log('Torrent Removed');
+                });
+            }
+        };
+        
+        $scope.removeAll = function(){
+            if(confirm('Remove All Torrents?')){
+                webSocket.emit('torrent:remove_all', {}, function(result) {
+                    console.log('Waiting torrent to remove');
+                });
+                webSocket.on('torrent:removed_all', function(message) {
+                    console.log('Torrents Removed');
+                });
+            }
+        };
+        
         $scope.safeApply = function(fn) {
             var phase = this.$root.$$phase;
             if (phase == '$apply' || phase == '$digest') {
@@ -60,5 +86,6 @@ app.controller('WebTorrent', [
             else
                 $scope.active = false;
         };
+        
     }
 ]);

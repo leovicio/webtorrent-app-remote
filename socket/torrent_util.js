@@ -28,13 +28,21 @@ var torrent_util = {
         global.u_speed = prettyBytes(torrent_util.client.uploadSpeed());
         return {'torrents': torrents, 'global': global};
     },
-    addTorrent: function(magnet) {
+    addTorrent: function(magnet, cb) {
         torrent_util.client.add(magnet, function(torrent) {
-            /*res.send({
-                torrent: torrent.infoHash,
-                "success": true
-            });*/
+            cb();
         });
+    },
+    remove: function(infoHash, cb){
+        torrent_util.client.remove(infoHash, function(){
+            cb();
+        })  
+    },
+    removeAll: function(cb){
+        console.log('remove all');
+        torrent_util.client.destroy(function(){
+            cb();
+        })  
     },
     getTorrent: function(infoHash) {
         var return_info = {}

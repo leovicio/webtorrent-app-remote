@@ -11,10 +11,11 @@ Useful for seedboxes or similars.
 
 Todo
 -------------
-* Use Socket.io for realtimeapp
-* Remove Torrents
-* Remove All Torrent
-* New window to add torrents, with an option to upload a .torrent file, add custom trackers, and other @webtorrent options
+* Implement bootstrap modals:
+  + Remove All torrents
+  + Remove single torrent ( with torrent name)
+  + Add new torrent
+* Add torrents with an option to upload a .torrent file, add custom trackers, and other @webtorrent options
 * HTTP Auth
 * Tab To filter torrents by status: All | Downloading | Seeding
 * Time Remaining
@@ -30,8 +31,5 @@ Todo
 
 Known Bugs
 -------------
-
-
-* Progress going to 100+ %
 
 Thanks to @feross for @webtorrent project!
