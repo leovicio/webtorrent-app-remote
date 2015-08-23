@@ -11,18 +11,19 @@ Useful for seedboxes or similars.
 
 Todo
 -------------
-* Better UI
+* Remove Torrents
+* Remove All Torrent
 * Pause / Resume Torrent
-* Remove Torrent
 * Pause All Torrents / Resume All Torrents
-* Right sidebar: Torrent info with peers list and speed, download location, total size, file list
 * Tab To filter torrents by status: All | Downloading | Seeding
 * Time Remaining
-* Set file priority
-* Create torrent
+* Create seed/torrent
 * Configure Tracker's when creating torrent
-* Import torrent from file
+* New window to add torrents, with an option to upload a .torrent file, add custom trackers, and other @webtorrent options
+* Right sidebar: Torrent info with peers list and speed, download location, total size, file list
+* Set file priority
 * Create a tracker server
+* Better UI
 
 
 Known Bugs
