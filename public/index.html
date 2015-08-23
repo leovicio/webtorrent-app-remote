@@ -7,6 +7,7 @@
   <link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
   <link href="/stylesheets/style.css" rel="stylesheet" type="text/css" />
   <script type="text/javascript" src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore.js"></script>
   <!--<script type="text/javascript" src="/bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>-->
 
 </head>
@@ -58,7 +59,7 @@
   </div>
   <div id="content">
     <ul>
-      <li ng-repeat="torrent in torrents | filter: filter.name">
+      <li ng-repeat="torrent in torrents | filter: filter.name" ng-click="selectTorrent(torrent)" ng-class="{'active': active == torrent.infoHash}">
         <div class="col-sm-12">{{::torrent.name}}</div>
         <div class="col-sm-12">
           <progressbar value="torrent.progress">{{torrent.progress}}%</progressbar>

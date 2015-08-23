@@ -12,8 +12,10 @@ router.get('/torrents', function(req, res, next) {
 
     for(var i in client.torrents){
         torrent = {};
+        torrent.infoHash = client.torrents[i].infoHash;
         torrent.name = client.torrents[i].name;
-        torrent.progress = (100 * client.torrents[i].downloaded / client.torrents[i].parsedTorrent.length).toFixed(1);
+        console.log(client.torrents[i].progress);
+        torrent.progress = (100 * client.torrents[i].progress).toFixed(1);
         torrent.peers = client.torrents[i].swarm.wires.length;
         torrent.d_speed = prettyBytes(client.torrents[i].swarm.downloadSpeed());
         torrent.u_speed = prettyBytes(client.torrents[i].swarm.uploadSpeed());

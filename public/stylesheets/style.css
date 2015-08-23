@@ -51,9 +51,12 @@ header {
   #content ul {
     padding: 10px 0px; }
     #content ul li {
+      cursor: pointer;
       width: 100%;
       min-height: 100px;
       border-bottom: 1px solid #000; }
+    #content ul li.active {
+      background-color: yellow; }
 
 #content:after {
   content: "";

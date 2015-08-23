@@ -12,17 +12,19 @@ Useful for seedboxes or similars.
 Todo
 -------------
 * Remove Torrents
+* Use Socket.io for realtimeapp
 * Remove All Torrent
-* Pause / Resume Torrent
-* Pause All Torrents / Resume All Torrents
+* New window to add torrents, with an option to upload a .torrent file, add custom trackers, and other @webtorrent options
+* HTTP Auth
 * Tab To filter torrents by status: All | Downloading | Seeding
 * Time Remaining
 * Create seed/torrent
 * Configure Tracker's when creating torrent
-* New window to add torrents, with an option to upload a .torrent file, add custom trackers, and other @webtorrent options
 * Right sidebar: Torrent info with peers list and speed, download location, total size, file list
 * Set file priority
 * Create a tracker server
+* Pause / Resume Torrent
+* Pause All Torrents / Resume All Torrents
 * Better UI
 
 
@@ -30,6 +32,6 @@ Known Bugs
 -------------
 
 
-* Upload Speed returns global speed, not torrent it self
+* Progress going to 100+ %
 
 Thanks to @feross for @webtorrent project!
