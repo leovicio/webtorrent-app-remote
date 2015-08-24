@@ -36,6 +36,10 @@ header {
   border-top: 2px solid #B3B3B3;
   border-bottom: 2px solid #B3B3B3;
   width: 100%; }
+  #buttons .filters, #filter .filters {
+    margin-top: 5px; }
+    #buttons .filters span, #filter .filters span {
+      cursor: pointer; }
 
 #buttons .ratio {
   margin: 8px; }

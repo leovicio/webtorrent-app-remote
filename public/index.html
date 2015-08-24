@@ -55,7 +55,7 @@
   <div id="filter">
     <div class="row">
       <form class="form-inline">
-        <div class="col-md-4"> 
+        <div class="col-md-3"> 
           <div class="form-group">
             <div class="input-group">
               <input type="text" class="form-control" ng-model="filter.name" type="text" placeholder="Filter torrent" />
@@ -63,12 +63,19 @@
             </div>
           </div>
         </div>
+        <div class="col-md-8">
+          <div class="filters">
+            <span ng-click="setFilterstatus(0)" class="label text-dark" ng-class="{'label-success': !filter.status, 'label-default': true}">All</span>
+            <span ng-click="setFilterstatus(1)" class="label text-dark" ng-class="{'label-success': filter.status == 1}">Downloading</span>
+            <span ng-click="setFilterstatus(2)" class="label text-dark" ng-class="{'label-success': filter.status == 2}">Seeding</span>
+          </div>
+        </div> 
       </form>
     </div>
   </div>
   <div id="content">
     <ul>
-      <li ng-repeat="torrent in torrents | filter: filter.name" ng-click="selectTorrent(torrent)" ng-class="{'active': active == torrent.infoHash}">
+      <li ng-repeat="torrent in torrents | filter: filter" ng-click="selectTorrent(torrent)" ng-class="{'active': active == torrent.infoHash}">
         <div class="col-sm-12">{{::torrent.name}} | Downloaded: {{::torrent.downloaded}} / Uploaded: {{::torrent.uploaded}}</div>
         <div class="col-sm-12">
           <progressbar value="torrent.progress">{{torrent.progress}}%</progressbar>

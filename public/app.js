@@ -142,6 +142,10 @@ app.controller('WebTorrent', [
             else
                 $scope.active = false;
         };
+        
+        $scope.setFilterstatus = function(status){
+            $scope.filter.status = status;
+        };
 
     }
 ]);
@@ -165,13 +169,12 @@ app.controller('AddTorrentCtrl', ['$scope', '$modalInstance', 'dialogs', functio
 
     $scope.save = function(file) {
         if ($scope.torrentMagnet){
-            if ($scope.torrentMagnet.match(/magnet:\?xt=urn:[a-z0-9]{20,50}/i) != null) {
+            var data = $scope.torrentMagnet.split('magnet:?')[1]
+            if (data && data.length > 0) {
                 $modalInstance.close($scope.torrentMagnet);
             }else{
                 $dialogs.error('Error', 'Not a valid magnet uri');
             }
-        
-            
         }else if (file) {
             $modalInstance.close(file);
         }

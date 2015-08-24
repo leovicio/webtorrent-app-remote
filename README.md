@@ -13,7 +13,6 @@ Todo
 -------------
 * Command line script to (to install bower and npm components)
 * Command line script to start server (run webtorrentapp with password, server, maxpeers options)
-* Tab To filter torrents by status: All | Downloading | Seeding
 * Time Remaining
 * Create seed/torrent
 * Configure Tracker's when creating torrent
@@ -30,5 +29,6 @@ Todo
 Known Bugs
 -------------
 * Can't get global ratio (webtorrent bug (?))
+* socket error nt triggering5
 
 Thanks to @feross for @webtorrent project!

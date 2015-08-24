@@ -18,13 +18,17 @@ var torrent_util = {
                     torrent.peers = torrent_util.client.torrents[i].swarm.wires.length;
                     torrent.d_speed = prettyBytes(torrent_util.client.torrents[i].swarm.downloadSpeed());
                     torrent.u_speed = prettyBytes(torrent_util.client.torrents[i].swarm.uploadSpeed());
-                    if(torrent_util.client.torrents[i].length)
-                        torrent.downloaded = prettyBytes(torrent_util.client.torrents[i].swarm.downloaded) + '/' +  prettyBytes(torrent_util.client.torrents[i].length);
-                        
+                    if(torrent_util.client.torrents[i].length){
+                        torrent.downloaded = prettyBytes(torrent_util.client.torrents[i].downloaded) + '/' +  prettyBytes(torrent_util.client.torrents[i].length);
+                        torrent.status = (torrent_util.client.torrents[i].downloaded >= torrent_util.client.torrents[i].length) ? 2 : 1;
+                    }else{
+                        torrent.status = 2;
+                    }
                     if(torrent_util.client.torrents[i].swarm.uploaded)
                         torrent.uploaded = prettyBytes(torrent_util.client.torrents[i].swarm.uploaded);
                     
                     torrent.ratio = Math.round(torrent_util.client.torrents[i].swarm.ratio * 100) / 100;
+                    
                 }
                 torrents.push(torrent);
                 torrent = null;
