@@ -19,7 +19,8 @@ module.exports = function(io, torrent_util) {
 
         socket.on('torrent:download', function(data) {
             if(!lock_update){
-                torrent_util.addTorrent(data.magnet, function() {
+                torrent_util.addTorrent(data.torrent, function() {
+                    console.log('cb');
                     socket.emit('torrent:added', {
                         success: true
                     });

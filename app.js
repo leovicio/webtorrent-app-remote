@@ -65,6 +65,7 @@ app.use(function(err, req, res, next) {
 
 var torrent_util = require('./socket/torrent_util.js');
 torrent_util.client = client;
+
 require('./socket/socket.js')(io, torrent_util);
 
 module.exports = app;

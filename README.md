@@ -11,10 +11,9 @@ Useful for seedboxes or similars.
 
 Todo
 -------------
-* Implement bootstrap modals:
-  + Remove All torrents
-  + Remove single torrent ( with torrent name)
-  + Add new torrent
+* Display torrent's size
+* Remove cdn's dependencies and instal it as bower component
+* Handle HTTP errors ( even on ioSocket)
 * Add torrents with an option to upload a .torrent file, add custom trackers, and other @webtorrent options
 * HTTP Auth
 * Tab To filter torrents by status: All | Downloading | Seeding
@@ -23,6 +22,7 @@ Todo
 * Configure Tracker's when creating torrent
 * Right sidebar: Torrent info with peers list and speed, download location, total size, file list
 * Set file priority
+* Create a DEBUG system (to console.log())
 * Create a tracker server
 * Pause / Resume Torrent
 * Pause All Torrents / Resume All Torrents

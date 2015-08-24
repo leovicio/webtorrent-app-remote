@@ -1,5 +1,12 @@
-var app = angular.module('webtorrent', ['btford.socket-io', 'ui.bootstrap']);
+var app = angular.module('webtorrent', ['btford.socket-io', 'ui.bootstrap', 'dialogs.main', 'pascalprecht.translate', 'dialogs.default-translations', 'angularFileInput']);
 
+app.run(['$templateCache', '$interpolate', function($templateCache, $interpolate) {
+
+    // get interpolation symbol (possible that someone may have changed it in their application instead of using '{{}}')
+    var startSym = $interpolate.startSymbol();
+    var endSym = $interpolate.endSymbol();
+
+}]); // end run / dialogs.main
 app.factory('webSocket', function(socketFactory) {
     var myIoSocket = io.connect('wss://62.75.213.174:3001/', {
         'transports': ['websocket', 'polling']
@@ -13,9 +20,16 @@ app.controller('WebTorrent', [
     '$scope',
     '$http',
     'webSocket',
-    function($scope, $http, webSocket) {
+    'dialogs',
+    '$rootScope',
+    '$window',
+    function($scope, $http, webSocket, $dialogs, $rootScope, $window) {
         $scope.filter = {};
 
+        $window.onbeforeunload = function(e){
+            webSocket.disconnect();
+        };
+        
         var $lock = false;
 
         /* Update torrent list */
@@ -27,47 +41,70 @@ app.controller('WebTorrent', [
 
         /* Add new torrent to download*/
         $scope.add = function() {
-            var magnet = prompt("Magnet: ", "magnet:?xt=urn:btih:1619ecc9373c3639f4ee3e261638f29b33a6cbd6&dn=Ubuntu+14.10+i386+%28Desktop+ISO%29&tr=udp%3A%2F%2Ftracker.openbittorrent.com%3A80&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969");
-            if (magnet) {
-                webSocket.emit('torrent:download', {
-                    magnet: magnet
-                }, function(result) {
-                    console.log('Waiting torrent to Add');
-                });
-                webSocket.on('torrent:added', function(message) {
-                    console.log('Torrent Added');
-                });
-            }
+            var dlg = $dialogs.create('/dialogs/add_torrent.html', 'AddTorrentCtrl', {}, {
+                size: 'lg',
+                keyboard: true,
+                backdrop: false,
+                windowClass: 'my-class'
+            });
+            //torrentInfo can be a magnet, .torrent file buffer and my other options that webtorrent accepts
+            dlg.result.then(function(torrentInfo) {
+                if (torrentInfo) {
+                    $dialogs.wait('Adding torrent');
+                    webSocket.emit('torrent:download', {
+                        torrent: torrentInfo
+                    }, function(result) {
+                        console.log('Waiting torrent to Add');
+                    });
+                    webSocket.on('torrent:added', function(message) {
+                        console.log('Torrent Added');
+                        $rootScope.$broadcast('dialogs.wait.complete');
+                    });
+                }
+            }, function() {
+
+            });
+            //var magnet = prompt("Magnet: ", "magnet:?xt=urn:btih:1619ecc9373c3639f4ee3e261638f29b33a6cbd6&dn=Ubuntu+14.10+i386+%28Desktop+ISO%29&tr=udp%3A%2F%2Ftracker.openbittorrent.com%3A80&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969");
+
         };
 
-        $scope.remove = function(torrentHash){
-            if(!torrentHash){
-                alert('Please select a torrent from the list');
+        $scope.remove = function(torrentHash) {
+            if (!torrentHash) {
+                $dialogs.error('Please select a torrent from the list');
                 return false;
             }
-            if(confirm('Remove torrent?')){
-                webSocket.emit('torrent:download', {
+            var dlg = $dialogs.confirm('Remove torrent?');
+            dlg.result.then(function(btn) {
+                $dialogs.wait('Removing torrent');
+                webSocket.emit('torrent:remove', {
                     infoHash: torrentHash
                 }, function(result) {
-                    console.log('Waiting torrent to remove');
+                    $
                 });
                 webSocket.on('torrent:removed', function(message) {
-                    console.log('Torrent Removed');
+                    $dialogs.notify('Torrent Removed');
+                    $rootScope.$broadcast('dialogs.wait.complete');
                 });
-            }
+            }, function(btn) {
+
+
+            });
+
         };
-        
-        $scope.removeAll = function(){
-            if(confirm('Remove All Torrents?')){
+
+        $scope.removeAll = function() {
+            if (confirm('Remove All Torrents?')) {
+                $dialogs.wait('Removing torrent');
                 webSocket.emit('torrent:remove_all', {}, function(result) {
                     console.log('Waiting torrent to remove');
                 });
                 webSocket.on('torrent:removed_all', function(message) {
-                    console.log('Torrents Removed');
+                    $dialogs.notify('Torrents Removed');
+                    $rootScope.$broadcast('dialogs.wait.complete');
                 });
             }
         };
-        
+
         $scope.safeApply = function(fn) {
             var phase = this.$root.$$phase;
             if (phase == '$apply' || phase == '$digest') {
@@ -86,6 +123,40 @@ app.controller('WebTorrent', [
             else
                 $scope.active = false;
         };
-        
+
     }
 ]);
+
+app.controller('AddTorrentCtrl', ['$scope', '$modalInstance', 'dialogs', function($scope, $modalInstance, $dialogs) {
+    
+    $scope.callback = function (file) {
+        
+        var extname = file.name.split('.').pop();
+        console.log(file.name);
+        console.log(extname);
+        if(extname === 'torrent'){
+            $scope.save(file.content);
+        }else{
+            $dialogs.error('Error', 'Not a torrent file');
+        }
+        
+    };
+    
+	$scope.cancel = function(){
+		$modalInstance.dismiss('Canceled');
+	}; // end cancel
+	
+	$scope.save = function(file){
+	    if($scope.torrentMagnet)
+		    $modalInstance.close($scope.torrentMagnet);
+		else if(file){
+		    $modalInstance.close(file);
+		}
+	}; // end save
+	
+	
+	$scope.hitEnter = function(evt){
+		if(angular.equals(evt.keyCode,13) && !(angular.equals($scope.torrentMagnet,null)))
+			$scope.save();
+	};
+}]);
