@@ -1,6 +1,7 @@
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
+var auth = require('http-auth');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
@@ -10,6 +11,12 @@ var client = new WebTorrent();
 var routes = require('./routes/index');
 
 var app = express();
+var basic = auth.basic({
+    realm: "WebTorrent App Area.",
+    file: __dirname + "/users.htpasswd" // gevorg:gpass, Sarah:testpass ... 
+});
+app.use(auth.connect(basic));
+
 var io = require('socket.io'),
   http = require('http'),
   server = http.createServer(app),

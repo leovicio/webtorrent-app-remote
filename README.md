@@ -12,9 +12,9 @@ Useful for seedboxes or similars.
 Todo
 -------------
 * Validate magnet / torrent file on Add
-* Handle HTTP errors ( even on ioSocket)
-* Add torrents with an option to upload a .torrent file, add custom trackers, and other @webtorrent options
-* HTTP Auth
+* Handle HTTP errors (even on ioSocket)
+* Command line script to (to install bower and npm components)
+* Command line script to start server (run webtorrentapp with password, server, maxpeers options)
 * Tab To filter torrents by status: All | Downloading | Seeding
 * Time Remaining
 * Create seed/torrent
@@ -26,6 +26,7 @@ Todo
 * Pause / Resume Torrent
 * Pause All Torrents / Resume All Torrents
 * Better UI
+* Create a desktop version with nw.js
 
 
 Known Bugs
