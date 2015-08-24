@@ -12,7 +12,6 @@ Useful for seedboxes or similars.
 Todo
 -------------
 * Validate magnet / torrent file on Add
-* Handle HTTP errors (even on ioSocket)
 * Command line script to (to install bower and npm components)
 * Command line script to start server (run webtorrentapp with password, server, maxpeers options)
 * Tab To filter torrents by status: All | Downloading | Seeding
@@ -31,5 +30,6 @@ Todo
 
 Known Bugs
 -------------
+* Can't get global ratio (webtorrent bug (?))
 
 Thanks to @feross for @webtorrent project!

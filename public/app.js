@@ -1,4 +1,12 @@
-var app = angular.module('webtorrent', ['btford.socket-io', 'ui.bootstrap', 'dialogs.main', 'pascalprecht.translate', 'dialogs.default-translations', 'angularFileInput']);
+var app = angular.module('webtorrent', [
+    'btford.socket-io',
+    'ui.bootstrap',
+    'dialogs.main',
+    'pascalprecht.translate',
+    'dialogs.default-translations',
+    'angularFileInput',
+    'ui-notification'
+]);
 
 app.run(['$templateCache', '$interpolate', function($templateCache, $interpolate) {
 
@@ -14,6 +22,8 @@ app.factory('webSocket', function(socketFactory) {
     var mySocket = socketFactory({
         ioSocket: myIoSocket
     });
+    mySocket.forward('error');
+    mySocket.forward('connect');
     return mySocket;
 })
 app.controller('WebTorrent', [
@@ -23,13 +33,22 @@ app.controller('WebTorrent', [
     'dialogs',
     '$rootScope',
     '$window',
-    function($scope, $http, webSocket, $dialogs, $rootScope, $window) {
+    'Notification',
+    function($scope, $http, webSocket, $dialogs, $rootScope, $window, Notification) {
         $scope.filter = {};
 
-        $window.onbeforeunload = function(e){
+        $scope.$on('socket:connect', function (ev, data) {
+            Notification.clearAll();
+        });
+        
+        $scope.$on('socket:error', function (ev, data) {
+            Notification.error('Error while connecting to the server');   
+        });
+        
+        $window.onbeforeunload = function(e) {
             webSocket.disconnect();
         };
-        
+
         var $lock = false;
 
         /* Update torrent list */
@@ -128,35 +147,36 @@ app.controller('WebTorrent', [
 ]);
 
 app.controller('AddTorrentCtrl', ['$scope', '$modalInstance', 'dialogs', function($scope, $modalInstance, $dialogs) {
-    
-    $scope.callback = function (file) {
-        
+
+    $scope.callback = function(file) {
+
         var extname = file.name.split('.').pop();
         console.log(file.name);
         console.log(extname);
-        if(extname === 'torrent'){
+        if (extname === 'torrent') {
             $scope.save(file.content);
-        }else{
+        }
+        else {
             $dialogs.error('Error', 'Not a torrent file');
         }
-        
+
     };
-    
-	$scope.cancel = function(){
-		$modalInstance.dismiss('Canceled');
-	}; // end cancel
-	
-	$scope.save = function(file){
-	    if($scope.torrentMagnet)
-		    $modalInstance.close($scope.torrentMagnet);
-		else if(file){
-		    $modalInstance.close(file);
-		}
-	}; // end save
-	
-	
-	$scope.hitEnter = function(evt){
-		if(angular.equals(evt.keyCode,13) && !(angular.equals($scope.torrentMagnet,null)))
-			$scope.save();
-	};
+
+    $scope.cancel = function() {
+        $modalInstance.dismiss('Canceled');
+    }; // end cancel
+
+    $scope.save = function(file) {
+        if ($scope.torrentMagnet)
+            $modalInstance.close($scope.torrentMagnet);
+        else if (file) {
+            $modalInstance.close(file);
+        }
+    }; // end save
+
+
+    $scope.hitEnter = function(evt) {
+        if (angular.equals(evt.keyCode, 13) && !(angular.equals($scope.torrentMagnet, null)))
+            $scope.save();
+    };
 }]);

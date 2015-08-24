@@ -19,6 +19,7 @@
     "ng-file-upload": "~7.0.10",
     "angular-file-input": "https://github.com/Goldark/angular-file-input.git",
     "socket.io": "~0.9.x",
-    "underscore": "~1.8.3"
+    "underscore": "~1.8.3",
+    "angular-ui-notification": "~0.0.14"
   }
 }
