@@ -12,6 +12,7 @@ Useful for seedboxes or similars.
 Todo
 -------------
 * Display torrent's size
+* Validate magnet / torrent file on Add
 * Remove cdn's dependencies and instal it as bower component
 * Handle HTTP errors ( even on ioSocket)
 * Add torrents with an option to upload a .torrent file, add custom trackers, and other @webtorrent options
