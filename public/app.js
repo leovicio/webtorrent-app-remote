@@ -151,13 +151,10 @@ app.controller('AddTorrentCtrl', ['$scope', '$modalInstance', 'dialogs', functio
     $scope.callback = function(file) {
 
         var extname = file.name.split('.').pop();
-        console.log(file.name);
-        console.log(extname);
         if (extname === 'torrent') {
             $scope.save(file.content);
-        }
-        else {
-            $dialogs.error('Error', 'Not a torrent file');
+        } else {
+            $dialogs.error('Error', 'Not a valid torrent file');
         }
 
     };
@@ -167,9 +164,15 @@ app.controller('AddTorrentCtrl', ['$scope', '$modalInstance', 'dialogs', functio
     }; // end cancel
 
     $scope.save = function(file) {
-        if ($scope.torrentMagnet)
-            $modalInstance.close($scope.torrentMagnet);
-        else if (file) {
+        if ($scope.torrentMagnet){
+            if ($scope.torrentMagnet.match(/magnet:\?xt=urn:[a-z0-9]{20,50}/i) != null) {
+                $modalInstance.close($scope.torrentMagnet);
+            }else{
+                $dialogs.error('Error', 'Not a valid magnet uri');
+            }
+        
+            
+        }else if (file) {
             $modalInstance.close(file);
         }
     }; // end save

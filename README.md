@@ -11,7 +11,6 @@ Useful for seedboxes or similars.
 
 Todo
 -------------
-* Validate magnet / torrent file on Add
 * Command line script to (to install bower and npm components)
 * Command line script to start server (run webtorrentapp with password, server, maxpeers options)
 * Tab To filter torrents by status: All | Downloading | Seeding
