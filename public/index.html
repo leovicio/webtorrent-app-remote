@@ -76,7 +76,7 @@
   <div id="content">
     <ul>
       <li ng-repeat="torrent in torrents | filter: filter" ng-click="selectTorrent(torrent)" ng-class="{'active': active == torrent.infoHash}">
-        <div class="col-sm-12">{{::torrent.name}} | Downloaded: {{::torrent.downloaded}} / Uploaded: {{::torrent.uploaded}}</div>
+        <div class="col-sm-12">{{::torrent.name}} | Downloaded: {{::torrent.downloaded}} / Uploaded: {{::torrent.uploaded}} | Time Remaning: {{::torrent.estimate}}</div>
         <div class="col-sm-12">
           <progressbar value="torrent.progress">{{torrent.progress}}%</progressbar>
         </div>

@@ -13,7 +13,6 @@ Todo
 -------------
 * Command line script to (to install bower and npm components)
 * Command line script to start server (run webtorrentapp with password, server, maxpeers options)
-* Time Remaining
 * Create seed/torrent
 * Configure Tracker's when creating torrent
 * Right sidebar: Torrent info with peers list and speed, download location, total size, file list

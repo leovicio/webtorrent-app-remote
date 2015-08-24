@@ -6,6 +6,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var WebTorrent = require('webtorrent-hybrid');
+
 var client = new WebTorrent();
 
 var routes = require('./routes/index');

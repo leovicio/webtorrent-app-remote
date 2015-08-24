@@ -13,6 +13,7 @@
     "ejs": "~2.3.3",
     "express": "~4.13.1",
     "mocha": "~2.2.5",
+    "moment": "^2.10.6",
     "morgan": "~1.6.1",
     "serve-favicon": "~2.3.0",
     "socket.io": "0.9.x",

@@ -1,4 +1,5 @@
 var prettyBytes = require('pretty-bytes');
+var moment = require('moment');
 
 var torrent_util = {
     client: false,
@@ -28,7 +29,7 @@ var torrent_util = {
                         torrent.uploaded = prettyBytes(torrent_util.client.torrents[i].swarm.uploaded);
                     
                     torrent.ratio = Math.round(torrent_util.client.torrents[i].swarm.ratio * 100) / 100;
-                    
+                    torrent.estimate = moment.duration(torrent.timeRemaining / 1000, 'seconds').humanize();
                 }
                 torrents.push(torrent);
                 torrent = null;
