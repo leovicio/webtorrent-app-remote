@@ -17,6 +17,8 @@
     "angular-socket-io": "~0.7.0",
     "angular-dialog-service": "~5.2.8",
     "ng-file-upload": "~7.0.10",
-    "angular-file-input": "https://github.com/Goldark/angular-file-input.git"
+    "angular-file-input": "https://github.com/Goldark/angular-file-input.git",
+    "socket.io": "~0.9.x",
+    "underscore": "~1.8.3"
   }
 }
