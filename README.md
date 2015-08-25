@@ -11,13 +11,15 @@ Useful for seedboxes or similars.
 
 Todo
 -------------
-* Command line script to (to install bower and npm components)
-* Command line script to start server (run webtorrentapp with password, server, maxpeers options)
 * Create seed/torrent
 * Configure Tracker's when creating torrent
-* Right sidebar: Torrent info with peers list and speed, download location, total size, file list
+* Command line script to (to install bower and npm components)
+* Command line script to start server (run webtorrentapp with password, server, maxpeers options)
+* Modal with: Torrent info with peers list and speed, download location, total size, file list
 * Set file priority
 * Create a DEBUG system (to console.log())
+* Organize angular structure, creating a service for get torrrent info, controllers on their own files
+* Use jade on html for faster development
 * Create a tracker server
 * Pause / Resume Torrent
 * Pause All Torrents / Resume All Torrents

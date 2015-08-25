@@ -82,6 +82,12 @@
         </div>
         <div class="col-sm-12">Peers: {{torrent.peers}} | Speed: D: {{torrent.d_speed}} U: {{torrent.u_speed}} | Ratio: {{torrent.ratio}}</div>
         <div class="col-sm-12" ng-if="torrent.peers == 0">Finding Peers ...</div>
+        <div class="col-sm-12 controls">
+          <i ng-click="" class="glyphicon glyphicon-play"></i>
+          <i ng-click="" class="glyphicon glyphicon-pause"></i>
+          <i ng-click="remove(torrent.infoHash)" class="glyphicon glyphicon-stop"></i>
+          <i ng-click="torrentInfo(torrent.infoHash)" class="glyphicon glyphicon-info-sign"></i>
+        </div>
       </li>
     </ul>
   </div>

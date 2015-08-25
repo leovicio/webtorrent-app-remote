@@ -62,7 +62,7 @@ header {
     #content ul li.active {
       background-color: yellow; }
 
-#content:after {
+#content:after, #sidebar:after {
   content: "";
   display: block; }
 

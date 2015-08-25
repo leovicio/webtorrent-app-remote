@@ -20,7 +20,6 @@ module.exports = function(io, torrent_util) {
         socket.on('torrent:download', function(data) {
             if(!lock_update){
                 torrent_util.addTorrent(data.torrent, function() {
-                    console.log('cb');
                     socket.emit('torrent:added', {
                         success: true
                     });
@@ -49,7 +48,14 @@ module.exports = function(io, torrent_util) {
                 });
                 lock_update = false;
             });
-            
+        });
+        
+        socket.on('torrent:get_info', function(data){
+            torrent_util.getTorrent(data.infoHash, function(torrent){
+                socket.emit('torrent:info', {
+                    torrent: torrent
+                });
+            });
         });
 
     });

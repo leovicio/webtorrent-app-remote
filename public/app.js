@@ -25,7 +25,19 @@ app.factory('webSocket', function(socketFactory) {
     mySocket.forward('error');
     mySocket.forward('connect');
     return mySocket;
-})
+});
+
+app.filter('status', function () {
+  return function (item) {
+      switch (item) {
+          case 1:
+              return 'Downloading';
+              break;
+          case 2:
+              return 'Seeding';
+      }
+  };
+});
 app.controller('WebTorrent', [
     '$scope',
     '$http',
@@ -37,19 +49,17 @@ app.controller('WebTorrent', [
     function($scope, $http, webSocket, $dialogs, $rootScope, $window, Notification) {
         $scope.filter = {};
 
-        $scope.$on('socket:connect', function (ev, data) {
+        $scope.$on('socket:connect', function(ev, data) {
             Notification.clearAll();
         });
-        
-        $scope.$on('socket:error', function (ev, data) {
-            Notification.error('Error while connecting to the server');   
+
+        $scope.$on('socket:error', function(ev, data) {
+            Notification.error('Error while connecting to the server');
         });
-        
+
         $window.onbeforeunload = function(e) {
             webSocket.disconnect();
         };
-
-        var $lock = false;
 
         /* Update torrent list */
         webSocket.on('torrents', function(message) {
@@ -108,7 +118,6 @@ app.controller('WebTorrent', [
 
 
             });
-
         };
 
         $scope.removeAll = function() {
@@ -142,13 +151,39 @@ app.controller('WebTorrent', [
             else
                 $scope.active = false;
         };
-        
-        $scope.setFilterstatus = function(status){
+
+        $scope.setFilterstatus = function(status) {
             $scope.filter.status = status;
+        };
+
+        $scope.torrentInfo = function(torrentInfoHash) {
+            var dlg = $dialogs.create('/dialogs/torrent_info.html', 'TorrentInfoCtrl', {
+                hash: torrentInfoHash
+            }, {
+                size: 'lg',
+                keyboard: true,
+                backdrop: false,
+                windowClass: 'my-class'
+            });
         };
 
     }
 ]);
+
+app.controller('TorrentInfoCtrl', ['$scope', '$modalInstance', 'dialogs', 'data', 'webSocket', '$rootScope', function($scope, $modalInstance, $dialogs, data, webSocket, $rootScope) {
+
+    webSocket.emit('torrent:get_info', {'infoHash': data.hash}, function(result) {
+        console.log('Getting Torrent Info');
+    });
+    webSocket.on('torrent:info', function(message) {
+        $scope.torrent = message.torrent;
+    });
+
+    $scope.cancel = function() {
+        $modalInstance.dismiss('Canceled');
+    }; // end cancel
+
+}]);
 
 app.controller('AddTorrentCtrl', ['$scope', '$modalInstance', 'dialogs', function($scope, $modalInstance, $dialogs) {
 
@@ -157,7 +192,8 @@ app.controller('AddTorrentCtrl', ['$scope', '$modalInstance', 'dialogs', functio
         var extname = file.name.split('.').pop();
         if (extname === 'torrent') {
             $scope.save(file.content);
-        } else {
+        }
+        else {
             $dialogs.error('Error', 'Not a valid torrent file');
         }
 
@@ -168,14 +204,16 @@ app.controller('AddTorrentCtrl', ['$scope', '$modalInstance', 'dialogs', functio
     }; // end cancel
 
     $scope.save = function(file) {
-        if ($scope.torrentMagnet){
+        if ($scope.torrentMagnet) {
             var data = $scope.torrentMagnet.split('magnet:?')[1]
             if (data && data.length > 0) {
                 $modalInstance.close($scope.torrentMagnet);
-            }else{
+            }
+            else {
                 $dialogs.error('Error', 'Not a valid magnet uri');
             }
-        }else if (file) {
+        }
+        else if (file) {
             $modalInstance.close(file);
         }
     }; // end save
