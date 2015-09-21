@@ -9,7 +9,8 @@ var torrent_util = {
         var global = {};
 
         if (torrent_util.client) {
-            for (var i in torrent_util.client.torrents) {
+            var current_torrents = torrent_util.client.torrents;
+            for (var i in current_torrents) {
                 torrent = {};
                 torrent.infoHash = torrent_util.client.torrents[i].infoHash;
                 torrent.name = torrent_util.client.torrents[i].name;
@@ -27,9 +28,11 @@ var torrent_util = {
                     }
                     if (torrent_util.client.torrents[i].swarm.uploaded)
                         torrent.uploaded = prettyBytes(torrent_util.client.torrents[i].swarm.uploaded);
+                    else
+                        torrent.uploaded = prettyBytes(0);
 
                     torrent.ratio = Math.round(torrent_util.client.torrents[i].swarm.ratio * 100) / 100;
-                    torrent.estimate = moment.duration(torrent.timeRemaining / 1000, 'seconds').humanize();
+                    torrent.estimate = moment.duration(torrent_util.client.torrents[i].timeRemaining / 1000, 'seconds').humanize();
                 }
                 torrents.push(torrent);
                 torrent = null;
@@ -88,7 +91,6 @@ var torrent_util = {
             torrent.files = Array();
             for(var file in get_torrent.files){
                 var f = get_torrent.files[file];
-                console.log(f.length + ' ' + f.name);
                 torrent.files.push({'name': f.name, 'path': f.path, 'size': prettyBytes(f.length)})
             }
             torrent.estimate = moment.duration(torrent.timeRemaining / 1000, 'seconds').humanize();

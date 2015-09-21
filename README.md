@@ -21,17 +21,14 @@ TODO:
 * Make it a npm package js with command line options. (options: user/password, server, port, maxpeers, etcs)
 * Set file priority
 * Create a DEBUG system (to console.log())
-* Organize angular structure, creating a service for get torrrent info, controllers on their own files
-* Use jade on html for faster development
-* Pause / Resume Torrent
-* Pause All Torrents / Resume All Torrents
+* Pause / Resume Torrent (needs webtorrent implementation)
+* Pause All Torrents / Resume All Torrents (needs webtorrent implementation)
 * Create a desktop version with nw.js
 * Create a browser version (maybe a chrome extension?)
 
 Known Bugs
 -------------
-* Can't get global ratio (webtorrent bug (?))
-* progressbar always stuck
+* Can't get global ratio (webtorrent bug (?)) 
 * App stops after some time. (due a webtorrent bug, it uses 100% of CPU / memory)
 
 Layout was based on [openseedbox](https://github.com/erindru/openseedbox/) by [erindru](https://github.com/erindru)

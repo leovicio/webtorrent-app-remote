@@ -103,7 +103,7 @@
                   <td style="width:15%;">
                     <form action="/" method="post" class="no-margin pull-left">
                       <div class="btn-group pull-right">
-                        <a torrentInfo(torrent.infoHash) class="btn btn-mini show-torrent-info" href="#"><i class="icon-info-sign"></i></a>
+                        <a ng-click="torrentInfo(torrent.infoHash)" class="btn btn-mini show-torrent-info" href="#"><i class="icon-info-sign"></i></a>
                         <button type="submit" class="btn btn-mini" name="what" value="stop"><i class="icon-pause"></i></button>
                         <button type="submit" class="btn btn-mini" name="what" value="start"><i class="icon-play"></i></button>
                         <a ng-click="remove(torrent.infoHash)" class="btn btn-mini remove-torrent" href="#"><i class="icon-remove"></i></a>
