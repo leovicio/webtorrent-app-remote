@@ -73,7 +73,9 @@ app.controller('WebTorrent', [
                 $scope.torrents = message.data.torrents;
                 $scope.global = message.data.global;
             }
-            webSocket.emit('torrent:getAll');
+            setTimeout(function(){
+                webSocket.emit('torrent:getAll');
+            }, 1000);
             message = null;
         });
 
