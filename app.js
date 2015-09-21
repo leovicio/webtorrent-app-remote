@@ -20,9 +20,9 @@ app.use(auth.connect(basic));
 
 var io = require('socket.io'),
   http = require('http'),
-  server = http.createServer(app),
+  server = http.createServer(app);
+  server.listen(3001);
   io = io.listen(server);
-server.listen(3001);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
