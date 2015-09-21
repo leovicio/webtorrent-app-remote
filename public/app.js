@@ -16,8 +16,9 @@ app.run(['$templateCache', '$interpolate', function($templateCache, $interpolate
 
 }]); // end run / dialogs.main
 app.factory('webSocket', function(socketFactory) {
-    var myIoSocket = io.connect('wss://62.75.213.174:3001/', {
-        'transports': ['websocket', 'polling']
+
+    var myIoSocket = io.connect('http://62.75.213.174:3001/', {
+        reconnect: true
     });
     var mySocket = socketFactory({
         ioSocket: myIoSocket
@@ -27,16 +28,16 @@ app.factory('webSocket', function(socketFactory) {
     return mySocket;
 });
 
-app.filter('status', function () {
-  return function (item) {
-      switch (item) {
-          case 1:
-              return 'Downloading';
-              break;
-          case 2:
-              return 'Seeding';
-      }
-  };
+app.filter('status', function() {
+    return function(item) {
+        switch (item) {
+            case 1:
+                return 'Downloading';
+                break;
+            case 2:
+                return 'Seeding';
+        }
+    };
 });
 app.controller('WebTorrent', [
     '$scope',
@@ -63,38 +64,51 @@ app.controller('WebTorrent', [
 
         /* Update torrent list */
         webSocket.on('torrents', function(message) {
-            $scope.torrents = message.data.torrents;
-            $scope.global = message.data.global;
+            //Remove torrent add progress. this is VERY Ugly, I guess.
+            if ($scope.torrent_added) {
+                $rootScope.$broadcast('dialogs.wait.complete');
+                delete $scope.torrent_added;
+            }
+            if (message.data && message.data.torrents) {
+                $scope.torrents = message.data.torrents;
+                $scope.global = message.data.global;
+            }
+            webSocket.emit('torrent:getAll');
+            message = null;
         });
 
 
         /* Add new torrent to download*/
-        $scope.add = function() {
-            var dlg = $dialogs.create('/dialogs/add_torrent.html', 'AddTorrentCtrl', {}, {
+        var dlg;
+        $scope.add = function($event, type) {
+            if(dlg) return;
+            $rootScope.new_torrent_type = type;
+            dlg = $dialogs.create('/dialogs/add_torrent.html', 'AddTorrentCtrl', {}, {
                 size: 'lg',
                 keyboard: true,
-                backdrop: false,
+                backdrop: true,
                 windowClass: 'my-class'
             });
             //torrentInfo can be a magnet, .torrent file buffer and my other options that webtorrent accepts
             dlg.result.then(function(torrentInfo) {
                 if (torrentInfo) {
                     $dialogs.wait('Adding torrent');
-                    webSocket.emit('torrent:download', {
-                        torrent: torrentInfo
-                    }, function(result) {
-                        console.log('Waiting torrent to Add');
-                    });
-                    webSocket.on('torrent:added', function(message) {
-                        console.log('Torrent Added');
-                        $rootScope.$broadcast('dialogs.wait.complete');
-                    });
+                    //Check if is magnets or a single file
+                    if (torrentInfo instanceof Array) {
+                        _(torrentInfo).forEach(function(v, k) {
+                            webSocket.emit('torrent:download', {
+                                torrent: v
+                            });
+                        });
+                    } else {
+                        webSocket.emit('torrent:download', {
+                            torrent: torrentInfo
+                        });
+                    }
+                    $scope.torrent_added = true;
+                    dlg = false;
                 }
-            }, function() {
-
-            });
-            //var magnet = prompt("Magnet: ", "magnet:?xt=urn:btih:1619ecc9373c3639f4ee3e261638f29b33a6cbd6&dn=Ubuntu+14.10+i386+%28Desktop+ISO%29&tr=udp%3A%2F%2Ftracker.openbittorrent.com%3A80&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969");
-
+            }, function() {});
         };
 
         $scope.remove = function(torrentHash) {
@@ -172,7 +186,9 @@ app.controller('WebTorrent', [
 
 app.controller('TorrentInfoCtrl', ['$scope', '$modalInstance', 'dialogs', 'data', 'webSocket', '$rootScope', function($scope, $modalInstance, $dialogs, data, webSocket, $rootScope) {
 
-    webSocket.emit('torrent:get_info', {'infoHash': data.hash}, function(result) {
+    webSocket.emit('torrent:get_info', {
+        'infoHash': data.hash
+    }, function(result) {
         console.log('Getting Torrent Info');
     });
     webSocket.on('torrent:info', function(message) {
@@ -185,42 +201,48 @@ app.controller('TorrentInfoCtrl', ['$scope', '$modalInstance', 'dialogs', 'data'
 
 }]);
 
-app.controller('AddTorrentCtrl', ['$scope', '$modalInstance', 'dialogs', function($scope, $modalInstance, $dialogs) {
+app.controller('AddTorrentCtrl', ['$scope', '$modalInstance', 'dialogs', '$rootScope',
+    function($scope, $modalInstance, $dialogs, $rootScope) {
 
-    $scope.callback = function(file) {
+        $scope.torrent = [];
 
-        var extname = file.name.split('.').pop();
-        if (extname === 'torrent') {
-            $scope.save(file.content);
-        }
-        else {
-            $dialogs.error('Error', 'Not a valid torrent file');
-        }
+        $scope.callback = function(file) {
 
-    };
-
-    $scope.cancel = function() {
-        $modalInstance.dismiss('Canceled');
-    }; // end cancel
-
-    $scope.save = function(file) {
-        if ($scope.torrentMagnet) {
-            var data = $scope.torrentMagnet.split('magnet:?')[1]
-            if (data && data.length > 0) {
-                $modalInstance.close($scope.torrentMagnet);
+            var extname = file.name.split('.').pop();
+            if (extname === 'torrent') {
+                $scope.save(file.content);
             }
             else {
-                $dialogs.error('Error', 'Not a valid magnet uri');
+                $dialogs.error('Error', 'Not a valid torrent file');
             }
-        }
-        else if (file) {
-            $modalInstance.close(file);
-        }
-    }; // end save
 
+        };
 
-    $scope.hitEnter = function(evt) {
-        if (angular.equals(evt.keyCode, 13) && !(angular.equals($scope.torrentMagnet, null)))
-            $scope.save();
-    };
-}]);
+        $scope.cancel = function() {
+            $modalInstance.dismiss('Canceled');
+        }; // end cancel
+
+        $scope.save = function(file) {
+            console.log($scope.torrent)
+            if ($scope.torrent.torrentMagnet) {
+                var $valid = false;
+                var magnets = $scope.torrent.torrentMagnet.split('\n');
+                _(magnets).forEach(function(v, k) {
+                    console.log(v);
+                    if (v.match('magnet:?')) {
+                        $valid = true;
+                    }
+                });
+                if ($valid) {
+                    $modalInstance.close(magnets);
+                }
+                else {
+                    $dialogs.error('Error', 'Not a valid magnet uri');
+                }
+            }
+            else if (file) {
+                $modalInstance.close(file);
+            }
+        }; // end save
+    }
+]);

@@ -12,7 +12,7 @@
   ],
   "dependencies": {
     "angular-bootstrap": "~0.13.3",
-    "bootstrap": "~3.3.5",
+    "bootstrap": "~2.3.2",
     "ngprogress": "~1.1.2",
     "angular-socket-io": "~0.7.0",
     "angular-dialog-service": "~5.2.8",

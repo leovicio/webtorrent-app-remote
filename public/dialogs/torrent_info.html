@@ -47,7 +47,22 @@
                    
             </div>
             <div role="tabpanel" class="tab-pane" id="files">
-                {{torrent.files}}
+                <table class="table table-striped">
+                    <thead>
+                        <th>
+                            <td>File</td>
+                            <td>Size</td>
+                            <td>Path</td>
+                        </th>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="file in torrent.files">
+                            <td>{{file.name}}</td>
+                            <td>{{file.size}}</td>
+                            <td>{{file.path}}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>            
         </div>
     </div>

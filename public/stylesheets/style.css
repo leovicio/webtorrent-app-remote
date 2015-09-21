@@ -69,9 +69,32 @@ header {
 footer, #content:after {
   height: 75px; }
 
+#page-header {
+  min-height: 80px; }
+
 footer {
   border-top: 2px solid #B3B3B3; }
   footer .footer_msg {
     line-height: 75px; }
+
+#main-menu .nav a {
+  line-height: 41px; }
+
+#avatar {
+  height: 40px;
+  margin-top: -8px; }
+
+#footer {
+  margin-top: 40px;
+  width: 200px;
+  margin-left: auto;
+  margin-right: auto; }
+
+.unselectable {
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none; }
 
 /*# sourceMappingURL=style.css.map */

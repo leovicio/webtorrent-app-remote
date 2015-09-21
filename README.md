@@ -1,35 +1,37 @@
 # Webtorrent Remote Managment
 
-This is my first public project.
-Was created to personal use, but since @webtorrent is a public free and open source why my project based on it, shouldn't be?
+[webtorrent](https://github.com/feross/webtorrent) is a great tool for share files using torrent, and what makes it special and phenomenal, it his hability to share in browser, using only javascript, with no dependencies!
+But, the only "problem" is: When seeding or getting files on browser, we can only ask for pieces to servers using wrtc protocol.
+Since most of torrent clients around there uses udp protocol, we have a lack of peers seeding over wrtc.
 
-If you liked the project, please, fork and share (and make it better).
+The main goal of this project, is: Download files on a good seedbox from peers on udp and share to wrtc peers!
+In this way you can share files to users from your server to your client on browser.
+
+This app gives you the hability to downloads files on the remote server by passing a .torrent file or magnet uris.
 
 
-Webtorrent Remote Managment is a very simple tool to manage WebTorrents in your server!
-Useful for seedboxes or similars.
-
-Todo
+TODO:
 -------------
+* Use npm packages only, remove bower dependencies and use browserfy to generate scripts 
+* Create a tracker server
+* When in server, display infos like: Memory, cpu and disk used / 
+* Modal with: Torrent info with peers list and speed, download location, total size, file list (work in progress)
 * Create seed/torrent
 * Configure Tracker's when creating torrent
-* Command line script to (to install bower and npm components)
-* Command line script to start server (run webtorrentapp with password, server, maxpeers options)
-* Modal with: Torrent info with peers list and speed, download location, total size, file list
+* Make it a npm package js with command line options. (options: user/password, server, port, maxpeers, etcs)
 * Set file priority
 * Create a DEBUG system (to console.log())
 * Organize angular structure, creating a service for get torrrent info, controllers on their own files
 * Use jade on html for faster development
-* Create a tracker server
 * Pause / Resume Torrent
 * Pause All Torrents / Resume All Torrents
-* Better UI
 * Create a desktop version with nw.js
-
+* Create a browser version (maybe a chrome extension?)
 
 Known Bugs
 -------------
 * Can't get global ratio (webtorrent bug (?))
-* socket error nt triggering5
+* progressbar always stuck
+* App stops after some time. (due a webtorrent bug, it uses 100% of CPU / memory)
 
-Thanks to @feross for @webtorrent project!
+Thanks to [feross](https://github.com/feross) for [webtorrent](https://github.com/feross/webtorrent) project!
