@@ -7,7 +7,6 @@ var torrent_util = {
         var torrents = [];
         var torrent = {};
         var global = {};
-        var fs = require('fs');
 
         if (torrent_util.client) {
             for (var i in torrent_util.client.torrents) {
@@ -50,22 +49,14 @@ var torrent_util = {
         }
     },
     addTorrent: function(torrent, cb) {
-        var torrent = torrent_util.client.add(torrent);
-        torrent.on('ready', function(torrent) {
-            console.log('Client is downloading:', torrent)
-            cb();
-        });
+        console.log('Add torrent');
+        torrent_util.client.add(torrent, {path: '/home/torrents'}, cb(torrent));
     },
     remove: function(infoHash, cb) {
-        torrent_util.client.remove(infoHash, function() {
-            cb();
-        })
+        torrent_util.client.remove(infoHash, cb);
     },
     removeAll: function(cb) {
-        console.log('remove all');
-        torrent_util.client.destroy(function() {
-            cb();
-        })
+        torrent_util.client.destroy(cb);
     },
     getTorrent: function(infoHash, cb) {
         var torrent = {};

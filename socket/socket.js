@@ -2,6 +2,7 @@ module.exports = function(io, torrent_util) {
     'use strict';
     io.on('connection', function(socket) {
 
+        console.log('Client connected');
         var lock_update = false;
         socket.emit('init', {
             welcome: 'welcome to the jungle nanananananana ai ai '
@@ -11,29 +12,27 @@ module.exports = function(io, torrent_util) {
             data: torrent_util.getTorrents()
         });
         
-        setInterval(function() {
+        socket.on('torrent:getAll', function(data) {
+            console.log('Client asked for torrents');
             socket.emit('torrents', {
                 data: torrent_util.getTorrents()
             });
-        }, 5000);
+        });
 
         socket.on('torrent:download', function(data) {
-            if(!lock_update){
-                torrent_util.addTorrent(data.torrent, function() {
-                    socket.emit('torrent:added', {
-                        success: true
-                    });
+            console.log('New torrent:', data);
+            torrent_util.addTorrent(data.torrent, function() {
+                socket.emit('torrent:added', {
+                    success: true,
                 });
-            }
+            });
         });
         
         socket.on('torrent:remove', function(data){
-            lock_update = true;
             torrent_util.remove(data.infoHash, function(){
                 socket.emit('torrent:removed', {
                     success: true
                 });
-                lock_update = false;
             });
             
         });
