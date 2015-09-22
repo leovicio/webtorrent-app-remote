@@ -1,13 +1,16 @@
 var prettyBytes = require('pretty-bytes');
 var moment = require('moment');
+var os = require("os")
+var disk = require('diskusage');
 
 var torrent_util = {
     client: false,
-    getTorrents: function() {
+    getTorrents: function(cb) {
         var torrents = [];
         var torrent = {};
         var global = {};
-
+        var os_info = {};
+        
         if (torrent_util.client) {
             var current_torrents = torrent_util.client.torrents;
             for (var i in current_torrents) {
@@ -42,12 +45,20 @@ var torrent_util = {
 
             global.d_speed = prettyBytes(torrent_util.client.downloadSpeed());
             global.u_speed = prettyBytes(torrent_util.client.uploadSpeed());
-            return {
-                'torrents': torrents,
-                'global': global
-            };
-        }
-        else {
+            os_info.load_avg = os.loadavg();
+            os_info.totalmem = os.totalmem();
+            os_info.freemem = os.freemem();
+            os_info.mem_used = os_info.totalmem - os_info.freemem;
+            disk.check('/', function(err, info) {
+                os_info.disk_total = info.total;
+                os_info.disk_free = info.free;
+                cb({
+                    'torrents': torrents,
+                    'global': global,
+                    'os_info': os_info
+                });
+            });
+        } else {
             return;
         }
     },

@@ -8,14 +8,18 @@ module.exports = function(io, torrent_util) {
             welcome: 'welcome to the jungle nanananananana ai ai '
         });
 
-        socket.emit('torrents', {
-            data: torrent_util.getTorrents()
+        torrent_util.getTorrents(function(infos) {
+            socket.emit('torrents', {
+                data: infos
+            });
         });
-        
+
         socket.on('torrent:getAll', function(data) {
             console.log('Client asked for torrents');
-            socket.emit('torrents', {
-                data: torrent_util.getTorrents()
+            torrent_util.getTorrents(function(infos) {
+                socket.emit('torrents', {
+                    data: infos
+                });
             });
         });
 
@@ -27,19 +31,19 @@ module.exports = function(io, torrent_util) {
                 });
             });
         });
-        
-        socket.on('torrent:remove', function(data){
-            torrent_util.remove(data.infoHash, function(){
+
+        socket.on('torrent:remove', function(data) {
+            torrent_util.remove(data.infoHash, function() {
                 socket.emit('torrent:removed', {
                     success: true
                 });
             });
-            
+
         });
-        
-        socket.on('torrent:remove_all', function(data){
+
+        socket.on('torrent:remove_all', function(data) {
             lock_update = true;
-            torrent_util.removeAll(function(){
+            torrent_util.removeAll(function() {
                 var WebTorrent = require('webtorrent-hybrid');
                 torrent_util.client = new WebTorrent();
                 socket.emit('torrent:removed_all', {
@@ -48,9 +52,9 @@ module.exports = function(io, torrent_util) {
                 lock_update = false;
             });
         });
-        
-        socket.on('torrent:get_info', function(data){
-            torrent_util.getTorrent(data.infoHash, function(torrent){
+
+        socket.on('torrent:get_info', function(data) {
+            torrent_util.getTorrent(data.infoHash, function(torrent) {
                 socket.emit('torrent:info', {
                     torrent: torrent
                 });
