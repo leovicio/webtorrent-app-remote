@@ -12,7 +12,6 @@ This app gives you the hability to downloads files on the remote server by passi
 
 TODO:
 -------------
-* Use npm packages only, remove bower dependencies and use browserfy to generate scripts 
 * Create a tracker server
 * When in server, display infos like: Memory, cpu and disk used / 
 * Modal with: Torrent info with peers list and speed, download location, total size, file list (work in progress)
