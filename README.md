@@ -12,7 +12,6 @@ This app gives you the hability to downloads files on the remote server by passi
 
 TODO:
 -------------
-* Create a tracker server (work in progress)
 * Configure tracker server (enable / disable, port, hostname)
 * BUG: Eveytime I ran webtorrent controller, it calls the socket.io again creating multiple connections
 * Default item in top menu

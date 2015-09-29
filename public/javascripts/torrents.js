@@ -3,11 +3,44 @@ app.controller('WebTorrent', [
     '$http',
     'webSocket',
     '$dialogs',
+    '$interval',
     '$rootScope',
     '$window',
     'Notification',
-    function($scope, $http, webSocket, $dialogs, $rootScope, $window, Notification) {
+    function($scope, $http, webSocket, $dialogs, $interval, $rootScope, $window, Notification) {
         $scope.filter = {};
+
+        $rootScope.registerEvents = false;
+
+        $scope.initEvents = function() {
+            if ($rootScope.registerEvents) return;
+            $rootScope.registerEvents = true;
+            //@TODO: Create something to enable debug
+            //console.log('Register Events');
+            
+            /* Update torrent list */
+            webSocket.on('torrents', function(message) {
+                //@TODO: Create something to enable debug
+                //console.log('Got torrent');
+                //Remove torrent add progress. this is VERY Ugly, I guess.
+                if ($scope.torrent_added) {
+                    $rootScope.$broadcast('dialogs.wait.complete');
+                    delete $scope.torrent_added;
+                }
+                if (message.data && message.data.torrents) {
+                    $scope.torrents = message.data.torrents;
+                    $scope.global = message.data.global;
+                    $scope.os_info = message.data.os_info;
+                }
+                message = null;
+            });
+
+            if (!$rootScope.torrentInterval) {
+                $rootScope.torrentInterval = $interval(function() {
+                    webSocket.emit('torrent:getAll');
+                }, 1500);
+            }
+        };
 
         $scope.$on('socket:connect', function(ev, data) {
             Notification.clearAll();
@@ -21,29 +54,17 @@ app.controller('WebTorrent', [
             webSocket.disconnect();
         };
 
-        /* Update torrent list */
-        webSocket.on('torrents', function(message) {
-            //Remove torrent add progress. this is VERY Ugly, I guess.
-            if ($scope.torrent_added) {
-                $rootScope.$broadcast('dialogs.wait.complete');
-                delete $scope.torrent_added;
-            }
-            if (message.data && message.data.torrents) {
-                $scope.torrents = message.data.torrents;
-                $scope.global = message.data.global;
-                $scope.os_info = message.data.os_info;
-            }
-            setTimeout(function(){
-                webSocket.emit('torrent:getAll');
-            }, 2000);
-            message = null;
+        $scope.$on('$destroy', function() {
+            $interval.cancel($rootScope.torrentInterval);
+            $rootScope.torrentInterval = false;
+            $rootScope.registerEvents = false;
+            webSocket.removeAllListeners();
         });
-
 
         /* Add new torrent to download*/
         var dlg;
         $scope.add = function($event, type) {
-            if(dlg) return;
+            if (dlg) return;
             $rootScope.new_torrent_type = type;
             dlg = $dialogs.create('/dialogs/add_torrent.html', 'AddTorrentCtrl', {}, {
                 size: 'lg',
@@ -62,7 +83,8 @@ app.controller('WebTorrent', [
                                 torrent: v
                             });
                         });
-                    } else {
+                    }
+                    else {
                         webSocket.emit('torrent:download', {
                             torrent: torrentInfo
                         });
@@ -100,7 +122,8 @@ app.controller('WebTorrent', [
             if (confirm('Remove All Torrents?')) {
                 $dialogs.wait('Removing torrent');
                 webSocket.emit('torrent:remove_all', {}, function(result) {
-                    console.log('Waiting torrent to remove');
+                    //@TODO: Create something to enable debug
+                    //console.log('Waiting torrent to remove');
                 });
                 webSocket.on('torrent:removed_all', function(message) {
                     $dialogs.notify('Torrents Removed');
@@ -154,7 +177,8 @@ app.controller('TorrentInfoCtrl', ['$scope', '$modalInstance', 'dialogs', 'data'
     webSocket.emit('torrent:get_info', {
         'infoHash': data.hash
     }, function(result) {
-        console.log('Getting Torrent Info');
+        //@TODO: Create something to enable debug
+        //console.log('Getting Torrent Info');
     });
     webSocket.on('torrent:info', function(message) {
         $scope.torrent = message.torrent;
@@ -188,12 +212,10 @@ app.controller('AddTorrentCtrl', ['$scope', '$modalInstance', '$dialogs', '$root
         }; // end cancel
 
         $scope.save = function(file) {
-            console.log($scope.torrent)
             if ($scope.torrent.torrentMagnet) {
                 var $valid = false;
                 var magnets = $scope.torrent.torrentMagnet.split('\n');
                 _(magnets).forEach(function(v, k) {
-                    console.log(v);
                     if (v.match('magnet:?')) {
                         $valid = true;
                     }
