@@ -7,7 +7,7 @@ app.controller('WebTorrent', [
     '$rootScope',
     '$window',
     'Notification',
-    function($scope, $http, webSocket, $dialogs, $interval, $rootScope, $window, Notification) {
+    function($scope, $http, webSocket, $dialogs, $timeout, $rootScope, $window, Notification) {
         $scope.filter = {};
 
         $rootScope.registerEvents = false;
@@ -33,13 +33,10 @@ app.controller('WebTorrent', [
                     $scope.os_info = message.data.os_info;
                 }
                 message = null;
-            });
-
-            if (!$rootScope.torrentInterval) {
-                $rootScope.torrentInterval = $interval(function() {
+                $rootScope.torrentInterval = $timeout(function() {
                     webSocket.emit('torrent:getAll');
-                }, 1500);
-            }
+                }, 2500);                
+            });
         };
 
         $scope.$on('socket:connect', function(ev, data) {
@@ -55,7 +52,7 @@ app.controller('WebTorrent', [
         };
 
         $scope.$on('$destroy', function() {
-            $interval.cancel($rootScope.torrentInterval);
+            $timeout.cancel($rootScope.torrentInterval);
             $rootScope.torrentInterval = false;
             $rootScope.registerEvents = false;
             webSocket.removeAllListeners();
