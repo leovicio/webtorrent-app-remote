@@ -97,4 +97,7 @@ footer {
   -ms-user-select: none;
   user-select: none; }
 
+.progress .bar {
+  line-height: 20px; }
+
 /*# sourceMappingURL=style.css.map */

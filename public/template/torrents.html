@@ -78,7 +78,8 @@
                     <div class="pull-right">
                         <h5><small>Speed: D: {{global.d_speed}} - U: {{global.u_speed}} | Global ratio: {{global.ratio}}</small></h5>
                         <h5><small>Load Avg: {{os_info.load_avg[0]}} -  {{os_info.load_avg[1]}} - {{os_info.load_avg[2]}}</small></h5>
-                        <h5><small>Memory Usage: <progressbar value="os_info.mem_used">{{torrent.progress}}%</progressbar></small></h5>
+                        <h5><small>Memory Usage: <progress><bar value="os_info.prc_mem_used" class="bar">{{os_info.prc_mem_used}}%</bar></progress>{{os_info.memused}} of {{os_info.totalmem}}</small></h5>
+                        <h5><small>Disk Usage: <progress><bar value="os_info.prc_disk_used" class="bar">{{os_info.prc_disk_used}}%</bar></progress></small>{{os_info.disk_used}} of {{os_info.disk_total}}</h5>
                     </div>
                 </td>
             </tr>

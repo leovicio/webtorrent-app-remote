@@ -30,13 +30,23 @@ app.controller('WebTorrent', [
                 if (message.data && message.data.torrents) {
                     $scope.torrents = message.data.torrents;
                     $scope.global = message.data.global;
-                    $scope.os_info = message.data.os_info;
                 }
                 message = null;
                 $rootScope.torrentInterval = $timeout(function() {
                     webSocket.emit('torrent:getAll');
                 }, 2500);                
             });
+            webSocket.emit('torrent:getAll');
+            
+            /* Get server Info*/
+            webSocket.on('server:info', function(message){
+                console.log(message);
+                $scope.os_info = message.details.os_info;
+                $rootScope.serverInfoInterval = $timeout(function(){
+                    webSocket.emit('server:getInfo');
+                }, 10000);
+            });
+            webSocket.emit('server:getInfo');
         };
 
         $scope.$on('socket:connect', function(ev, data) {
