@@ -13,7 +13,6 @@ This app gives you the hability to downloads files on the remote server by passi
 TODO:
 -------------
 * Configure tracker server (enable / disable, port, hostname)
-* Default item in top menu (Add class active)
 * When in server, display infos like: Memory, cpu and disk used (work in progress)
 * Modal with: Torrent info with peers list and speed, download location, total size, file list (work in progress)
 * Create seed/torrent

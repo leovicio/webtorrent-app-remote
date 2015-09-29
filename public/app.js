@@ -8,11 +8,12 @@ var app = angular.module('webtorrent', [
     'ngRoute'
 ]);
 
-app.run(['$templateCache', '$interpolate', function($templateCache, $interpolate) {
-
-    // get interpolation symbol (possible that someone may have changed it in their application instead of using '{{}}')
-    var startSym = $interpolate.startSymbol();
-    var endSym = $interpolate.endSymbol();
+app.run(['$rootScope', '$location', function($rootScope, $location) {
+    
+    $rootScope.$on('$routeChangeSuccess', function(e, current, pre) {
+      $rootScope.current_tab = $location.path();
+      // Get all URL parameter
+    });
 
 }]); // end run / dialogs.main
 
