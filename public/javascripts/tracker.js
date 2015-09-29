@@ -1,12 +1,38 @@
 app.controller('TrackerServer', ['$scope',
-    '$http',
     'webSocket',
-    'dialogs',
-    '$rootScope',
-    '$window',
+    '$dialogs',
     'Notification',
-    function($scope) {
+    function($scope, webSocket, $dialogs, Notification) {
 	
-	    $scope.message = 'This is Add new order screen';
+	    $scope.tab = 'details';
+	    
+	    $scope.host_name = window.location.hostname;
+	    webSocket.emit('tracker:getOptions');
+	    webSocket.emit('tracker:getTracker');
+	    
+	    webSocket.on('tracker:details', function(message) {
+	        $scope.tracker = message.details;
+	    });
+	    
+	    webSocket.on('tracker:options', function(message) {
+	        $scope.tracker_opts = message.options;
+	    });	    
+	    
+	    $scope.setTab = function($event, tab){
+            $event.preventDefault();
+            $event.stopPropagation();
+            $event.stopImmediatePropagation();	        
+            $scope.tab = tab;
+	    };
+	    
+	    $scope.saveOptions = function($event){
+	        $event.preventDefault();
+            $event.stopPropagation();
+            $event.stopImmediatePropagation();
+            webSocket.emit('tracker:saveOptions', $scope.tracker_opts, function(result){
+                Notification.alert('Options saved!')
+            });
+            
+	    }
 	
 }]);

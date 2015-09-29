@@ -7,8 +7,6 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var WebTorrent = require('webtorrent-hybrid');
 
-var client = new WebTorrent();
-
 var routes = require('./routes/index');
 
 var app = express();
@@ -71,9 +69,15 @@ app.use(function(err, req, res, next) {
   });
 });
 
-var torrent_util = require('./socket/torrent_util.js');
-torrent_util.client = client;
+/* WebTorrent Client*/
+var client = new WebTorrent();
 
-require('./socket/socket.js')(io, torrent_util);
+var torrent_util = require('./lib/torrent_util.js');
+torrent_util.client = client;
+var tracker = require('./lib/tracker.js');
+tracker.check_settings();
+
+require('./lib/socket.js')(io, torrent_util, tracker);
+
 
 module.exports = app;

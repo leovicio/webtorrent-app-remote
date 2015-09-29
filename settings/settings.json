@@ -1,0 +1,6 @@
+{
+  "tracker": true,
+  "tracker_udp": true,
+  "tracker_http": true,
+  "tracker_ws": true
+}

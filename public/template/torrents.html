@@ -1,18 +1,19 @@
 <div class="row">
     <div class="span2">
         <ul id="torrent-groups" class="nav nav-pills nav-stacked nav-list">
-            <li ng-click="setFilterstatus(0)" ng-class="{'active': !filter.status}">
-                <a href="#">
+            <li  ng-class="{'active': !filter.status}">
+                <a ng-click="setFilterstatus($event, 0)" href="/#torrents/">
                     <i class="icon-minus pull-right hide remove-group" rel="tooltip" title="All"></i> All
                 </a>
             </li>
-            <li ng-click="setFilterstatus(1)" ng-class="{'active': filter.status == 1}">
-                <a href="#">
+            <li ng-class="{'active': filter.status == 1}">
+                <a ng-click="setFilterstatus($event, 1)" href="#">
                     <i class="icon-minus pull-right hide remove-group" rel="tooltip" title="Downloading"></i> Downloading
                 </a>
+
             </li>
-            <li ng-click="setFilterstatus(2)" ng-class="{'active': filter.status == 2}">
-                <a href="#">
+            <li ng-class="{'active': filter.status == 2}">
+                <a ng-click="setFilterstatus($event, 2)" href="#">
                     <i class="icon-minus pull-right hide remove-group" rel="tooltip" title="Seeding"></i> Seeding
                 </a>
             </li>

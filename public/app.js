@@ -35,7 +35,6 @@ app.filter('status', function() {
         switch (item) {
             case 1:
                 return 'Downloading';
-                break;
             case 2:
                 return 'Seeding';
         }

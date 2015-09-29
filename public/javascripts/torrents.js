@@ -35,7 +35,7 @@ app.controller('WebTorrent', [
             }
             setTimeout(function(){
                 webSocket.emit('torrent:getAll');
-            }, 1000);
+            }, 2000);
             message = null;
         });
 
@@ -128,7 +128,10 @@ app.controller('WebTorrent', [
                 $scope.active = false;
         };
 
-        $scope.setFilterstatus = function(status) {
+        $scope.setFilterstatus = function($event, status) {
+            $event.preventDefault();
+            $event.stopPropagation();
+            $event.stopImmediatePropagation();
             $scope.filter.status = status;
         };
 
@@ -163,7 +166,7 @@ app.controller('TorrentInfoCtrl', ['$scope', '$modalInstance', 'dialogs', 'data'
 
 }]);
 
-app.controller('AddTorrentCtrl', ['$scope', '$modalInstance', 'dialogs', '$rootScope',
+app.controller('AddTorrentCtrl', ['$scope', '$modalInstance', '$dialogs', '$rootScope',
     function($scope, $modalInstance, $dialogs, $rootScope) {
 
         $scope.torrent = [];

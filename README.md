@@ -12,7 +12,10 @@ This app gives you the hability to downloads files on the remote server by passi
 
 TODO:
 -------------
-* Create a tracker server
+* Create a tracker server (work in progress)
+* Configure tracker server (enable / disable, port, hostname)
+* BUG: Eveytime I ran webtorrent controller, it calls the socket.io again creating multiple connections
+* Default item in top menu
 * When in server, display infos like: Memory, cpu and disk used (work in progress)
 * Modal with: Torrent info with peers list and speed, download location, total size, file list (work in progress)
 * Create seed/torrent
