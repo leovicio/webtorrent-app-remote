@@ -206,7 +206,6 @@ app.controller('AddTorrentCtrl', ['$scope', '$modalInstance', '$dialogs', '$root
         $scope.torrent = [];
 
         $scope.callback = function(file) {
-            console.log(file);
             var extname = file.name.split('.').pop();
             if (extname === 'torrent') {
                 $scope.save(file.content);
