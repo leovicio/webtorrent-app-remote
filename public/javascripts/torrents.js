@@ -14,6 +14,7 @@ app.controller('WebTorrent', [
 
         $scope.initEvents = function() {
             if ($rootScope.registerEvents) return;
+            
             $rootScope.registerEvents = true;
             //@TODO: Create something to enable debug
             //console.log('Register Events');
@@ -21,7 +22,7 @@ app.controller('WebTorrent', [
             /* Update torrent list */
             webSocket.on('torrents', function(message) {
                 //@TODO: Create something to enable debug
-                //console.log('Got torrent');
+                console.log('Got torrents');
                 //Remove torrent add progress. this is VERY Ugly, I guess.
                 if ($scope.torrent_added) {
                     $rootScope.$broadcast('dialogs.wait.complete');
@@ -32,9 +33,11 @@ app.controller('WebTorrent', [
                     $scope.global = message.data.global;
                 }
                 message = null;
-                $rootScope.torrentInterval = $timeout(function() {
-                    webSocket.emit('torrent:getAll');
-                }, 4000);                
+                if(!$rootScope.torrentInterval){
+                    $rootScope.torrentInterval = $timeout(function() {
+                        webSocket.emit('torrent:getAll');
+                    }, 4000);
+                }
             });
             webSocket.emit('torrent:getAll');
             
