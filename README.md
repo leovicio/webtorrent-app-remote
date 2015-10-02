@@ -12,7 +12,6 @@ This app gives you the hability to downloads files on the remote server by passi
 
 TODO:
 -------------
-* Configure tracker server (enable / disable, port, hostname)
 * Modal with: Torrent info with peers list and speed, download location, total size, file list (work in progress)
 * Create seed/torrent
 * Configure Tracker's when creating torrent
@@ -30,4 +29,5 @@ Known Bugs
 * App stops after some time. (due a webtorrent bug, it uses 100% of CPU / memory)
 
 Layout was based on [openseedbox](https://github.com/erindru/openseedbox/) by [erindru](https://github.com/erindru)
+
 Thanks to [feross](https://github.com/feross) for [webtorrent](https://github.com/feross/webtorrent) project!

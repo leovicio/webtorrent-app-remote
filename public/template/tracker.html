@@ -42,12 +42,12 @@
                 <strong>
                    udp tracker address:
                 </strong>
-                    <span ng-if="tracker_opts.tracker_udp">
-                        udp://{{host_name}}:{{tracker.udp_port}}
-                    </span>
-                    <span ng-if="!tracker_opts.tracker_udp">
-                        disabled
-                    </span>
+                <span ng-if="tracker_opts.tracker_udp">
+                    udp://{{host_name}}:{{tracker.udp_port}}
+                </span>
+                <span ng-if="!tracker_opts.tracker_udp">
+                    disabled
+                </span>
             </div>
         </div>
     </div>
@@ -55,22 +55,30 @@
         <h4>Tracker Options</h4>
         <form ng-submit="saveOptions($event)" class="form-inline">
             <div class="form-group row">
-                <label for="exampleInputName2 span3">Enable Tracker: </label>
+                <label for="span3">Enable Tracker: </label>
                 <input ng-model="tracker_opts.tracker" type="checkbox" class="form-control">
             </div>
             <div class="form-group row">
-                <label for="exampleInputName2 span3">Enable WS Tracker: </label>
+                <label for="span3">Enable WS Tracker: </label>
                 <input ng-model="tracker_opts.tracker_ws" type="checkbox" class="form-control">
             </div>
             <div class="form-group row">
-                <label for="exampleInputName2 span3">Enable HTTP Tracker: </label>
+                <label for="span3">Enable HTTP Tracker: </label>
                 <input ng-model="tracker_opts.tracker_http" type="checkbox" class="form-control">
             </div>
             <div class="form-group row">
-                <label for="exampleInputName2 span3">Enable UDP Tracker: </label>
+                <label for="span3">Enable UDP Tracker: </label>
                 <input ng-model="tracker_opts.tracker_udp" type="checkbox" class="form-control">
             </div>
-            <button type="submit"  class="btn btn-default">Save</button>
+            <div class="form-group row">
+                <label for="span3">Host name: </label>
+                <input ng-model="tracker_opts.host_name" type="text" class="form-control">
+            </div>
+            <div class="form-group row">
+                <label for="span3">Port: </label>
+                <input ng-model="tracker_opts.port" type="text" class="form-control">
+            </div>            
+            <button type="submit" class="btn btn-default">Save</button>
         </form>
     </div>
 </div>

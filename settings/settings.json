@@ -2,5 +2,7 @@
   "tracker": true,
   "tracker_udp": true,
   "tracker_http": true,
-  "tracker_ws": true
+  "tracker_ws": true,
+  "port": 6887,
+  "host_name": "0.0.0.0"
 }

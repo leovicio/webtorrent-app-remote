@@ -16,7 +16,7 @@ app.controller('TrackerServer', ['$scope',
 	    
 	    webSocket.on('tracker:options', function(message) {
 	        $scope.tracker_opts = message.options;
-	    });	    
+	    });
 	    
 	    $scope.setTab = function($event, tab){
             $event.preventDefault();
@@ -29,10 +29,15 @@ app.controller('TrackerServer', ['$scope',
 	        $event.preventDefault();
             $event.stopPropagation();
             $event.stopImmediatePropagation();
-            webSocket.emit('tracker:saveOptions', $scope.tracker_opts, function(result){
-                Notification.alert('Options saved!')
-            });
+            webSocket.emit('tracker:saveOptions', $scope.tracker_opts);
+            webSocket.emit('tracker:getTracker');
             
+            var savedCallBack = function(result){
+                $scope.tracker_opts = result.options;
+                Notification.success('Options saved!');
+                webSocket.removeListener('tracker:optionsSaved', savedCallBack);
+            };
+            webSocket.on('tracker:optionsSaved', savedCallBack);
 	    }
 	
 }]);
