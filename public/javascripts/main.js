@@ -4,7 +4,7 @@ require('bootstrap');
 require('angular-route');
 require('angular-bootstrap');
 require('angular-dialog-service/dialogs.min.js');
-require('angular-file-upload');
+require('angularFileInput/dist/angular-file-input.js');
 require('angular-sanitize');
 require('angular-socket-io');
 require('angular-translate');

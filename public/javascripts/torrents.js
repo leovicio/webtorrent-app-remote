@@ -34,13 +34,12 @@ app.controller('WebTorrent', [
                 message = null;
                 $rootScope.torrentInterval = $timeout(function() {
                     webSocket.emit('torrent:getAll');
-                }, 2500);                
+                }, 4000);                
             });
             webSocket.emit('torrent:getAll');
             
             /* Get server Info*/
             webSocket.on('server:info', function(message){
-                console.log(message);
                 $scope.os_info = message.details.os_info;
                 $rootScope.serverInfoInterval = $timeout(function(){
                     webSocket.emit('server:getInfo');
@@ -71,6 +70,10 @@ app.controller('WebTorrent', [
         /* Add new torrent to download*/
         var dlg;
         $scope.add = function($event, type) {
+            $event.preventDefault();
+            $event.stopPropagation();
+            $event.stopImmediatePropagation();
+            
             if (dlg) return;
             $rootScope.new_torrent_type = type;
             dlg = $dialogs.create('/dialogs/add_torrent.html', 'AddTorrentCtrl', {}, {
@@ -203,7 +206,7 @@ app.controller('AddTorrentCtrl', ['$scope', '$modalInstance', '$dialogs', '$root
         $scope.torrent = [];
 
         $scope.callback = function(file) {
-
+            console.log(file);
             var extname = file.name.split('.').pop();
             if (extname === 'torrent') {
                 $scope.save(file.content);
