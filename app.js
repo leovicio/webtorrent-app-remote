@@ -76,7 +76,6 @@ var torrent_util = require('./lib/torrent_util.js');
 torrent_util.client = client;
 var tracker = require('./lib/tracker.js');
 tracker.check_settings();
-
 require('./lib/socket.js')(io, torrent_util, tracker);
 
 

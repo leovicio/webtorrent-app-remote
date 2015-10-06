@@ -3,7 +3,7 @@ var app = angular.module('webtorrent', [
     'ui.bootstrap',
     'dialogs',
     'pascalprecht.translate',
-    'angularFileUpload',
+    'angularFileInput',
     'ui-notification',
     'ngRoute'
 ]);
@@ -21,7 +21,7 @@ app.run(['$rootScope', '$location', function($rootScope, $location) {
 app.factory('webSocket', function(socketFactory) {
 
     var myIoSocket = io.connect('http://62.75.213.174:3001/', {
-        reconnect: true
+        'force new connection': true
     });
     var mySocket = socketFactory({
         ioSocket: myIoSocket

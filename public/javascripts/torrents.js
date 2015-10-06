@@ -19,10 +19,11 @@ app.controller('WebTorrent', [
             //@TODO: Create something to enable debug
             //console.log('Register Events');
             
+            webSocket.emit('startCrons');
+            
             /* Update torrent list */
             webSocket.on('torrents', function(message) {
                 //@TODO: Create something to enable debug
-                console.log('Got torrents');
                 //Remove torrent add progress. this is VERY Ugly, I guess.
                 if ($scope.torrent_added) {
                     $rootScope.$broadcast('dialogs.wait.complete');
@@ -33,22 +34,12 @@ app.controller('WebTorrent', [
                     $scope.global = message.data.global;
                 }
                 message = null;
-                if(!$rootScope.torrentInterval){
-                    $rootScope.torrentInterval = $timeout(function() {
-                        webSocket.emit('torrent:getAll');
-                    }, 4000);
-                }
             });
-            webSocket.emit('torrent:getAll');
-            
+
             /* Get server Info*/
             webSocket.on('server:info', function(message){
                 $scope.os_info = message.details.os_info;
-                $rootScope.serverInfoInterval = $timeout(function(){
-                    webSocket.emit('server:getInfo');
-                }, 10000);
             });
-            webSocket.emit('server:getInfo');
         };
 
         $scope.$on('socket:connect', function(ev, data) {
@@ -60,6 +51,8 @@ app.controller('WebTorrent', [
         });
 
         $window.onbeforeunload = function(e) {
+            $timeout.cancel($rootScope.serverInfoInterval);
+            webSocket.removeAllListeners();
             webSocket.disconnect();
         };
 
@@ -185,13 +178,15 @@ app.controller('WebTorrent', [
     }
 ]);
 
-app.controller('TorrentInfoCtrl', ['$scope', '$modalInstance', 'dialogs', 'data', 'webSocket', '$rootScope', function($scope, $modalInstance, $dialogs, data, webSocket, $rootScope) {
+app.controller('TorrentInfoCtrl', ['$scope', '$modalInstance', '$dialogs', 'data', 'webSocket', '$rootScope', function($scope, $modalInstance, $dialogs, data, webSocket, $rootScope) {
 
+    $scope.tab = "info";
+    $scope.setTab = function(tab){
+        $scope.tab = tab;
+    };
+    console.log('get info');
     webSocket.emit('torrent:get_info', {
         'infoHash': data.hash
-    }, function(result) {
-        //@TODO: Create something to enable debug
-        //console.log('Getting Torrent Info');
     });
     webSocket.on('torrent:info', function(message) {
         $scope.torrent = message.torrent;
