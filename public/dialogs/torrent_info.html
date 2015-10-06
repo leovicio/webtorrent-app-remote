@@ -8,12 +8,18 @@
 <div class="modal-body">
     <div>
         <ul class="nav nav-tabs" role="tablist">
-            <li role="presentation" class="active"><a href="#info" aria-controls="info" role="tab" data-toggle="tab">Info</a></li>
-            <li role="presentation"><a href="#peers" aria-controls="peers" role="tab" data-toggle="tab">Peers</a></li>
-            <li role="presentation"><a href="#files" aria-controls="files" role="tab" data-toggle="tab">Files</a></li>
+            <li role="presentation" ng-class="{'active': tab == 'info'}">
+                <a aria-controls="info" role="tab"  ng-click="setTab('peers')" data-toggle="tab">Info</a>
+            </li>
+            <li role="presentation" ng-class="{'active': tab == 'peers'}">
+                <a aria-controls="peers" role="tab" ng-click="setTab('peers')" data-toggle="tab">Peers</a>
+            </li>
+            <li role="presentation" ng-class="{'active': tab == 'files'}">
+                <a aria-controls="files" role="tab" ng-click="setTab('files')" data-toggle="tab">Files</a>
+            </li>
         </ul>
         <div class="tab-content">
-            <div role="tabpanel" class="tab-pane active" id="info">
+            <div role="tabpanel" class="tab-pane" ng-class="{'active': tab == 'info'}" id="info">
                 <dl class="dl-horizontal">
                     <dt>Status: </dt>
                     <dd>{{torrent.status | status}}</dd>
@@ -43,23 +49,24 @@
                     <dd>{{torrent.files.length}}</dd>
                 </dl>
             </div>
-            <div role="tabpanel" class="tab-pane" id="peers">
-                   
+            <div role="tabpanel" class="tab-pane" ng-class="{'active': tab == 'peers'}" id="peers">
+                   Total Peers: {{torrent.peers.length}}
+                   {{torrent.peers}}
             </div>
-            <div role="tabpanel" class="tab-pane" id="files">
+            <div role="tabpanel" class="tab-pane" ng-class="{'active': tab == 'files'}" id="files">
                 <table class="table table-striped">
                     <thead>
-                        <th>
-                            <td>File</td>
-                            <td>Size</td>
-                            <td>Path</td>
-                        </th>
+                        <tr>
+                            <th>File</th>
+                            <th>Size</th>
+                            <th>Path</th>
+                        </tr>
                     </thead>
                     <tbody>
                         <tr ng-repeat="file in torrent.files">
                             <td>{{file.name}}</td>
                             <td>{{file.size}}</td>
-                            <td>{{file.path}}</td>
+                            <td>{{torrent.location}}/{{file.path}}</td>
                         </tr>
                     </tbody>
                 </table>

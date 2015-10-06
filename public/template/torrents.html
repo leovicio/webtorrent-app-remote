@@ -30,7 +30,7 @@
             </ul>
         </div>
         <div class="btn-group pull-right">
-            <a class="btn btn-success dropdown-toggle" data-toggle="dropdown" href="#">
+            <a class="btn btn-success dropdown-toggle" data-toggle="dropdown">
                 <i class="icon-plus-sign"></i>Add Torrent
                 <span class="caret"></span>
             </a>
@@ -57,12 +57,12 @@
                         </tr>
                         <tr>
                             <td style="width:85%;">
-                                <progressbar value="torrent.progress">{{torrent.progress}}%</progressbar>
+                                <progress><bar class="bar" value="torrent.progress">{{torrent.progress}}%</bar></progressbar>
                             </td>
                             <td style="width:15%;">
                                 <form action="/" method="post" class="no-margin pull-left">
                                     <div class="btn-group pull-right">
-                                        <a ng-click="torrentInfo(torrent.infoHash)" class="btn btn-mini show-torrent-info" href="#"><i class="icon-info-sign"></i></a>
+                                        <a ng-click="torrentInfo(torrent.infoHash)" class="btn btn-mini show-torrent-info"><i class="icon-info-sign"></i></a>
                                         <button type="submit" class="btn btn-mini" name="what" value="stop"><i class="icon-pause"></i></button>
                                         <button type="submit" class="btn btn-mini" name="what" value="start"><i class="icon-play"></i></button>
                                         <a ng-click="remove(torrent.infoHash)" class="btn btn-mini remove-torrent" href="#"><i class="icon-remove"></i></a>
