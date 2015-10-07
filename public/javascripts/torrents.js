@@ -2,14 +2,13 @@ var _ = require('underscore')
 module.exports = function (app) {
   app.controller('WebTorrent', [
     '$scope',
-    '$http',
     'webSocket',
     '$dialogs',
     'Notification',
     '$rootScope',
     '$window',
     'Notification',
-    function ($scope, $http, webSocket, $dialogs, $timeout, $rootScope, $window, Notification) {
+    function ($scope, webSocket, $dialogs, $rootScope, $window, Notification) {
       $scope.filter = {}
 
       $rootScope.registerEvents = false
@@ -57,8 +56,6 @@ module.exports = function (app) {
       }
 
       $scope.$on('$destroy', function () {
-        $timeout.cancel($rootScope.torrentInterval)
-        $rootScope.torrentInterval = false
         $rootScope.registerEvents = false
         webSocket.removeAllListeners()
       })
