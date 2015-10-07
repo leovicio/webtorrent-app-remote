@@ -42,10 +42,6 @@ module.exports = function (app) {
         })
       }
 
-      $scope.$on('socket:connect', function (ev, data) {
-        Notification.clearAll()
-      })
-
       $scope.$on('socket:error', function (ev, data) {
         Notification.error('Error while connecting to the server')
       })
@@ -68,8 +64,7 @@ module.exports = function (app) {
         $event.stopImmediatePropagation()
 
         if (dlg) return
-        $rootScope.new_torrent_type = type
-        dlg = $dialogs.create('/dialogs/add_torrent.html', 'AddTorrentCtrl', {}, {
+        dlg = $dialogs.create('/dialogs/add_torrent.html', 'AddTorrentCtrl', {new_torrent_type: type}, {
           size: 'lg',
           keyboard: true,
           backdrop: true,
@@ -92,9 +87,11 @@ module.exports = function (app) {
               })
             }
             $scope.torrent_added = true
-            dlg = false
           }
-        }, function () {})
+          dlg = false          
+        }, function () {
+          dlg = false
+        })
       }
 
       $scope.remove = function (torrentHash) {
@@ -196,10 +193,11 @@ module.exports = function (app) {
     }
   ])
 
-  app.controller('AddTorrentCtrl', ['$scope', '$modalInstance', '$dialogs',
-    function ($scope, $modalInstance, $dialogs) {
+  app.controller('AddTorrentCtrl', ['$scope', '$modalInstance', '$dialogs', 'data',
+    function ($scope, $modalInstance, $dialogs, data) {
       $scope.torrent = []
-
+      $scope.new_torrent_type = data.new_torrent_type
+      
       $scope.callback = function (file) {
         var extname = file.name.split('.').pop()
         if (extname === 'torrent') {
