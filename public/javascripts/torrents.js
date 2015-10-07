@@ -52,7 +52,6 @@ module.exports = function (app) {
       })
 
       $window.onbeforeunload = function (e) {
-        $timeout.cancel($rootScope.serverInfoInterval)
         webSocket.removeAllListeners()
         webSocket.disconnect()
       }
