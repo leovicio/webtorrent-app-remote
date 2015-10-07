@@ -175,16 +175,14 @@ module.exports = function (app) {
 
   app.controller('TorrentInfoCtrl', ['$scope',
     '$modalInstance',
-    '$dialogs',
     'data',
     'webSocket',
     '$rootScope',
-    function ($scope, $modalInstance, $dialogs, data, webSocket, $rootScope) {
+    function ($scope, $modalInstance, data, webSocket, $rootScope) {
       $scope.tab = 'info'
       $scope.setTab = function (tab) {
         $scope.tab = tab
       }
-      console.log('get info')
       webSocket.emit('torrent:get_info', {
         'infoHash': data.hash
       })
@@ -198,8 +196,8 @@ module.exports = function (app) {
     }
   ])
 
-  app.controller('AddTorrentCtrl', ['$scope', '$modalInstance', '$dialogs', '$rootScope',
-    function ($scope, $modalInstance, $dialogs, $rootScope) {
+  app.controller('AddTorrentCtrl', ['$scope', '$modalInstance', '$dialogs',
+    function ($scope, $modalInstance, $dialogs) {
       $scope.torrent = []
 
       $scope.callback = function (file) {

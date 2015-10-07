@@ -1,9 +1,8 @@
 module.exports = function (app) {
   app.controller('TrackerServer', ['$scope',
     'webSocket',
-    '$dialogs',
     'Notification',
-    function ($scope, webSocket, $dialogs, Notification) {
+    function ($scope, webSocket, Notification) {
       $scope.tab = 'details'
 
       $scope.host_name = window.location.hostname
