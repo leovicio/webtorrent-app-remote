@@ -5,7 +5,6 @@ require('angular-dialog-service/dialogs.min.js')
 require('angularFileInput/dist/angular-file-input.js')
 require('angular-sanitize/angular-sanitize.min.js')
 require('angular-socket-io/socket.min.js')
-require('angular-translate')
 require('ng-ui-notification/dist/angular-ui-notification.min.js')
 
 var io = require('socket.io-client')
@@ -14,7 +13,6 @@ var app = angular.module('webtorrent', [
   'btford.socket-io',
   'ui.bootstrap',
   'dialogs',
-  // 'pascalprecht.translate',
   'angularFileInput',
   'ui-notification',
   'ngRoute'
