@@ -26,6 +26,7 @@ module.exports = function (app) {
           if (message.data && message.data.torrents) {
             $scope.torrents = message.data.torrents
             $scope.global = message.data.global
+            $scope.safeApply()
           }
           //  Remove torrent add progress. this is VERY Ugly, I guess.
           if ($scope.torrent_added) {

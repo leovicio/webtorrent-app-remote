@@ -50,8 +50,24 @@
                 </dl>
             </div>
             <div role="tabpanel" class="tab-pane" ng-class="{'active': tab == 'peers'}" id="peers">
-                   Total Peers: {{torrent.peers.length}}
-                   {{torrent.peers}}
+                   Total Peers: {{torrent.peers}}
+                   <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>IP</th>
+                            <th>D Speed</th>
+                            <th>U Speed</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="peer in torrent.peers_list">
+                            <td>{{peer.ip}}</td>
+                            <td>{{peer.d_speed}}</td>
+                            <td>{{peer.u_speed}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                   {{}}
             </div>
             <div role="tabpanel" class="tab-pane" ng-class="{'active': tab == 'files'}" id="files">
                 <table class="table table-striped">
