@@ -12,7 +12,6 @@ This app gives you the hability to downloads files on the remote server by passi
 
 TODO:
 -------------
-* Torrent info: List peers (work in progress)
 * Authenticate Socket.io (try to use the same auth from express)
 * Organize all scripts (Use prototype and better function names), also document it.
 * Create seed/torrent
