@@ -27,6 +27,11 @@ module.exports = function (app) {
             $scope.torrents = message.data.torrents
             $scope.global = message.data.global
           }
+          //  Remove torrent add progress. this is VERY Ugly, I guess.
+          if ($scope.torrent_added) {
+            $scope.$root.$broadcast('dialogs.wait.complete')
+            delete $scope.torrent_added
+          }          
           message = null
         })
 
@@ -67,7 +72,7 @@ module.exports = function (app) {
           //  torrentInfo can be a magnet, .torrent file buffer and my other options that webtorrent accepts
         dlg.result.then(function (torrentInfo) {
           if (torrentInfo) {
-            Notification.info('Adding Torrent ...');
+            $dialogs.wait('Adding torrent')
               //  Check if is magnets or a single file
             if (torrentInfo instanceof Array) {
               _(torrentInfo).forEach(function (v, k) {
@@ -187,8 +192,8 @@ module.exports = function (app) {
     }
   ])
 
-  app.controller('AddTorrentCtrl', ['$scope', '$modalInstance', '$dialogs', 'data',
-    function ($scope, $modalInstance, $dialogs, data) {
+  app.controller('AddTorrentCtrl', ['$scope', '$modalInstance', '$dialogs', 'data', '$rootScope',
+    function ($scope, $modalInstance, $dialogs, data, $rootScope) {
       $scope.torrent = []
       $scope.new_torrent_type = data.new_torrent_type
       
