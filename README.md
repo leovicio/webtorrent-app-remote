@@ -12,13 +12,12 @@ This app gives you the hability to downloads files on the remote server by passi
 
 TODO:
 -------------
-* Since bundle is too large, it's good have a preloader or something like (keep until socket gets connected)
-* Modal with: Torrent info with peers list and speed, download location, total size, file list (work in progress)
+* Static resources and files are too large. Add a preload in app, and also, try to reduce that.
+* Torrent info: List peers (work in progress)
 * Authenticate Socket.io (try to use the same auth from express)
-* Document All project
+* Organize all scripts (Use prototype and better function names), also document it.
 * Create seed/torrent
-* Add torrent: Allow url with .torrent
-* Organize whole lib/ scripts (Use prototype and better function names)
+* Add torrent: Allow url with .torrent (fetch url from web and add it's buffer)
 * Configure Tracker's when creating torrent
 * Make it a npm package js with command line options. (options: user/password, server, port, maxpeers, etcs)
 * Update readme with screenshots, better description, documentation
@@ -32,7 +31,6 @@ TODO:
 
 Known Bugs
 -------------
-* App stops after some time. (due a webtorrent bug, it uses 100% of CPU / memory)
 
 Layout was based on [openseedbox](https://github.com/erindru/openseedbox/) by [erindru](https://github.com/erindru)
 
