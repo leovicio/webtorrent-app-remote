@@ -12,6 +12,7 @@ This app gives you the hability to downloads files on the remote server by passi
 
 TODO:
 -------------
+* Since bundle is too large, it's good have a preloader or something like (keep until socket gets connected)
 * Modal with: Torrent info with peers list and speed, download location, total size, file list (work in progress)
 * Authenticate Socket.io (try to use the same auth from express)
 * Document All project

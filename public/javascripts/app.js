@@ -1,10 +1,10 @@
 var angular = require('angular')
-require('angular-route')
-require('angular-bootstrap')
+require('angular-route/angular-route.min.js')
+require('angular-bootstrap/ui-bootstrap-tpls.min.js')
 require('angular-dialog-service/dialogs.min.js')
 require('angularFileInput/dist/angular-file-input.js')
-require('angular-sanitize')
-require('angular-socket-io')
+require('angular-sanitize/angular-sanitize.min.js')
+require('angular-socket-io/socket.min.js')
 require('angular-translate')
 require('ng-ui-notification/dist/angular-ui-notification.min.js')
 
@@ -14,7 +14,7 @@ var app = angular.module('webtorrent', [
   'btford.socket-io',
   'ui.bootstrap',
   'dialogs',
-  'pascalprecht.translate',
+  //'pascalprecht.translate',
   'angularFileInput',
   'ui-notification',
   'ngRoute'

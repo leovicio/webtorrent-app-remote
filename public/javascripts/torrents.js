@@ -23,12 +23,6 @@ module.exports = function (app) {
         webSocket.emit('startCrons')
           /* Update torrent list */
         webSocket.on('torrents', function (message) {
-          //  @TODO: Create something to enable debug
-          //  Remove torrent add progress. this is VERY Ugly, I guess.
-          if ($scope.torrent_added) {
-            $rootScope.$broadcast('dialogs.wait.complete')
-            delete $scope.torrent_added
-          }
           if (message.data && message.data.torrents) {
             $scope.torrents = message.data.torrents
             $scope.global = message.data.global
@@ -73,7 +67,7 @@ module.exports = function (app) {
           //  torrentInfo can be a magnet, .torrent file buffer and my other options that webtorrent accepts
         dlg.result.then(function (torrentInfo) {
           if (torrentInfo) {
-            $dialogs.wait('Adding torrent')
+            Notification.info('Adding Torrent ...');
               //  Check if is magnets or a single file
             if (torrentInfo instanceof Array) {
               _(torrentInfo).forEach(function (v, k) {
