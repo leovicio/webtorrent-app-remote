@@ -32,7 +32,7 @@ module.exports = function (app) {
           if ($scope.torrent_added) {
             $scope.$root.$broadcast('dialogs.wait.complete')
             delete $scope.torrent_added
-          }          
+          }
           message = null
         })
 
@@ -88,7 +88,7 @@ module.exports = function (app) {
             }
             $scope.torrent_added = true
           }
-          dlg = false          
+          dlg = false
         }, function () {
           dlg = false
         })
@@ -197,7 +197,7 @@ module.exports = function (app) {
     function ($scope, $modalInstance, $dialogs, data, $rootScope) {
       $scope.torrent = []
       $scope.new_torrent_type = data.new_torrent_type
-      
+
       $scope.callback = function (file) {
         var extname = file.name.split('.').pop()
         if (extname === 'torrent') {

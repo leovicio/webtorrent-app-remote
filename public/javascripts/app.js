@@ -14,7 +14,7 @@ var app = angular.module('webtorrent', [
   'btford.socket-io',
   'ui.bootstrap',
   'dialogs',
-  //'pascalprecht.translate',
+  // 'pascalprecht.translate',
   'angularFileInput',
   'ui-notification',
   'ngRoute'
