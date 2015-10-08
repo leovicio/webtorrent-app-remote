@@ -24,15 +24,17 @@ module.exports = function (app) {
           /* Update torrent list */
         webSocket.on('torrents', function (message) {
           if (message.data && message.data.torrents) {
-            $scope.torrents = message.data.torrents
-            $scope.global = message.data.global
-            $scope.safeApply()
+            $scope.safeApply(function(){
+              $scope.torrents = message.data.torrents
+              $scope.global = message.data.global
+              //  Remove torrent add progress. this is VERY Ugly, I guess.
+              if ($scope.torrent_added) {
+                $scope.$root.$broadcast('dialogs.wait.complete')
+                delete $scope.torrent_added
+              }
+            })
           }
-          //  Remove torrent add progress. this is VERY Ugly, I guess.
-          if ($scope.torrent_added) {
-            $scope.$root.$broadcast('dialogs.wait.complete')
-            delete $scope.torrent_added
-          }
+
           message = null
         })
 
