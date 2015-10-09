@@ -5,18 +5,29 @@ module.exports = function (app) {
     function ($scope, webSocket, Notification) {
       $scope.tab = 'details'
 
-      $scope.host_name = window.location.hostname
+      /**
+      * Ask for socket: Tracker options and tracker info 
+      */
       webSocket.emit('tracker:getOptions')
       webSocket.emit('tracker:getTracker')
 
+      /**
+      * Called when tracker send details
+      */
       webSocket.on('tracker:details', function (message) {
         $scope.tracker = message.details
       })
 
+      /**
+      * Called when tracker send options
+      */
       webSocket.on('tracker:options', function (message) {
         $scope.tracker_opts = message.options
       })
 
+      /**
+      * Set active tab (settings or tracker info)
+      */
       $scope.setTab = function ($event, tab) {
         $event.preventDefault()
         $event.stopPropagation()
@@ -24,6 +35,9 @@ module.exports = function (app) {
         $scope.tab = tab
       }
 
+      /**
+      * Save tracker options
+      */
       $scope.saveOptions = function ($event) {
         $event.preventDefault()
         $event.stopPropagation()

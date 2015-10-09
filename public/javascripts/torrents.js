@@ -244,6 +244,9 @@ module.exports = function (app) {
     }
   ])
 
+  /**
+  * Controller for torrent info
+  */
   app.controller('TorrentInfoCtrl', ['$scope',
     '$modalInstance',
     'data',
@@ -277,6 +280,9 @@ module.exports = function (app) {
     }
   ])
 
+  /**
+  * Controller for add torrent modal
+  */
   app.controller('AddTorrentCtrl', ['$scope', '$modalInstance', '$dialogs', 'data',
     function ($scope, $modalInstance, $dialogs, data) {
       $scope.torrent = []
