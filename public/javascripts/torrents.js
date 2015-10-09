@@ -4,7 +4,6 @@ module.exports = function (app) {
     '$scope',
     'webSocket',
     '$dialogs',
-    'Notification',
     '$window',
     'Notification',
     function ($scope, webSocket, $dialogs, $window, Notification) {
