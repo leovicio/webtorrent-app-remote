@@ -12,7 +12,6 @@ This app gives you the hability to downloads files on the remote server by passi
 
 TODO:
 -------------
-* Add torrent: Allow url with .torrent (fetch url from web and add it's buffer)
 * Create seed/torrent
 * Configure Tracker's when creating torrent
 * API using express and API using websocket (with auth)
