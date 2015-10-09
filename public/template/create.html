@@ -1,0 +1,76 @@
+<div class="row">
+  <div class="span2">
+    <ul id="torrent-groups" class="nav nav-pills nav-stacked nav-list">
+      <li ng-class="{'active': !filter.status}">
+        <a ng-click="setFilterstatus($event, 0)" href="/#torrents/">
+          <i class="icon-minus pull-right hide remove-group" rel="tooltip" title="All"></i> All
+        </a>
+      </li>
+      <li ng-class="{'active': filter.status == 1}">
+        <a ng-click="setFilterstatus($event, 1)" href="#">
+          <i class="icon-minus pull-right hide remove-group" rel="tooltip" title="Uploading"></i> Uploading
+        </a>
+
+      </li>
+      <li ng-class="{'active': filter.status == 2}">
+        <a ng-click="setFilterstatus($event, 2)" href="#">
+          <i class="icon-minus pull-right hide remove-group" rel="tooltip" title="Uploaded"></i> Uploaded
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="span10">
+    <input id="select-all" type="checkbox" style="margin-right: 25px; margin-left: 10px; margin-top: 8px;" class="pull-left" />
+    <div class="btn-group pull-left">
+      <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">With Selected <span class="caret"></span></a>
+      <ul id="with-selected-dropdown" class="dropdown-menu">
+        <li><a href="#" data-what="start">Start</a></li>
+        <li><a href="#" data-what="stop">Pause</a></li>
+        <li><a href="#" data-what="remove">Remove</a></li>
+      </ul>
+    </div>
+    <div class="btn-group pull-right">
+      <a class="btn btn-success dropdown-toggle" data-toggle="dropdown" ng-click="create()">
+        <i class="icon-plus-sign"></i> Create Torrent
+      </a>
+    </div>
+    <div style="clear:both; height: 5px; width: 100%"></div>
+    <p ng-if="!torrents.length" style="margin-top: 10px;">No torrents are uploading or were uploaded.</p>
+
+    <table class="table table-condensed table-hover">
+      <tr class="torrent-row unselectable" style="width:100%;" ng-repeat="torrent in torrents | filter: filter">
+        <td>
+          <table class="no-table torrent-info" style="width:100%;">
+            <tr>
+              <td colspan="4">
+                <h5 class="torrent-title pull-left">
+        							{{::torrent.name}}
+        							<small>- Downloaded: {{::torrent.downloaded}} / Uploaded: {{::torrent.uploaded}} | Time Remaning: {{::torrent.estimate}}</small>
+        						</h5>
+                <div class="clearfix"></div>
+                <small class="text-error" ng-if="torrent.error"></small>
+              </td>
+            </tr>
+            <tr>
+              <td style="width:85%;">
+                <progress>
+                  <bar class="bar" value="torrent.progress">{{torrent.progress}}%</bar>
+                  </progressbar>
+              </td>
+              <td style="width:15%;">
+                <form action="/" method="post" class="no-margin pull-left">
+                  <div class="btn-group pull-right">
+                    <a ng-click="torrentInfo(torrent.infoHash)" class="btn btn-mini show-torrent-info"><i class="icon-info-sign"></i></a>
+                    <button type="submit" class="btn btn-mini" name="what" value="stop"><i class="icon-pause"></i></button>
+                    <button type="submit" class="btn btn-mini" name="what" value="start"><i class="icon-play"></i></button>
+                    <a ng-click="remove(torrent.infoHash)" class="btn btn-mini remove-torrent" href="#"><i class="icon-remove"></i></a>
+                  </div>
+                </form>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>

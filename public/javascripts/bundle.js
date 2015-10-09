@@ -49356,9 +49356,7 @@ require('angular-dialog-service/dialogs.min.js')
 require('angularFileInput/dist/angular-file-input.js')
 require('angular-sanitize/angular-sanitize.min.js')
 require('angular-socket-io/socket.min.js')
-//require('angular-translate')
 require('ng-ui-notification/dist/angular-ui-notification.min.js')
-
 var io = require('socket.io-client')
 
 var app = angular.module('webtorrent', [
@@ -49373,9 +49371,8 @@ var app = angular.module('webtorrent', [
 app.run(['$rootScope', '$location', function ($rootScope, $location) {
   $rootScope.$on('$routeChangeSuccess', function (e, current, pre) {
     $rootScope.current_tab = $location.path()
-    // Get all URL parameter
   })
-}]) // end run / dialogs.main
+}])
 
 app.factory('webSocket', function (socketFactory) {
   var myIoSocket = io.connect('http://62.75.213.174:3001/', {
@@ -49386,6 +49383,8 @@ app.factory('webSocket', function (socketFactory) {
   })
   mySocket.forward('error')
   mySocket.forward('connect')
+  mySocket.emit('startCrons')
+
   return mySocket
 })
 
@@ -49400,133 +49399,206 @@ app.filter('status', function () {
   }
 })
 
+app.config(['$routeProvider', function ($routeProvider) {
+  $routeProvider.when('/torrents', {
+    templateUrl: '/template/torrents.html',
+    controller: 'WebTorrent'
+  }).when('/tracker', {
+    templateUrl: '/template/tracker.html',
+    controller: 'TrackerServer'
+  }).when('/create', {
+    templateUrl: '/template/create.html',
+    controller: 'CreateTorrent'
+  }).otherwise({
+    redirectTo: '/torrents'
+  })
+}])
+
 module.exports = app
 
 },{"angular":7,"angular-bootstrap/ui-bootstrap-tpls.min.js":1,"angular-dialog-service/dialogs.min.js":2,"angular-route/angular-route.min.js":3,"angular-sanitize/angular-sanitize.min.js":4,"angular-socket-io/socket.min.js":5,"angularFileInput/dist/angular-file-input.js":8,"ng-ui-notification/dist/angular-ui-notification.min.js":24,"socket.io-client":25}],76:[function(require,module,exports){
+var _ = require('underscore')
 module.exports = function (app) {
-  app.config(['$routeProvider',
-    function ($routeProvider) {
-      $routeProvider.when('/torrents', {
-        templateUrl: '/template/torrents.html',
-        controller: 'WebTorrent'
-      }).when('/tracker', {
-        templateUrl: '/template/tracker.html',
-        controller: 'TrackerServer'
-      }).otherwise({
-        redirectTo: '/torrents'
-      })
+  app.controller('CreateTorrent', [
+    '$scope',
+    'webSocket',
+    '$dialogs',
+    '$window',
+    'Notification',
+    function ($scope, webSocket, $dialogs, $window, Notification) {
+      $scope.files = []
+      
+      $scope.callback = function (file) {
+        $scope.files.push(file)
+      }
+
+      var dlg = false      
+      $scope.create = function () {
+        if (dlg) return
+        dlg = $dialogs.create('/dialogs/create_torrent.html', 'CreateTorrent')
+          .result.then(function () {
+            // client.seed logic here
+            dlg = false
+          }, function () {
+            dlg = false
+          })
+      }
+      
+      $scope.remove = function (file) {
+        var index = $scope.files.indexOf(file);
+        $scope.files.splice(index, 1);
+      }
+
+      $window.onbeforeunload = function (e) {
+        window.confirm('You\'re still uploading the file, are you sure you\'re gonna leave?')
+      }
+      
     }])
 }
-
-},{}],77:[function(require,module,exports){
+},{"underscore":73}],77:[function(require,module,exports){
 require('jquery-browserify')
 require('bootstrap')
 
 var app = require('./app.js')
-require('./config.js')(app)
 require('./torrents.js')(app)
 require('./tracker.js')(app)
+require('./create.js')(app)
 
 require('./app.css')
 
-},{"./app.css":74,"./app.js":75,"./config.js":76,"./torrents.js":78,"./tracker.js":79,"bootstrap":9,"jquery-browserify":23}],78:[function(require,module,exports){
+},{"./app.css":74,"./app.js":75,"./create.js":76,"./torrents.js":78,"./tracker.js":79,"bootstrap":9,"jquery-browserify":23}],78:[function(require,module,exports){
 var _ = require('underscore')
 module.exports = function (app) {
   app.controller('WebTorrent', [
     '$scope',
     'webSocket',
     '$dialogs',
-    'Notification',
-    '$rootScope',
     '$window',
     'Notification',
-    function ($scope, webSocket, $dialogs, $rootScope, $window, Notification) {
+    function ($scope, webSocket, $dialogs, $window, Notification) {
       $scope.filter = {}
 
-      $rootScope.registerEvents = false
+      // @TODO: Should I move this to a specific service / factory?
+      function Torrent () {}
 
-      $scope.initEvents = function () {
-        if ($rootScope.registerEvents) return
-
-        $rootScope.registerEvents = true
-          //  @TODO: Create something to enable debug
-          //  console.log('Register Events')
-
-        webSocket.emit('startCrons')
-          /* Update torrent list */
-        webSocket.on('torrents', function (message) {
-          if (message.data && message.data.torrents) {
-            $scope.torrents = message.data.torrents
-            $scope.global = message.data.global
-            $scope.safeApply()
-          }
-          //  Remove torrent add progress. this is VERY Ugly, I guess.
-          if ($scope.torrent_added) {
-            $scope.$root.$broadcast('dialogs.wait.complete')
-            delete $scope.torrent_added
-          }
-          message = null
+      Torrent.prototype._dialogDefaults = {
+        size: 'lg',
+        keyboard: true,
+        backdrop: true,
+        windowClass: 'my-class'
+      }
+      /**
+      * Called when socket send torrent array list
+      *
+      * @message: message from socket
+      */
+      Torrent.prototype._onTorrent = function (message) {
+        if (!message.data || !message.data.torrents) {
+          return
+        }
+        $scope.safeApply(function () {
+          $scope.torrents = message.data.torrents
+          $scope.global = message.data.global
         })
-
-        /* Get server Info*/
-        webSocket.on('server:info', function (message) {
-          $scope.os_info = message.details.os_info
-        })
+        message = null
       }
 
-      $scope.$on('socket:error', function (ev, data) {
-        Notification.error('Error while connecting to the server')
-      })
-
-      $window.onbeforeunload = function (e) {
-        webSocket.removeAllListeners()
-        webSocket.disconnect()
+      /**
+      * Called after torrent is added
+      */
+      Torrent.prototype._onTorrentAdded = function () {
+        if ($scope.torrent_added) {
+          $scope.$root.$broadcast('dialogs.wait.complete')
+          delete $scope.torrent_added
+        }
       }
 
-      $scope.$on('$destroy', function () {
-        $rootScope.registerEvents = false
-        webSocket.removeAllListeners()
-      })
+      /**
+      * Called when socket sends server info (memory usage )
+      *
+      * @message: Message from Socket
+      */
+      Torrent.prototype._onServerInfo = function (message) {
+        $scope.os_info = message.details.os_info
+      }
 
-      /* Add new torrent to download*/
-      var dlg
-      $scope.add = function ($event, type) {
-        $event.preventDefault()
-        $event.stopPropagation()
-        $event.stopImmediatePropagation()
+      /**
+      * Called after torrent is removed
+      */
+      Torrent.prototype._onTorretRemoved = function () {
+        $dialogs.notify('Torrent Removed')
+        $scope.$root.$broadcast('dialogs.wait.complete')
+      }
 
-        if (dlg) return
-        dlg = $dialogs.create('/dialogs/add_torrent.html', 'AddTorrentCtrl', {new_torrent_type: type}, {
-          size: 'lg',
-          keyboard: true,
-          backdrop: true,
-          windowClass: 'my-class'
-        })
-          //  torrentInfo can be a magnet, .torrent file buffer and my other options that webtorrent accepts
-        dlg.result.then(function (torrentInfo) {
-          if (torrentInfo) {
-            $dialogs.wait('Adding torrent')
-              //  Check if is magnets or a single file
-            if (torrentInfo instanceof Array) {
-              _(torrentInfo).forEach(function (v, k) {
-                webSocket.emit('torrent:download', {
-                  torrent: v
-                })
-              })
-            } else {
+      /**
+      * Called after All torrents are removed
+      */
+      Torrent.prototype._onTorretAllRemoved = function () {
+        $dialogs.notify('Torrents Removed')
+        $scope.$root.$broadcast('dialogs.wait.complete')
+      }
+
+      /**
+      * Shows Add Torrent Dialog
+      */
+      Torrent.prototype._addTorrentDialog = function (type) {
+        if (torrent.dlg) return
+        torrent.dlg = $dialogs.create('/dialogs/add_torrent.html',
+          'AddTorrentCtrl',
+          {
+            new_torrent_type: type
+          },
+          torrent._dialogDefaults)
+        .result.then(torrent._addTorrentCallbackSuccess, torrent._addTorrentCallbackError)
+      }
+
+      /**
+      * Called when user closes add torrent callback with success
+      *
+      * @torrentInfo: Can be multple or one magnet uri, or a file buffer
+      */
+      Torrent.prototype._addTorrentCallbackSuccess = function (torrentInfo) {
+        if (torrentInfo) {
+          $dialogs.wait('Adding torrent')
+          //  Check if is magnets or a single file
+          if (torrentInfo instanceof Array) {
+            _(torrentInfo).forEach(function (v, k) {
               webSocket.emit('torrent:download', {
-                torrent: torrentInfo
+                torrent: v
               })
-            }
-            $scope.torrent_added = true
+            })
+          } else {
+            webSocket.emit('torrent:download', {
+              torrent: torrentInfo
+            })
           }
-          dlg = false
-        }, function () {
-          dlg = false
-        })
+          $scope.torrent_added = true
+        }
+        torrent.dlg = false
       }
 
-      $scope.remove = function (torrentHash) {
+      /**
+      * Called when user closes add torrent callback with error
+      */
+      Torrent.prototype._addTorrentCallbackError = function () {
+        $dialogs.error('Not a valid torrent')
+        torrent.dlg = false
+      }
+
+      /**
+      * Called when user closes add torrent callback with error
+      */
+      Torrent.prototype._addTorrentCallbackError = function () {
+        $dialogs.error('Not a valid torrent')
+        torrent.dlg = false
+      }
+
+      /**
+      * Called when user closes clicks on remove button in torrent
+      *
+      * @torrentHash: torrent info hash to remove
+      */
+      Torrent.prototype._RemoveTorrentDialog = function (torrentHash) {
         if (!torrentHash) {
           $dialogs.error('Please select a torrent from the list')
           return false
@@ -49536,32 +49608,67 @@ module.exports = function (app) {
           $dialogs.wait('Removing torrent')
           webSocket.emit('torrent:remove', {
             infoHash: torrentHash
-          }, function (result) {
-
           })
-          webSocket.on('torrent:removed', function (message) {
-            $dialogs.notify('Torrent Removed')
-            $rootScope.$broadcast('dialogs.wait.complete')
-          })
-        }, function (btn) {
-
         })
       }
 
-      $scope.removeAll = function () {
+      /**
+      * Called when user closes clicks on remove All torrents button
+      */
+      Torrent.prototype._RemoveAllTorrentDialog = function () {
         // @Todo: Fancy UI confirm dialog
         if (window.confirm('Remove All Torrents?')) {
           $dialogs.wait('Removing torrent')
-          webSocket.emit('torrent:remove_all', {}, function (result) {
-            //  @TODO: Create something to enable debug
-            //  console.log('Waiting torrent to remove')
-          })
-          webSocket.on('torrent:removed_all', function (message) {
-            $dialogs.notify('Torrents Removed')
-            $rootScope.$broadcast('dialogs.wait.complete')
-          })
+          webSocket.emit('torrent:remove_all', {})
         }
       }
+
+      /**
+      * Called when user closes clicks on remove All torrents button
+      */
+      Torrent.prototype._RemoveAllTorrentDialog = function () {
+        // @Todo: Fancy UI confirm dialog
+        if (window.confirm('Remove All Torrents?')) {
+          $dialogs.wait('Removing torrent')
+          webSocket.emit('torrent:remove_all', {})
+        }
+      }
+
+      /**
+      * Calls torrent Info dialog
+      */
+      Torrent.prototype._TorrentInfoDialog = function (torrentInfoHash) {
+        $dialogs.create('/dialogs/torrent_info.html', 'TorrentInfoCtrl', {
+          hash: torrentInfoHash
+        }, torrent._dialogDefaults)
+      }
+
+      var torrent = new Torrent()
+
+      webSocket.on('torrents', torrent._onTorrent)
+
+      webSocket.on('torrent:added', torrent._onTorrentAdded)
+
+      webSocket.on('server:info', torrent._onServerInfo)
+
+      webSocket.on('torrent:removed', torrent._onTorretRemoved)
+
+      webSocket.on('torrent:removed_all', torrent._onTorretAllRemoved)
+
+      /* Add new torrent to download*/
+      $scope.add = function ($event, type) {
+        $event.preventDefault()
+        $event.stopPropagation()
+        $event.stopImmediatePropagation()
+
+        torrent._addTorrentDialog(type)
+      }
+
+      $scope.remove = torrent._RemoveTorrentDialog
+
+      $scope.removeAll = torrent._RemoveAllTorrentDialog
+
+      $scope.torrentInfo = torrent._TorrentInfoDialog
 
       $scope.safeApply = function (fn) {
         var phase = this.$root.$$phase
@@ -49589,47 +49696,69 @@ module.exports = function (app) {
         $scope.filter.status = status
       }
 
-      $scope.torrentInfo = function (torrentInfoHash) {
-        $dialogs.create('/dialogs/torrent_info.html', 'TorrentInfoCtrl', {
-          hash: torrentInfoHash
-        }, {
-          size: 'lg',
-          keyboard: true,
-          backdrop: false,
-          windowClass: 'my-class'
-        })
+      $scope.$on('socket:error', function (ev, data) {
+        Notification.error('Error while connecting to the server')
+      })
+
+      $window.onbeforeunload = function (e) {
+        webSocket.removeAllListeners()
+        webSocket.disconnect()
       }
+
+      $scope.$on('$destroy', function () {
+        webSocket.removeAllListeners()
+      })
     }
   ])
 
+  /**
+  * Controller for torrent info
+  */
   app.controller('TorrentInfoCtrl', ['$scope',
     '$modalInstance',
     'data',
     'webSocket',
-    '$rootScope',
-    function ($scope, $modalInstance, data, webSocket, $rootScope) {
+    function ($scope, $modalInstance, data, webSocket) {
       $scope.tab = 'info'
       $scope.setTab = function (tab) {
         $scope.tab = tab
       }
+
+      /**
+      * Ask socket for torrent info
+      */
       webSocket.emit('torrent:get_info', {
         'infoHash': data.hash
       })
+
+      /**
+      * Called when socket send torrent info
+      */
       webSocket.on('torrent:info', function (message) {
+        console.log(message)
         $scope.torrent = message.torrent
       })
 
+      /**
+      * Close torrent info
+      */
       $scope.cancel = function () {
         $modalInstance.dismiss('Canceled')
-      } //   end cancel
+      }
     }
   ])
 
-  app.controller('AddTorrentCtrl', ['$scope', '$modalInstance', '$dialogs', 'data', '$rootScope',
-    function ($scope, $modalInstance, $dialogs, data, $rootScope) {
+  /**
+  * Controller for add torrent modal
+  */
+  app.controller('AddTorrentCtrl', ['$scope', '$modalInstance', '$dialogs', 'data',
+    function ($scope, $modalInstance, $dialogs, data) {
       $scope.torrent = []
       $scope.new_torrent_type = data.new_torrent_type
 
+      /**
+      * Called after user upload something
+      */
       $scope.callback = function (file) {
         var extname = file.name.split('.').pop()
         if (extname === 'torrent') {
@@ -49639,10 +49768,16 @@ module.exports = function (app) {
         }
       }
 
+      /**
+      * Called when user hits cancel button in modal
+      */
       $scope.cancel = function () {
         $modalInstance.dismiss('Canceled')
       } // end cancel
 
+      /**
+      * Called when use hits save button or after uploads a valid file
+      */
       $scope.save = function (file) {
         if ($scope.torrent.torrentMagnet) {
           var $valid = false
@@ -49651,16 +49786,19 @@ module.exports = function (app) {
             if (v.match('magnet:?')) {
               $valid = true
             }
+            if (v.match('.torrent') && v.match(/http(s)/i)) {
+              $valid = true
+            }
           })
           if ($valid) {
             $modalInstance.close(magnets)
           } else {
-            $dialogs.error('Error', 'Not a valid magnet uri')
+            $dialogs.error('Error', 'Not a valid magnet uri / or url file')
           }
         } else if (file) {
           $modalInstance.close(file)
         }
-      } // end save
+      }
     }
   ])
 }
@@ -49673,18 +49811,29 @@ module.exports = function (app) {
     function ($scope, webSocket, Notification) {
       $scope.tab = 'details'
 
-      $scope.host_name = window.location.hostname
+      /**
+      * Ask for socket: Tracker options and tracker info
+      */
       webSocket.emit('tracker:getOptions')
       webSocket.emit('tracker:getTracker')
 
+      /**
+      * Called when tracker send details
+      */
       webSocket.on('tracker:details', function (message) {
         $scope.tracker = message.details
       })
 
+      /**
+      * Called when tracker send options
+      */
       webSocket.on('tracker:options', function (message) {
         $scope.tracker_opts = message.options
       })
 
+      /**
+      * Set active tab (settings or tracker info)
+      */
       $scope.setTab = function ($event, tab) {
         $event.preventDefault()
         $event.stopPropagation()
@@ -49692,6 +49841,9 @@ module.exports = function (app) {
         $scope.tab = tab
       }
 
+      /**
+      * Save tracker options
+      */
       $scope.saveOptions = function ($event) {
         $event.preventDefault()
         $event.stopPropagation()

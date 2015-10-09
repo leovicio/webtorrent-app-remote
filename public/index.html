@@ -2,6 +2,7 @@
 
 <head>
   <title>Webtorrent Remote Managment</title>
+  <script async src="/javascripts/webtorrent.min.js"></script>
   <script async src="/javascripts/bundle.js"></script>
   <link async href="/stylesheets/bootstrap.min.css" rel="stylesheet" type="text/css" />
   <link async href="/stylesheets/style.css" rel="stylesheet" type="text/css" />
@@ -20,6 +21,7 @@
           <ul class="nav">
 							<li ng-class="{'active': current_tab == '/torrents'}"><a href="#/torrents">Torrrents</a></li>
 							<li ng-class="{'active': current_tab == '/tracker'}"><a href="#/tracker">Tracker</a></li>
+							<li ng-class="{'active': current_tab == '/create'}"><a href="#/create">Create Torrent</a></li>
 					</ul>					
         <ul class="nav pull-right">
           <li><a href="/">Logout</a></li>

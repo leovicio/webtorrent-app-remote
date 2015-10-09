@@ -174,7 +174,7 @@ module.exports = function (app) {
         }, torrent._dialogDefaults)
       }
 
-      var torrent = Torrent()
+      var torrent = new Torrent()
 
       webSocket.on('torrents', torrent._onTorrent)
 

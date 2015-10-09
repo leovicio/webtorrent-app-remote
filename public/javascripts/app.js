@@ -55,6 +55,9 @@ app.config(['$routeProvider', function ($routeProvider) {
   }).when('/tracker', {
     templateUrl: '/template/tracker.html',
     controller: 'TrackerServer'
+  }).when('/create', {
+    templateUrl: '/template/create.html',
+    controller: 'CreateTorrent'
   }).otherwise({
     redirectTo: '/torrents'
   })

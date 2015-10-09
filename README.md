@@ -14,12 +14,13 @@ TODO:
 -------------
 * Create seed/torrent
 * Configure Tracker's when creating torrent
-* API using express and API using websocket (with auth)
-* Update readme with screenshots, better description, documentation
+* Display each torrent upload/download speed
 * Make it a npm package js with command line options. (options: user/password, server, port, maxpeers, etcs)
+* API using express and API using websocket (with auth)
+* Check if browser suports webrtc (for create torrents and also allow socket.io communicaton)
+* Update readme with screenshots, better description, documentation
 * Pause / Resume Torrent (needs webtorrent implementation)
 * Pause All Torrents / Resume All Torrents (needs webtorrent implementation)
-* Authenticate Socket.io
 * Create a DEBUG system (to console.log())
 * Create a desktop version with nw.js
 * Create a browser version (maybe a chrome extension?)
