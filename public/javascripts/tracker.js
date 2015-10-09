@@ -6,7 +6,7 @@ module.exports = function (app) {
       $scope.tab = 'details'
 
       /**
-      * Ask for socket: Tracker options and tracker info 
+      * Ask for socket: Tracker options and tracker info
       */
       webSocket.emit('tracker:getOptions')
       webSocket.emit('tracker:getTracker')

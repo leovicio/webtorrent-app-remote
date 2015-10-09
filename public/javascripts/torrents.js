@@ -21,14 +21,14 @@ module.exports = function (app) {
       }
       /**
       * Called when socket send torrent array list
-      * 
+      *
       * @message: message from socket
       */
       Torrent.prototype._onTorrent = function (message) {
         if (!message.data || !message.data.torrents) {
           return
         }
-        $scope.safeApply(function(){
+        $scope.safeApply(function () {
           $scope.torrents = message.data.torrents
           $scope.global = message.data.global
         })
@@ -37,7 +37,7 @@ module.exports = function (app) {
 
       /**
       * Called after torrent is added
-      */      
+      */
       Torrent.prototype._onTorrentAdded = function () {
         if ($scope.torrent_added) {
           $scope.$root.$broadcast('dialogs.wait.complete')
@@ -47,16 +47,16 @@ module.exports = function (app) {
 
       /**
       * Called when socket sends server info (memory usage )
-      * 
+      *
       * @message: Message from Socket
-      */      
+      */
       Torrent.prototype._onServerInfo = function (message) {
         $scope.os_info = message.details.os_info
       }
 
       /**
       * Called after torrent is removed
-      */      
+      */
       Torrent.prototype._onTorretRemoved = function () {
         $dialogs.notify('Torrent Removed')
         $scope.$root.$broadcast('dialogs.wait.complete')
@@ -64,19 +64,18 @@ module.exports = function (app) {
 
       /**
       * Called after All torrents are removed
-      */      
+      */
       Torrent.prototype._onTorretAllRemoved = function () {
         $dialogs.notify('Torrents Removed')
         $scope.$root.$broadcast('dialogs.wait.complete')
       }
-      
 
       /**
       * Shows Add Torrent Dialog
       */
       Torrent.prototype._addTorrentDialog = function (type) {
         if (torrent.dlg) return
-        torrent.dlg = $dialogs.create('/dialogs/add_torrent.html', 
+        torrent.dlg = $dialogs.create('/dialogs/add_torrent.html',
           'AddTorrentCtrl',
           {
             new_torrent_type: type
@@ -87,7 +86,7 @@ module.exports = function (app) {
 
       /**
       * Called when user closes add torrent callback with success
-      * 
+      *
       * @torrentInfo: Can be multple or one magnet uri, or a file buffer
       */
       Torrent.prototype._addTorrentCallbackSuccess = function (torrentInfo) {
@@ -109,26 +108,26 @@ module.exports = function (app) {
         }
         torrent.dlg = false
       }
-      
+
       /**
       * Called when user closes add torrent callback with error
       */
-      Torrent.prototype._addTorrentCallbackError = function () { 
+      Torrent.prototype._addTorrentCallbackError = function () {
         $dialogs.error('Not a valid torrent')
         torrent.dlg = false
       }
-      
+
       /**
       * Called when user closes add torrent callback with error
       */
-      Torrent.prototype._addTorrentCallbackError = function () { 
+      Torrent.prototype._addTorrentCallbackError = function () {
         $dialogs.error('Not a valid torrent')
         torrent.dlg = false
       }
 
       /**
       * Called when user closes clicks on remove button in torrent
-      * 
+      *
       * @torrentHash: torrent info hash to remove
       */
       Torrent.prototype._RemoveTorrentDialog = function (torrentHash) {
@@ -202,7 +201,7 @@ module.exports = function (app) {
       $scope.removeAll = torrent._RemoveAllTorrentDialog
 
       $scope.torrentInfo = torrent._TorrentInfoDialog
-      
+
       $scope.safeApply = function (fn) {
         var phase = this.$root.$$phase
         if (phase === '$apply' || phase === '$digest') {
@@ -228,7 +227,7 @@ module.exports = function (app) {
         $event.stopImmediatePropagation()
         $scope.filter.status = status
       }
-      
+
       $scope.$on('socket:error', function (ev, data) {
         Notification.error('Error while connecting to the server')
       })
@@ -256,23 +255,23 @@ module.exports = function (app) {
       $scope.setTab = function (tab) {
         $scope.tab = tab
       }
-      
+
       /**
-      * Ask socket for torrent info 
+      * Ask socket for torrent info
       */
       webSocket.emit('torrent:get_info', {
         'infoHash': data.hash
       })
-      
+
       /**
       * Called when socket send torrent info
-      */      
+      */
       webSocket.on('torrent:info', function (message) {
         $scope.torrent = message.torrent
       })
 
       /**
-      * Close torrent info 
+      * Close torrent info
       */
       $scope.cancel = function () {
         $modalInstance.dismiss('Canceled')
@@ -289,7 +288,7 @@ module.exports = function (app) {
       $scope.new_torrent_type = data.new_torrent_type
 
       /**
-      * Called after user upload something 
+      * Called after user upload something
       */
       $scope.callback = function (file) {
         var extname = file.name.split('.').pop()

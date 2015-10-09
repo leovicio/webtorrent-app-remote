@@ -33,7 +33,7 @@ app.factory('webSocket', function (socketFactory) {
   mySocket.forward('error')
   mySocket.forward('connect')
   mySocket.emit('startCrons')
-  
+
   return mySocket
 })
 
