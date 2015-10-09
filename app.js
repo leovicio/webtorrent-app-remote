@@ -70,10 +70,12 @@ app.use(function (err, req, res, next) {
 /* WebTorrent Client*/
 var client = new WebTorrent()
 
-var torrent_util = require('./lib/torrent_util.js')
-torrent_util.client = client
-var tracker = require('./lib/tracker.js')
-tracker.check_settings()
-require('./lib/socket.js')(io, torrent_util, tracker)
+var Torrent = require('./lib/torrent.js')
+Torrent = new Torrent()
+Torrent.client = client
+var Tracker = require('./lib/tracker.js')
+Tracker = new Tracker()
+Tracker.check_settings()
+require('./lib/socket.js')(io, Torrent, Tracker)
 
 module.exports = app

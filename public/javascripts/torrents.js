@@ -267,6 +267,7 @@ module.exports = function (app) {
       * Called when socket send torrent info
       */
       webSocket.on('torrent:info', function (message) {
+        console.log(message)
         $scope.torrent = message.torrent
       })
 
