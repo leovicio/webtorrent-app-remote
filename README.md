@@ -12,18 +12,17 @@ This app gives you the hability to downloads files on the remote server by passi
 
 TODO:
 -------------
-* Authenticate Socket.io (try to use the same auth from express)
 * Organize all scripts (Use prototype and better function names), also document it.
-* Create seed/torrent
 * Add torrent: Allow url with .torrent (fetch url from web and add it's buffer)
+* Create seed/torrent
 * Configure Tracker's when creating torrent
-* Make it a npm package js with command line options. (options: user/password, server, port, maxpeers, etcs)
+* API using express and API using websocket (with auth)
 * Update readme with screenshots, better description, documentation
-* API using express and API using websocket
-* Set file priority
-* Create a DEBUG system (to console.log())
+* Make it a npm package js with command line options. (options: user/password, server, port, maxpeers, etcs)
 * Pause / Resume Torrent (needs webtorrent implementation)
 * Pause All Torrents / Resume All Torrents (needs webtorrent implementation)
+* Authenticate Socket.io
+* Create a DEBUG system (to console.log())
 * Create a desktop version with nw.js
 * Create a browser version (maybe a chrome extension?)
 
