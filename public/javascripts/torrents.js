@@ -318,11 +318,14 @@ module.exports = function (app) {
             if (v.match('magnet:?')) {
               $valid = true
             }
+            if (v.match('.torrent') && v.match(/http(s)/i)) {
+              $valid = true
+            }
           })
           if ($valid) {
             $modalInstance.close(magnets)
           } else {
-            $dialogs.error('Error', 'Not a valid magnet uri')
+            $dialogs.error('Error', 'Not a valid magnet uri / or url file')
           }
         } else if (file) {
           $modalInstance.close(file)

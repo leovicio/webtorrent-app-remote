@@ -9,10 +9,11 @@
     {{}}
     <form class="form-horizontal">
         <div class="control-group" ng-if="new_torrent_type == 'magnet'">
-            <label>Magnet(s): </label>
+            <label>Magnet(s) or URLs*: </label>
             <div>
                 <textarea style="width: 100%; height: 300px;" ng-model="torrent.torrentMagnet" class="form-control"></textarea>
             </div>
+            <small>* Must be a valid url with http/https ending in .torrent, acessible from anywhere</small>
         </div>
         <div class="control-group" ng-if="new_torrent_type == 'file'">
             <label class="col-sm-2 control-label">Upload .torrent: </label>
