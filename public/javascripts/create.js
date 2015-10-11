@@ -1,4 +1,3 @@
-var _ = require('underscore')
 module.exports = function (app, WebTorrent) {
   app.controller('CreateTorrent', [
     '$scope',
@@ -7,7 +6,7 @@ module.exports = function (app, WebTorrent) {
     '$window',
     function ($scope, webSocket, $dialogs, $window) {
       var client = new WebTorrent()
-      
+
       var dlg = false
       $scope.create = function () {
         if (dlg) return
@@ -19,7 +18,7 @@ module.exports = function (app, WebTorrent) {
               return false
             }
             $dialogs.wait('Creating Torrent')
-            client.seed(files, function(torrent) {
+            client.seed(files, function (torrent) {
               $dialogs.notify('Torrent Added', 'MagnetURI: <br />' + torrent.magnetURI)
               $scope.$root.$broadcast('dialogs.wait.complete')
             })
@@ -28,29 +27,26 @@ module.exports = function (app, WebTorrent) {
             dlg = false
           })
       }
-      
+
       $window.onbeforeunload = function (e) {
         window.confirm('You\'re still uploading the file, are you sure you\'re gonna leave?')
       }
-      
     }])
-    
   app.controller('CreateTorrentModal', [
     '$scope',
     '$modalInstance',
     '$dialogs',
     function ($scope, $modalInstance, $dialogs) {
       $scope.save = function () {
-         $modalInstance.close($scope.files)
+        $modalInstance.close($scope.files)
       }
 
       $scope.close = function () {
-         $modalInstance.close(false)
+        $modalInstance.close(false)
       }
-      
+
       $scope.remove = function (index) {
         $scope.files.splice(index, 1)
       }
-
     }])
 }

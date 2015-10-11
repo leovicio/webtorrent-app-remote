@@ -61,11 +61,11 @@ app.config(['$routeProvider', function ($routeProvider) {
   })
 }])
 
-app.directive('filelistBind', function() {
-  return function( scope, elm, attrs ) {
-    elm.bind('change', function( evt ) {
-      scope.$apply(function() {
-        var arr = scope [ attrs.name] ? scope [ attrs.name ] : []
+app.directive('filelistBind', function () {
+  return function (scope, elm, attrs) {
+    elm.bind('change', function (evt) {
+      scope.$apply(function () {
+        var arr = scope [ attrs.name ] ? scope [ attrs.name ] : [ ]
         for (var i = 0; i < evt.target.files.length; i++) {
           arr.push(evt.target.files.item(i))
         }
