@@ -2,7 +2,6 @@ var angular = require('angular')
 require('angular-route/angular-route.min.js')
 require('angular-bootstrap/ui-bootstrap-tpls.min.js')
 require('angular-dialog-service/dialogs.min.js')
-require('angularFileInput/dist/angular-file-input.js')
 require('angular-sanitize/angular-sanitize.min.js')
 require('angular-socket-io/socket.min.js')
 require('ng-ui-notification/dist/angular-ui-notification.min.js')
@@ -12,7 +11,6 @@ var app = angular.module('webtorrent', [
   'btford.socket-io',
   'ui.bootstrap',
   'dialogs',
-  'angularFileInput',
   'ui-notification',
   'ngRoute'
 ])
@@ -62,5 +60,19 @@ app.config(['$routeProvider', function ($routeProvider) {
     redirectTo: '/torrents'
   })
 }])
+
+app.directive('filelistBind', function() {
+  return function( scope, elm, attrs ) {
+    elm.bind('change', function( evt ) {
+      scope.$apply(function() {
+        var arr = scope [ attrs.name] ? scope [ attrs.name ] : []
+        for (var i = 0; i < evt.target.files.length; i++) {
+          arr.push(evt.target.files.item(i))
+        }
+        scope[ attrs.name ] = arr
+      })
+    })
+  }
+})
 
 module.exports = app

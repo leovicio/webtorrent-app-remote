@@ -1,32 +1,26 @@
 var _ = require('underscore')
-module.exports = function (app) {
+module.exports = function (app, WebTorrent) {
   app.controller('CreateTorrent', [
     '$scope',
     'webSocket',
     '$dialogs',
     '$window',
-    'Notification',
-    function ($scope, webSocket, $dialogs, $window, Notification) {
+    function ($scope, webSocket, $dialogs, $window) {
       var client = new WebTorrent()
       
-      $scope.files = []
-      
-      $scope.callback = function (file) {
-        $scope.files.push(file)
-      }
-
-      var dlg = false      
+      var dlg = false
       $scope.create = function () {
         if (dlg) return
-        dlg = $dialogs.create('/dialogs/create_torrent.html', 'CreateTorrent')
+
+        dlg = $dialogs.create('/dialogs/create_torrent.html', 'CreateTorrentModal')
           .result.then(function (files) {
+            if (!files) {
+              dlg = false
+              return false
+            }
             $dialogs.wait('Creating Torrent')
-            var buffers = []
-            _.each(files, function(v, k) {
-              buffers.push(v.content)
-            })
-            
-            client.seed(buffers, function() {
+            client.seed(files, function(torrent) {
+              $dialogs.notify('Torrent Added', 'MagnetURI: <br />' + torrent.magnetURI)
               $scope.$root.$broadcast('dialogs.wait.complete')
             })
             dlg = false
@@ -35,14 +29,28 @@ module.exports = function (app) {
           })
       }
       
-      $scope.remove = function (file) {
-        var index = $scope.files.indexOf(file);
-        $scope.files.splice(index, 1);
-      }
-
       $window.onbeforeunload = function (e) {
         window.confirm('You\'re still uploading the file, are you sure you\'re gonna leave?')
       }
       
+    }])
+    
+  app.controller('CreateTorrentModal', [
+    '$scope',
+    '$modalInstance',
+    '$dialogs',
+    function ($scope, $modalInstance, $dialogs) {
+      $scope.save = function () {
+         $modalInstance.close($scope.files)
+      }
+
+      $scope.close = function () {
+         $modalInstance.close(false)
+      }
+      
+      $scope.remove = function (index) {
+        $scope.files.splice(index, 1)
+      }
+
     }])
 }
