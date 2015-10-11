@@ -14,6 +14,10 @@ TODO:
 -------------
 * Create seed/torrent
 * Configure Tracker's when creating torrent
+* Torrent info: Include each tracker total peers.
+* Torrent info: Show peers client
+* Torrent info: Configure per torrent speed limit
+* Torrent info: Configure per torrent peer limit
 * Display each torrent upload/download speed
 * Make it a npm package js with command line options. (options: user/password, server, port, maxpeers, etcs)
 * API using express and API using websocket (with auth)
