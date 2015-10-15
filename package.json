@@ -1,6 +1,6 @@
 {
-  "name": "WebtorrentRemoteManagment",
-  "version": "0.0.0",
+  "name": "webtorrent-app-remote",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "start": "node ./bin/www_webtorrentapp",
