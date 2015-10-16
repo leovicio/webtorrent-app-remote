@@ -293,7 +293,7 @@ module.exports = function (app) {
           }
         } else if ($scope.files) {
           _($scope.files).forEach(function (v, k) {
-           if (v.name.match('.torrent')) {
+            if (v.name.match('.torrent')) {
               $valid = true
             }
           })
