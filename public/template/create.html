@@ -35,10 +35,10 @@
       </a>
     </div>
     <div style="clear:both; height: 5px; width: 100%"></div>
-    <p ng-if="!torrents.length" style="margin-top: 10px;">No torrents are uploading or were uploaded.</p>
+    <p ng-if="!self_torrents.length" style="margin-top: 10px;">No torrents are uploading or were uploaded.</p>
 
     <table class="table table-condensed table-hover">
-      <tr class="torrent-row unselectable" style="width:100%;" ng-repeat="torrent in torrents | filter: filter">
+      <tr class="torrent-row unselectable" style="width:100%;" ng-repeat="torrent in self_torrents | filter: filter">
         <td>
           <table class="no-table torrent-info" style="width:100%;">
             <tr>

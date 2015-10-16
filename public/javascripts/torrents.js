@@ -18,6 +18,7 @@ module.exports = function (app) {
         backdrop: true,
         windowClass: 'my-class'
       }
+
       /**
       * Called when socket send torrent array list
       *

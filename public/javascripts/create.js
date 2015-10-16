@@ -1,12 +1,22 @@
-module.exports = function (app, WebTorrent) {
+module.exports = function (app, WebTorrent, Torrent) {
   app.controller('CreateTorrent', [
     '$scope',
     'webSocket',
     '$dialogs',
     '$window',
-    function ($scope, webSocket, $dialogs, $window) {
+    '$interval',
+    function ($scope, webSocket, $dialogs, $window, $interval) {
       var client = new WebTorrent()
 
+      Torrent = new Torrent()
+      Torrent.client = client
+
+      $interval(function () {
+        Torrent.getTorrents(function (message) {
+          $scope.self_torrents = message.torrents
+        })
+      }, 2000)
+      
       var dlg = false
       $scope.create = function () {
         if (dlg) return
@@ -20,6 +30,9 @@ module.exports = function (app, WebTorrent) {
             $dialogs.wait('Creating Torrent')
             client.seed(files, function (torrent) {
               $dialogs.notify('Torrent Added', 'MagnetURI: <br />' + torrent.magnetURI)
+              webSocket.emit('torrent:download', {
+                torrent: torrent.magnetURI
+              })
               $scope.$root.$broadcast('dialogs.wait.complete')
             })
             dlg = false
