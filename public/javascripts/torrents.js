@@ -88,31 +88,18 @@ module.exports = function (app) {
       *
       * @torrentInfo: Can be multple or one magnet uri, or a file buffer
       */
-      Torrent.prototype._addTorrentCallbackSuccess = function (torrentInfo) {
-        if (torrentInfo) {
+      Torrent.prototype._addTorrentCallbackSuccess = function (torrents, source) {
+        if (torrents) {
           $dialogs.wait('Adding torrent')
           //  Check if is magnets or a single file
-          if (torrentInfo instanceof Array) {
-            _(torrentInfo).forEach(function (v, k) {
-              webSocket.emit('torrent:download', {
-                torrent: v
-              })
-            })
-          } else {
+          _(torrents).forEach(function (v, k) {
+            console.log(v);
             webSocket.emit('torrent:download', {
-              torrent: torrentInfo
+              torrent: v
             })
-          }
+          })
           $scope.torrent_added = true
         }
-        torrent.dlg = false
-      }
-
-      /**
-      * Called when user closes add torrent callback with error
-      */
-      Torrent.prototype._addTorrentCallbackError = function () {
-        $dialogs.error('Not a valid torrent')
         torrent.dlg = false
       }
 
@@ -141,17 +128,6 @@ module.exports = function (app) {
             infoHash: torrentHash
           })
         })
-      }
-
-      /**
-      * Called when user closes clicks on remove All torrents button
-      */
-      Torrent.prototype._RemoveAllTorrentDialog = function () {
-        // @Todo: Fancy UI confirm dialog
-        if (window.confirm('Remove All Torrents?')) {
-          $dialogs.wait('Removing torrent')
-          webSocket.emit('torrent:remove_all', {})
-        }
       }
 
       /**
@@ -285,19 +261,8 @@ module.exports = function (app) {
   app.controller('AddTorrentCtrl', ['$scope', '$modalInstance', '$dialogs', 'data',
     function ($scope, $modalInstance, $dialogs, data) {
       $scope.torrent = []
+      $scope.files = []
       $scope.new_torrent_type = data.new_torrent_type
-
-      /**
-      * Called after user upload something
-      */
-      $scope.callback = function (file) {
-        var extname = file.name.split('.').pop()
-        if (extname === 'torrent') {
-          $scope.save(file.content)
-        } else {
-          $dialogs.error('Error', 'Not a valid torrent file')
-        }
-      }
 
       /**
       * Called when user hits cancel button in modal
@@ -310,8 +275,8 @@ module.exports = function (app) {
       * Called when use hits save button or after uploads a valid file
       */
       $scope.save = function (file) {
+        var $valid = false
         if ($scope.torrent.torrentMagnet) {
-          var $valid = false
           var magnets = $scope.torrent.torrentMagnet.split('\n')
           _(magnets).forEach(function (v, k) {
             if (v.match('magnet:?')) {
@@ -326,8 +291,15 @@ module.exports = function (app) {
           } else {
             $dialogs.error('Error', 'Not a valid magnet uri / or url file')
           }
-        } else if (file) {
-          $modalInstance.close(file)
+        } else if ($scope.files) {
+          _($scope.files).forEach(function (v, k) {
+           if (v.name.match('.torrent')) {
+              $valid = true
+            }
+          })
+          if ($valid) {
+            $modalInstance.close($scope.files)
+          }
         }
       }
     }
