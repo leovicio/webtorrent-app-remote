@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www_webtorrentapp",
-    "test": "standard"
+    "test": "standard",
+    "build": "browserify -t browserify-css --autoInject=true ./public/javascripts/main.js | uglifyjs > ./public/javascripts/bundle.min.js"
   },
   "dependencies": {
     "angular": "^1.4.7",
