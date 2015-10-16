@@ -76,6 +76,8 @@ Torrent.client = client
 var Tracker = require('./lib/tracker.js')
 Tracker = new Tracker()
 Tracker.check_settings()
-require('./lib/socket.js')(io, Torrent, Tracker)
+var System = require('./lib/system_info.js')
+System = new System
+require('./lib/socket.js')(io, Torrent, System, Tracker)
 
 module.exports = app
