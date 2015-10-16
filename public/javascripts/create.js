@@ -6,18 +6,17 @@ module.exports = function (app, WebTorrent, Torrent) {
     '$window',
     '$interval',
     function ($scope, webSocket, $dialogs, $window, $interval) {
-
       global.WEBTORRENT_ANNOUNCE = []
       webSocket.emit('tracker:getOptions')
 
       webSocket.on('tracker:options', function (message) {
-        if (message.options.tracker_ws) {
+        if (message.options.tracker_ws && message.options.host_name != "0.0.0.0") {
           global.WEBTORRENT_ANNOUNCE.push('ws://' + message.options.host_name + ':' + message.options.port)
         }
-        if (message.options.tracker_http) {
+        if (message.options.tracker_http && message.options.host_name != "0.0.0.0") {
           global.WEBTORRENT_ANNOUNCE.push('http://' + message.options.host_name + ':' + message.options.port + '/anounce')
         }
-        if (message.options.tracker_udp) {
+        if (message.options.tracker_udp && message.options.host_name != "0.0.0.0") {
           global.WEBTORRENT_ANNOUNCE.push('udp://' + message.options.host_name + ':' + message.options.port)
         }
       })
