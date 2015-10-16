@@ -88,12 +88,11 @@ module.exports = function (app) {
       *
       * @torrentInfo: Can be multple or one magnet uri, or a file buffer
       */
-      Torrent.prototype._addTorrentCallbackSuccess = function (torrents, source) {
+      Torrent.prototype._addTorrentCallbackSuccess = function (torrents) {
         if (torrents) {
           $dialogs.wait('Adding torrent')
           //  Check if is magnets or a single file
           _(torrents).forEach(function (v, k) {
-            console.log(v);
             webSocket.emit('torrent:download', {
               torrent: v
             })
