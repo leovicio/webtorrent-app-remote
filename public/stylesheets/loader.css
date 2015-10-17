@@ -15,13 +15,20 @@ body,html{
   width: 350px;
 }
 
-#progressbar {
+#error, #progressbar {
   left: 10%;
   position: absolute;
   text-align: center;
   top: 55%;
   right: 10%;
 }
+
+#error {
+  font-weight:bold;
+  font-size: 14px;
+  color: red;
+}
+
 #progressbar .bar {
   -moz-box-shadow: #505050 0 0 10px 1px;
   -webkit-box-shadow: #505050 0 0 10px 1px;
