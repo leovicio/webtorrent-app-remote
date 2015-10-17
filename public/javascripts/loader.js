@@ -1,12 +1,19 @@
 /* global createjs */
 /* global $ */
 
-var supportsWebSockets = 'WebSocket' in window || 'MozWebSocket' in window;
-if(supportsWebSockets){
+var supportsWebSockets = 'WebSocket' in window || 'MozWebSocket' in window
+if (supportsWebSockets) {
   var queue = new createjs.LoadQueue()
-  
-  queue.on('progress', onProgress)
-  
+
+  queue.on('progress', function (event) {
+    var progress = Math.round(event.loaded * 100)
+
+    $('#prc').text(progress + '%')
+    $('#progressbar .bar').css({
+      'width': progress + '%'
+    })
+  })
+
   queue.loadManifest([
     {
       id: '1',
@@ -25,17 +32,8 @@ if(supportsWebSockets){
       src: '/javascripts/build/bundle.min.js?' + Math.random()
     }
   ])
-  
-  function onProgress (event) {
-    var progress = Math.round(event.loaded * 100)
-  
-    $('#prc').text(progress + '%')
-    $('#progressbar .bar').css({
-      'width': progress + '%'
-    })
-  }
 } else {
-  jQuery(function () {
-    jQuery("#error").text('Error: Your browser does not support websockets')
+  $(function () {
+    $('#error').text('Error: Your browser does not support websockets')
   })
 }

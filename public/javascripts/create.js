@@ -70,10 +70,10 @@ module.exports = function (app, WebTorrent, Torrent) {
     function ($scope, $modalInstance, $dialogs) {
       $scope.save = function () {
         var $result = {'files': $scope.files, 'trackers': $scope.trackers}
-        $modalInstance.close($result);
+        $modalInstance.close($result)
       }
 
-      $scope.trackers = global.WEBTORRENT_ANNOUNCE.join("\n")
+      $scope.trackers = global.WEBTORRENT_ANNOUNCE.join('\n')
 
       $scope.close = function () {
         $modalInstance.close(false)
