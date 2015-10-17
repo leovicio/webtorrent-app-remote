@@ -1,89 +1,98 @@
 <div class="row" ng-init="initEvents()">
-    <div class="span2">
-        <ul id="torrent-groups" class="nav nav-pills nav-stacked nav-list">
-            <li  ng-class="{'active': !filter.status}">
-                <a ng-click="setFilterstatus($event, 0)" href="/#torrents/">
-                    <i class="icon-minus pull-right hide remove-group" rel="tooltip" title="All"></i> All
-                </a>
-            </li>
-            <li ng-class="{'active': filter.status == 1}">
-                <a ng-click="setFilterstatus($event, 1)" href="#">
-                    <i class="icon-minus pull-right hide remove-group" rel="tooltip" title="Downloading"></i> Downloading
-                </a>
+  <div class="span2">
+    <ul id="torrent-groups" class="nav nav-pills nav-stacked nav-list">
+      <li ng-class="{'active': !filter.status}">
+        <a ng-click="setFilterstatus($event, 0)" href="/#torrents/">
+          <i class="icon-minus pull-right hide remove-group" rel="tooltip" title="All"></i> All
+        </a>
+      </li>
+      <li ng-class="{'active': filter.status == 1}">
+        <a ng-click="setFilterstatus($event, 1)" href="#">
+          <i class="icon-minus pull-right hide remove-group" rel="tooltip" title="Downloading"></i> Downloading
+        </a>
 
-            </li>
-            <li ng-class="{'active': filter.status == 2}">
-                <a ng-click="setFilterstatus($event, 2)" href="#">
-                    <i class="icon-minus pull-right hide remove-group" rel="tooltip" title="Seeding"></i> Seeding
-                </a>
-            </li>
-        </ul>
+      </li>
+      <li ng-class="{'active': filter.status == 2}">
+        <a ng-click="setFilterstatus($event, 2)" href="#">
+          <i class="icon-minus pull-right hide remove-group" rel="tooltip" title="Seeding"></i> Seeding
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="span10">
+    <input id="select-all" type="checkbox" style="margin-right: 25px; margin-left: 10px; margin-top: 8px;" class="pull-left" />
+    <div class="btn-group pull-left">
+      <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">With Selected <span class="caret"></span></a>
+      <ul id="with-selected-dropdown" class="dropdown-menu">
+        <li><a href="#" data-what="start">Start</a></li>
+        <li><a href="#" data-what="stop">Pause</a></li>
+        <li><a href="#" data-what="remove">Remove</a></li>
+      </ul>
     </div>
-    <div class="span10">
-        <input id="select-all" type="checkbox" style="margin-right: 25px; margin-left: 10px; margin-top: 8px;" class="pull-left" />
-        <div class="btn-group pull-left">
-            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">With Selected <span class="caret"></span></a>
-            <ul id="with-selected-dropdown" class="dropdown-menu">
-                <li><a href="#" data-what="start">Start</a></li>
-                <li><a href="#" data-what="stop">Pause</a></li>
-                <li><a href="#" data-what="remove">Remove</a></li>
-            </ul>
-        </div>
-        <div class="btn-group pull-right">
-            <a class="btn btn-success dropdown-toggle" data-toggle="dropdown">
-                <i class="icon-plus-sign"></i>Add Torrent
-                <span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu">
-                <li><a ng-click="add($event, 'file')" href="#add-torrent-from-file-dialog" data-toggle="modal">From File</a></li>
-                <li><a ng-click="add($event, 'magnet')" href="#add-torrent-from-url-dialog" data-toggle="modal">From URL/Magnet</a></li>
-            </ul>
-        </div>
-        <div style="clear:both; height: 5px; width: 100%"></div>
-        <p ng-if="!torrents.length" style="margin-top: 10px;">No torrents found. Add a torrent using the button on the right.</p>
+    <div class="btn-group pull-right">
+      <a class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+        <i class="icon-plus-sign"></i>Add Torrent
+        <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu">
+        <li><a ng-click="add($event, 'file')" href="#add-torrent-from-file-dialog" data-toggle="modal">From File</a></li>
+        <li><a ng-click="add($event, 'magnet')" href="#add-torrent-from-url-dialog" data-toggle="modal">From URL/Magnet</a></li>
+      </ul>
+    </div>
+    <div style="clear:both; height: 5px; width: 100%"></div>
+    <p ng-if="!torrents.length" style="margin-top: 10px;">No torrents found. Add a torrent using the button on the right.</p>
 
-        <table class="table table-condensed table-hover">
-            <tr class="torrent-row unselectable" style="width:100%;" ng-repeat="torrent in torrents | filter: filter">
-                <td>
-                    <table class="no-table torrent-info" style="width:100%;">
-                        <tr>
-                            <td colspan="4">
-                                <h5 class="torrent-title pull-left">
+    <table class="table table-condensed table-hover">
+      <tr class="torrent-row unselectable" style="width:100%;" ng-repeat="torrent in torrents | filter: filter">
+        <td>
+          <table class="no-table torrent-info" style="width:100%;">
+            <tr>
+              <td colspan="4">
+                <h5 class="torrent-title pull-left">
         							{{::torrent.name}}
-        							<small>- Downloaded: {{::torrent.downloaded}} / Uploaded: {{::torrent.uploaded}} | Time Remaning: {{::torrent.estimate}}</small>							
-        						</h5>
-                                <div class="clearfix"></div>
-                                <small class="text-error" ng-if="torrent.error"></small>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="width:85%;">
-                                <progress><bar class="bar" value="torrent.progress">{{torrent.progress}}%</bar></progressbar>
-                            </td>
-                            <td style="width:15%;">
-                                <form action="/" method="post" class="no-margin pull-left">
-                                    <div class="btn-group pull-right">
-                                        <a ng-click="torrentInfo(torrent.infoHash)" class="btn btn-mini show-torrent-info"><i class="icon-info-sign"></i></a>
-                                        <button type="submit" class="btn btn-mini" name="what" value="stop"><i class="icon-pause"></i></button>
-                                        <button type="submit" class="btn btn-mini" name="what" value="start"><i class="icon-play"></i></button>
-                                        <a ng-click="remove(torrent.infoHash)" class="btn btn-mini remove-torrent" href="#"><i class="icon-remove"></i></a>
-                                    </div>
-                                </form>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
+        							<small>- Downloaded: {{::torrent.downloaded}} / Uploaded: {{::torrent.uploaded}} | Time Remaning: {{::torrent.estimate}}</small>
+                </h5>
+              </td>
             </tr>
             <tr>
-                <td>
-                    <div class="pull-right">
-                        <h5><small>Speed: D: {{global.d_speed}} - U: {{global.u_speed}} | Global ratio: {{global.ratio}}</small></h5>
-                        <h5><small>Load Avg: {{os_info.load_avg[0]}} -  {{os_info.load_avg[1]}} - {{os_info.load_avg[2]}}</small></h5>
-                        <h5><small>Memory Usage: <progress><bar value="os_info.prc_mem_used" class="bar">{{os_info.prc_mem_used}}%</bar></progress>{{os_info.memused}} of {{os_info.totalmem}}</small></h5>
-                        <h5><small>Disk Usage: <progress><bar value="os_info.prc_disk_used" class="bar">{{os_info.prc_disk_used}}%</bar></progress></small>{{os_info.disk_used}} of {{os_info.disk_total}}</h5>
-                    </div>
-                </td>
+              <td colspan="4">
+                <h5>
+        							<small>Peers: {{::torrent.peers}} | <span style='color: red'>D: {{::torrent.d_speed}}</span> | <span style='color: green'>U: {{::torrent.u_speed}}</span></small>
+                </h5>
+                <div class="clearfix"></div>
+                <small class="text-error" ng-if="torrent.error"></small>
+              </td>
             </tr>
-        </table>
-    </div>
+            <tr>
+              <td style="width:85%;">
+                <progress>
+                  <bar class="bar" value="torrent.progress">{{torrent.progress}}%</bar>
+                  </progressbar>
+              </td>
+              <td style="width:15%;">
+                <form action="/" method="post" class="no-margin pull-left">
+                  <div class="btn-group pull-right">
+                    <a ng-click="torrentInfo(torrent.infoHash)" class="btn btn-mini show-torrent-info"><i class="icon-info-sign"></i></a>
+                    <button type="submit" class="btn btn-mini" name="what" value="stop"><i class="icon-pause"></i></button>
+                    <button type="submit" class="btn btn-mini" name="what" value="start"><i class="icon-play"></i></button>
+                    <a ng-click="remove(torrent.infoHash)" class="btn btn-mini remove-torrent" href="#"><i class="icon-remove"></i></a>
+                  </div>
+                </form>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="pull-right">
+            <h5><small>Speed: D: {{global.d_speed}} - U: {{global.u_speed}} | Global ratio: {{global.ratio}}</small></h5>
+            <h5><small>Load Avg: {{os_info.load_avg[0]}} -  {{os_info.load_avg[1]}} - {{os_info.load_avg[2]}}</small></h5>
+            <h5><small>Memory Usage: <progress><bar value="os_info.prc_mem_used" class="bar">{{os_info.prc_mem_used}}%</bar></progress>{{os_info.memused}} of {{os_info.totalmem}}</small></h5>
+            <h5><small>Disk Usage: <progress><bar value="os_info.prc_disk_used" class="bar">{{os_info.prc_disk_used}}%</bar></progress></small>{{os_info.disk_used}} of {{os_info.disk_total}}</h5>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
 </div>

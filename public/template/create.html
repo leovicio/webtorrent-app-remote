@@ -52,6 +52,15 @@
               </td>
             </tr>
             <tr>
+              <td colspan="">
+                <h5>
+        							<small>Peers: {{::torrent.peers}} | <span style='color: red'>D: {{::torrent.d_speed}}</span> | <span style='color: green'>U: {{::torrent.u_speed}}</span></small>
+                </h5>
+                <div class="clearfix"></div>
+                <small class="text-error" ng-if="torrent.error"></small>
+              </td>
+            </tr>            
+            <tr>
               <td style="width:85%;">
                 <progress>
                   <bar class="bar" value="torrent.progress">{{torrent.progress}}%</bar>
