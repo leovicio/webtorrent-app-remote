@@ -19,7 +19,7 @@ queue.loadManifest([
   },
   {
     id: '4',
-    src: '/javascripts/build/bundle.min.js'
+    src: '/javascripts/build/bundle.min.js?' + Math.random()
   }
 ])
 
