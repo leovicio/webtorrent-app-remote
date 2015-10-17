@@ -37,11 +37,14 @@ module.exports = function (app, WebTorrent, Torrent) {
         if (dlg) return
 
         dlg = $dialogs.create('/dialogs/create_torrent.html', 'CreateTorrentModal')
-          .result.then(function (files) {
+          .result.then(function ($result) {
+            var files = $result.files
+            var trackers = $result.trackers
             if (!files) {
               dlg = false
               return false
             }
+            global.WEBTORRENT_ANNOUNCE = trackers.split('\n')
             $dialogs.wait('Creating Torrent')
             client.seed(files, function (torrent) {
               $dialogs.notify('Torrent Added', 'MagnetURI: <br />' + torrent.magnetURI)
@@ -66,8 +69,11 @@ module.exports = function (app, WebTorrent, Torrent) {
     '$dialogs',
     function ($scope, $modalInstance, $dialogs) {
       $scope.save = function () {
-        $modalInstance.close($scope.files)
+        var $result = {'files': $scope.files, 'trackers': $scope.trackers}
+        $modalInstance.close($result);
       }
+
+      $scope.trackers = global.WEBTORRENT_ANNOUNCE.join("\n")
 
       $scope.close = function () {
         $modalInstance.close(false)
