@@ -18,7 +18,7 @@ var app = angular.module('webtorrent', [
 app.run(['$rootScope', '$location', function ($rootScope, $location) {
   $rootScope.$on('$routeChangeSuccess', function (e, current, pre) {
     $rootScope.current_tab = $location.path()
-    $rootScope.loaded=true
+    $rootScope.loaded = true
   })
 }])
 
