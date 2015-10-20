@@ -214,16 +214,16 @@ module.exports = function (app) {
       }
 
       /* Drag and drop functions */
-      $scope.OnDragFiles = function ($dragFiles){
-        if($dragFiles.length)
-          torrent._addTorrentCallbackSuccess ($dragFiles)
+      $scope.OnDragFiles = function ($dragFiles) {
+        if ($dragFiles.length) {
+          torrent._addTorrentCallbackSuccess($dragFiles)
+        }
       }
 
       /*  Remove listeners when destroying controller */
       $scope.$on('$destroy', function () {
         webSocket.removeAllListeners()
       })
-      
     }
   ])
 

@@ -76,21 +76,20 @@ app.directive('filelistBind', function () {
   }
 })
 
-app.directive("dropzone", function() {
+app.directive('dropzone', function () {
   return function (scope, elem) {
-
     var handleover = function (event) {
       if (event !== null) {
-				event.preventDefault()
-			}
-      return false 
+        event.preventDefault()
+      }
+      return false
     }
     elem.bind('dragover', handleover)
     elem.bind('dragend', handleover)
-    
+
     elem.bind('drop', function (event) {
       if (event !== null) {
-			  event.preventDefault();
+        event.preventDefault()
       }
       console.log('dropped')
       event.stopPropagation()
@@ -98,9 +97,9 @@ app.directive("dropzone", function() {
 
       var files = event.originalEvent.dataTransfer.files
       var validFiles = []
-      for (var i = 0, f; f = files[i]; i++) {
-        if (f.name.match('.torrent')) {
-          validFiles.push(f)
+      for (var i in files) {
+        if (files[i].name.match('.torrent')) {
+          validFiles.push(files[i])
         }
       }
       scope.OnDragFiles(validFiles)
