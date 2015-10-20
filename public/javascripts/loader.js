@@ -29,7 +29,7 @@ if (supportsWebSockets) {
     },
     {
       id: '4',
-      src: '/javascripts/build/bundle.min.js?' + Math.random()
+      src: '/javascripts/build/bundle.min.js'
     }
   ])
 } else {
