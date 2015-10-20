@@ -106,4 +106,19 @@ small.tracker_warning {
   left: 160px;
   position: relative; }
 
+.table th.noborder, .table td.noborder {
+  border-top: none !important; }
+
+div[dropzone] {
+  border: 2px dashed #bbb;
+  border-radius: 5px;
+  text-align: center;
+  color: #bbb;
+  margin-bottom: 20px; }
+  div[dropzone] h5 {
+    padding: 20px; }
+
+div[dropzone]:hover {
+  opacity: 0.8; }
+
 /*# sourceMappingURL=style.css.map */

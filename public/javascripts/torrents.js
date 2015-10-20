@@ -2,11 +2,12 @@ var _ = require('underscore')
 module.exports = function (app) {
   app.controller('WebTorrent', [
     '$scope',
+    '$rootScope',
     'webSocket',
     '$dialogs',
     '$window',
     'Notification',
-    function ($scope, webSocket, $dialogs, $window, Notification) {
+    function ($scope, $rootScope, webSocket, $dialogs, $window, Notification) {
       $scope.filter = {}
 
       // @TODO: Should I move this to a specific service / factory?
@@ -212,9 +213,17 @@ module.exports = function (app) {
         webSocket.disconnect()
       }
 
+      /* Drag and drop functions */
+      $scope.OnDragFiles = function ($dragFiles){
+        if($dragFiles.length)
+          torrent._addTorrentCallbackSuccess ($dragFiles)
+      }
+
+      /*  Remove listeners when destroying controller */
       $scope.$on('$destroy', function () {
         webSocket.removeAllListeners()
       })
+      
     }
   ])
 
