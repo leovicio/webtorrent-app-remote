@@ -30,3 +30,4 @@ node_modules
 public/bower_components
 
 public/stylesheets/.sass-cache/
+.sass-cache/
