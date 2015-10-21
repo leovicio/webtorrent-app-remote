@@ -35,9 +35,21 @@
       </a>
     </div>
     <div style="clear:both; height: 5px; width: 100%"></div>
-    <p ng-if="!self_torrents.length" style="margin-top: 10px;">No torrents are uploading or were uploaded.</p>
 
     <table class="table table-condensed table-hover">
+      <tr class="torrent-row">
+        <td class="noborder">
+          <table class="no-table torrent-info" style="width:100%;">
+          <tr>
+            <td colspan="4">
+              <div ngf-drop ngf-select ng-model="files" class="drop-box" 
+                    ngf-drag-over-class="hover" ngf-multiple="true" ngf-allow-dir="true">
+                <h5>Drag and drop files here to create a new torrent</h5>
+              </center>
+            </td>
+          </tr>
+        </td>
+      </tr>
       <tr class="torrent-row unselectable" style="width:100%;" ng-repeat="torrent in self_torrents | filter: filter">
         <td>
           <table class="no-table torrent-info" style="width:100%;">

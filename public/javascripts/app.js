@@ -5,6 +5,7 @@ require('angular-dialog-service/dialogs.min.js')
 require('angular-sanitize/angular-sanitize.min.js')
 require('angular-socket-io/socket.min.js')
 require('ng-ui-notification/dist/angular-ui-notification.min.js')
+require('ng-file-upload/dist/ng-file-upload-all.min.js')
 var io = require('socket.io-client')
 
 var app = angular.module('webtorrent', [
@@ -12,7 +13,8 @@ var app = angular.module('webtorrent', [
   'ui.bootstrap',
   'dialogs',
   'ui-notification',
-  'ngRoute'
+  'ngRoute',
+  'ngFileUpload'
 ])
 
 app.run(['$rootScope', '$location', function ($rootScope, $location) {
@@ -72,37 +74,6 @@ app.directive('filelistBind', function () {
         }
         scope[ attrs.name ] = arr
       })
-    })
-  }
-})
-
-app.directive('dropzone', function () {
-  return function (scope, elem) {
-    var handleover = function (event) {
-      if (event !== null) {
-        event.preventDefault()
-      }
-      return false
-    }
-    elem.bind('dragover', handleover)
-    elem.bind('dragend', handleover)
-
-    elem.bind('drop', function (event) {
-      if (event !== null) {
-        event.preventDefault()
-      }
-      console.log('dropped')
-      event.stopPropagation()
-      event.preventDefault()
-
-      var files = event.originalEvent.dataTransfer.files
-      var validFiles = []
-      for (var i in files) {
-        if (files[i].name.match('.torrent')) {
-          validFiles.push(files[i])
-        }
-      }
-      scope.OnDragFiles(validFiles)
     })
   }
 })

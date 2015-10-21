@@ -30,6 +30,7 @@ module.exports = function (app) {
           return
         }
         $scope.safeApply(function () {
+          $scope.$root.$broadcast('dialogs.wait.complete')
           $scope.torrents = message.data.torrents
           $scope.global = message.data.global
         })
@@ -214,11 +215,11 @@ module.exports = function (app) {
       }
 
       /* Drag and drop functions */
-      $scope.OnDragFiles = function ($dragFiles) {
-        if ($dragFiles.length) {
-          torrent._addTorrentCallbackSuccess($dragFiles)
-        }
-      }
+      $scope.files = []
+      $scope.$watch('files', function () {
+        if($scope.files.length)
+          torrent._addTorrentCallbackSuccess($scope.files)
+      });
 
       /*  Remove listeners when destroying controller */
       $scope.$on('$destroy', function () {
@@ -251,7 +252,6 @@ module.exports = function (app) {
       * Called when socket send torrent info
       */
       webSocket.on('torrent:info', function (message) {
-        console.log(message)
         $scope.torrent = message.torrent
       })
 

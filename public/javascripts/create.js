@@ -30,7 +30,7 @@ module.exports = function (app, WebTorrent, Torrent) {
         Torrent.getTorrents(function (message) {
           $scope.self_torrents = message.torrents
         })
-      }, 2000)
+      }, 2500)
 
       var dlg = false
       $scope.create = function () {
@@ -59,6 +59,15 @@ module.exports = function (app, WebTorrent, Torrent) {
           })
       }
 
+      /* Drag and drop functions */
+      $scope.files = []
+      $scope.$watch('files', function () {
+        if ($scope.files.length) {
+          $scope.create($scope.files)
+          $scope.$root.files = $scope.files
+        }
+      });
+
       $window.onbeforeunload = function (e) {
         window.confirm('You\'re still uploading the file, are you sure you\'re gonna leave?')
       }
@@ -67,7 +76,11 @@ module.exports = function (app, WebTorrent, Torrent) {
     '$scope',
     '$modalInstance',
     '$dialogs',
-    function ($scope, $modalInstance, $dialogs) {
+    'data',
+    function ($scope, $modalInstance, $dialogs, data) {
+      if ($scope.$root.files) {
+        $scope.files = $scope.$root.files
+      }
       $scope.save = function () {
         var $result = {'files': $scope.files, 'trackers': $scope.trackers}
         $modalInstance.close($result)

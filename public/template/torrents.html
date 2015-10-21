@@ -46,7 +46,8 @@
           <table class="no-table torrent-info" style="width:100%;">
           <tr>
             <td colspan="4">
-              <div dropzone>
+              <div ngf-drop ngf-select ng-model="files" class="drop-box" 
+                    ngf-drag-over-class="hover" ngf-multiple="true" ngf-allow-dir="true">
                 <h5>Drag and drop .torrent files here to download</h5>
               </center>
             </td>
