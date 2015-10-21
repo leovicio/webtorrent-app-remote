@@ -3,7 +3,7 @@
   "version": "0.0.6",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www_webtorrentapp",
+    "start": "node server",
     "test": "standard",
     "build": "browserify -t browserify-css --autoInject=true ./public/javascripts/main.js | uglifyjs > ./public/javascripts/build/bundle.min.js"
   },
