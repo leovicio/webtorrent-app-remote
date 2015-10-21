@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node server",
     "test": "standard",
-    "build": "browserify -t browserify-css --autoInject=true ./public/javascripts/main.js | uglifyjs > ./public/javascripts/build/bundle.min.js"
+    "build": "browserify -t browserify-css --autoInject=true ./client/javascripts/main.js | uglifyjs > ./client/javascripts/build/bundle.min.js"
   },
   "dependencies": {
     "angular": "^1.4.7",

@@ -1,4 +1,5 @@
-module.exports = function (app, WebTorrent, Torrent) {
+/* global WebTorrent */
+module.exports = function (app, Torrent) {
   app.controller('CreateTorrent', [
     '$scope',
     'webSocket',
