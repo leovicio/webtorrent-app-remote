@@ -217,9 +217,10 @@ module.exports = function (app) {
       /* Drag and drop functions */
       $scope.files = []
       $scope.$watch('files', function () {
-        if($scope.files.length)
+        if ($scope.files.length) {
           torrent._addTorrentCallbackSuccess($scope.files)
-      });
+        }
+      })
 
       /*  Remove listeners when destroying controller */
       $scope.$on('$destroy', function () {

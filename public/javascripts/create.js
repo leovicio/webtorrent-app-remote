@@ -66,7 +66,7 @@ module.exports = function (app, WebTorrent, Torrent) {
           $scope.create($scope.files)
           $scope.$root.files = $scope.files
         }
-      });
+      })
 
       $window.onbeforeunload = function (e) {
         window.confirm('You\'re still uploading the file, are you sure you\'re gonna leave?')
