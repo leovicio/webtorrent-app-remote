@@ -114,11 +114,13 @@ div[ngf-drop] {
   border-radius: 5px;
   text-align: center;
   color: #bbb;
-  margin-bottom: 20px; }
+  margin-bottom: 20px;
+  cursor: pointer; }
   div[ngf-drop] h5 {
     padding: 20px; }
 
-div[ngf-drop].hover {
-  opacity: 0.8; }
+div[ngf-drop].hover, div[ngf-drop]:hover {
+  opacity: 0.8;
+  background: #eee; }
 
 /*# sourceMappingURL=style.css.map */
