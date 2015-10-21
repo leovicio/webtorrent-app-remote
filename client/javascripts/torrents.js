@@ -237,23 +237,30 @@ module.exports = function (app) {
     'data',
     'webSocket',
     function ($scope, $modalInstance, data, webSocket) {
+      $scope.loading = true
       $scope.tab = 'info'
       $scope.setTab = function (tab) {
         $scope.tab = tab
       }
 
+      $scope.refresh = function () {
+        $scope.loading = true
+        webSocket.emit('torrent:get_info', {
+          'infoHash': data.hash
+        })
+      }
+
       /**
       * Ask socket for torrent info
       */
-      webSocket.emit('torrent:get_info', {
-        'infoHash': data.hash
-      })
+      $scope.refresh()
 
       /**
       * Called when socket send torrent info
       */
       webSocket.on('torrent:info', function (message) {
         $scope.torrent = message.torrent
+        $scope.loading = false
       })
 
       /**
