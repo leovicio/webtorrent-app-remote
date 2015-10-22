@@ -7,7 +7,6 @@ module.exports = function (app) {
     '$window',
     'Notification',
     function ($scope, $rootScope, $location, webSocket, $window, Notification) {
-
       $scope.loading = false
       $scope.login = {}
       $scope.form = {}
@@ -23,7 +22,7 @@ module.exports = function (app) {
           Notification.success('login successful')
           webSocket.emit('startCrons')
           $location.state('torrents')
-        } else { 
+        } else {
           Notification.error('Invalid User / Password')
         }
 

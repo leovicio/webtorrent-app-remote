@@ -1,10 +1,11 @@
 /**
- * Module dependecies 
+ * Module dependecies
  */
 var WebTorrent = require('webtorrent-hybrid/node_modules/webtorrent')
-//var debug = require('debug')('webtorrentapp:server')
+// var debug = require('debug')('webtorrentapp:server')
+var io = require('socket.io')
 var http = require('http')
-var NodeStatic = require( 'node-static' )
+var NodeStatic = require('node-static')
 
 /**
  * Initiate levelup database
@@ -12,30 +13,26 @@ var NodeStatic = require( 'node-static' )
 var levelup = require('levelup')
 var db = levelup(__dirname + '/settings/database')
 
-
 /**
  * Static file serve
  */
-var file = new NodeStatic.Server( './client', {
-    cache: 0,
-    gzip: true
-} );
-
-var port = process.env.PORT || '3001';
-var server = http.createServer(function ( request, response ) {
-    request.addListener( 'end', function () {
-        file.serve( request, response );
-    } ).resume();
+var file = new NodeStatic.Server('./client', {
+  cache: 0,
+  gzip: true
 })
 
-server.listen(port);
+var port = process.env.PORT || '3001'
+var server = http.createServer(function (request, response) {
+  request.addListener('end', function () {
+    file.serve(request, response)
+  }).resume()
+})
+
+server.listen(port)
 
 /**
- * Socket IO Server 
+ * Socket IO Server
  */
-var io = require('socket.io')
-var http = require('http')
-
 io = io.listen(server)
 
 /**
@@ -58,7 +55,7 @@ var System_info = require('../lib/system_info.js')
 System_info = new System_info()
 
 var User = require('../lib/user.js')
-User = new User
+User = new User()
 User.db = db
 
 /**
