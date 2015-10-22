@@ -8,7 +8,7 @@ var auth = require('http-auth')
 var logger = require('morgan')
 var cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser')
-var WebTorrent = require('webtorrent-hybrid')
+var WebTorrent = require('webtorrent-hybrid/node_modules/webtorrent')
 var debug = require('debug')('webtorrentapp:server');
 var http = require('http');
 
