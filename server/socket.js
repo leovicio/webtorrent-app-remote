@@ -6,12 +6,13 @@ module.exports = function (io, Torrent, System, tracker, user) {
   io.sockets.on('connection', function (socket) {
     socket.auth = false
     socket.on('authenticate', function (data) {
-      user.checkLogin({user: data.user, pass: data.password}, function (err, success) {
-        if (!err && success) {
+      user.checkLogin({user: data.user, pass: data.password}, function (err, user) {
+        if (!err && user) {
           clients.push(socket.id)
           crons[socket.id] = []
           socket.emit('auth:reply', {
-            auth: true
+            auth: true,
+            user: user
           })
         } else {
           socket.emit('auth:reply', {
@@ -94,7 +95,6 @@ module.exports = function (io, Torrent, System, tracker, user) {
         return false
       }
       Torrent.getTorrent(data.infoHash, function (torrent) {
-        console.log('Got torrent info')
         io.to(socket.id).emit('torrent:info', {
           torrent: torrent
         })

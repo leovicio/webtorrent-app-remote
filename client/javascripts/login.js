@@ -3,10 +3,11 @@ module.exports = function (app) {
     '$scope',
     '$rootScope',
     '$location',
+    '$timeout',
     'webSocket',
     '$window',
     'Notification',
-    function ($scope, $rootScope, $location, webSocket, $window, Notification) {
+    function ($scope, $rootScope, $location, $timeout, webSocket, $window, Notification) {
       $scope.loading = false
       $scope.login = {}
       $scope.form = {}
@@ -17,23 +18,24 @@ module.exports = function (app) {
        * Called when server sent login response
        */
       Login.prototype._onServerResponse = function (data) {
-        console.log(data)
         if (data.auth) {
           Notification.success('login successful')
           webSocket.emit('startCrons')
-          $location.state('torrents')
+          $timeout(function () {
+            $rootScope.nome = data.user.nome
+            $scope.loading = false
+            $location.path('torrents')
+          }, 2000)
         } else {
           Notification.error('Invalid User / Password')
+          $scope.loading = false
         }
-
-        $scope.loading = false
       }
 
       /**
        * Send login informations to server
        */
       Login.prototype._sendLoginInformations = function (data) {
-        console.log(data)
         webSocket.emit('authenticate', data)
       }
 
