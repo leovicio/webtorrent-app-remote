@@ -17,7 +17,7 @@ var db = levelup(__dirname + '/settings/database')
  * Static file serve
  */
 var file = new NodeStatic.Server( './client', {
-    cache: 3600,
+    cache: 0,
     gzip: true
 } );
 
@@ -44,18 +44,24 @@ io = io.listen(server)
 var client = new WebTorrent()
 
 /**
- * Require torrent, tracker, and system utils
+ * Require torrent, tracker, system and user utils
  */
 var Torrent = require('../lib/torrent.js')
 Torrent = new Torrent()
 Torrent.client = client
+
 var Tracker = require('../lib/tracker.js')
 Tracker = new Tracker()
 Tracker.check_settings()
+
 var System_info = require('../lib/system_info.js')
 System_info = new System_info()
+
+var User = require('../lib/user.js')
+User = new User
+User.db = db
 
 /**
  * Now require Socket.js Events
  */
-require('./socket.js')(io, Torrent, System_info, Tracker)
+require('./socket.js')(io, Torrent, System_info, Tracker, User)

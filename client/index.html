@@ -8,7 +8,7 @@
     <style type="text/css" data-href="app.css"></style>
   </head>
   
-  <body ng-app="webtorrent" ng-controller="WebTorrent">
+  <body ng-app="webtorrent">
     
     <div ng-if="!loaded" class="app_loader">
       <div id="progress">WebTorrent App Loading ... <span id='prc'></span> </div>
@@ -19,7 +19,7 @@
         
       </div>
     </div>
-    <div ng-include="'/template/header.html'"></div>
+    <div ng-if="current_tab != '/login'" ng-include="'/template/header.html'"></div>
     <div id="container" class="container" style="padding-top: 20px;">
       <div id="page-header"></div>
       <div ng-view></div>

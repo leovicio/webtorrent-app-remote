@@ -1,15 +1,26 @@
-module.exports = function (io, Torrent, System, tracker) {
+module.exports = function (io, Torrent, System, tracker, user) {
   'use strict'
   var clients = []
   var crons = []
 
   io.sockets.on('connection', function (socket) {
-    clients.push(socket.id)
-    crons[socket.id] = []
-
-    socket.emit('init', {
-      welcome: 'welcome to the jungle nanananananana ai ai '
-    })
+    socket.auth = false;
+    
+    socket.on('authenticate', function(data){
+      user.checkLogin({user: data.user, pass: data.password}, function(err, success){
+        if (!err && success){
+          clients.push(socket.id)
+          crons[socket.id] = []
+          socket.emit('auth:reply', {
+            auth: true
+          })
+        } else {
+          socket.emit('auth:reply', {
+            auth: false
+          })
+        }
+      });
+    });
 
     var sendTorrents = function () {
       Torrent.getTorrents(function (torrents) {
@@ -19,7 +30,18 @@ module.exports = function (io, Torrent, System, tracker) {
       })
     }
 
+    var sendServerInfo = function () {
+      System.serverInfo(function (details) {
+        io.to(socket.id).emit('server:info', {
+          details: details
+        })
+      })
+    }
+
     socket.on('startCrons', function (data) {
+      if (!crons[socket.id]) {
+        return false
+      }      
       if (!crons[socket.id]['torrents']) {
         crons[socket.id]['torrents'] = setInterval(sendTorrents, 2500)
         sendTorrents()
@@ -31,15 +53,10 @@ module.exports = function (io, Torrent, System, tracker) {
       }
     })
 
-    var sendServerInfo = function () {
-      System.serverInfo(function (details) {
-        io.to(socket.id).emit('server:info', {
-          details: details
-        })
-      })
-    }
-
     socket.on('torrent:download', function (data) {
+      if (!crons[socket.id]) {
+        return false
+      }      
       Torrent.addTorrent(data.torrent, function () {
         setTimeout(function () {
           io.to(socket.id).emit('torrent:added', {
@@ -50,6 +67,9 @@ module.exports = function (io, Torrent, System, tracker) {
     })
 
     socket.on('torrent:remove', function (data) {
+      if (!crons[socket.id]) {
+        return false
+      }      
       Torrent.remove(data.infoHash, function () {
         io.to(socket.id).emit('torrent:removed', {
           success: true
@@ -58,6 +78,9 @@ module.exports = function (io, Torrent, System, tracker) {
     })
 
     socket.on('torrent:remove_all', function (data) {
+      if (!crons[socket.id]) {
+        return false
+      }      
       Torrent.removeAll(function () {
         var WebTorrent = require('webtorrent-hybrid')
         Torrent.client = new WebTorrent()
@@ -68,6 +91,9 @@ module.exports = function (io, Torrent, System, tracker) {
     })
 
     socket.on('torrent:get_info', function (data) {
+      if (!crons[socket.id]) {
+        return false
+      }      
       Torrent.getTorrent(data.infoHash, function (torrent) {
         console.log('Got torrent info')
         io.to(socket.id).emit('torrent:info', {
@@ -77,6 +103,9 @@ module.exports = function (io, Torrent, System, tracker) {
     })
 
     socket.on('tracker:getOptions', function () {
+      if (!crons[socket.id]) {
+        return false
+      }
       tracker.getOptions(function (options) {
         io.to(socket.id).emit('tracker:options', {
           options: options
@@ -85,6 +114,9 @@ module.exports = function (io, Torrent, System, tracker) {
     })
 
     socket.on('tracker:saveOptions', function (options) {
+      if (!crons[socket.id]) {
+        return false
+      }
       tracker.saveOptions(options, function (res) {
         io.to(socket.id).emit('tracker:optionsSaved', {
           options: res
@@ -93,6 +125,9 @@ module.exports = function (io, Torrent, System, tracker) {
     })
 
     socket.on('tracker:getTracker', function (data) {
+      if (!crons[socket.id]) {
+        return false
+      }
       tracker.getTracker(function (details) {
         io.to(socket.id).emit('tracker:details', {
           details: details
@@ -101,8 +136,10 @@ module.exports = function (io, Torrent, System, tracker) {
     })
 
     socket.on('disconnect', function () {
-      clearInterval(crons[socket.id]['server'])
-      clearInterval(crons[socket.id]['torrent'])
+      if(crons[socket.id]) {
+        clearInterval(crons[socket.id]['server'])
+        clearInterval(crons[socket.id]['torrent'])
+      }
       delete clients[socket.id]
       console.info('Client gone (id=' + socket.id + ').')
     })

@@ -24,18 +24,8 @@ app.run(['$rootScope', '$location', function ($rootScope, $location) {
   })
 }])
 
-app.factory('webSocket', function (socketFactory) {
-  var myIoSocket = io.connect('http://62.75.213.174:3001/', {
-    'force new connection': true
-  })
-  var mySocket = socketFactory({
-    ioSocket: myIoSocket
-  })
-  mySocket.forward('error')
-  mySocket.forward('connect')
-  mySocket.emit('startCrons')
-
-  return mySocket
+app.factory('webSocket', function ($rootScope) {
+  return io.connect('http://62.75.213.174:3001/')
 })
 
 app.filter('status', function () {
@@ -59,8 +49,11 @@ app.config(['$routeProvider', function ($routeProvider) {
   }).when('/create', {
     templateUrl: '/template/create.html',
     controller: 'CreateTorrent'
+  }).when('/login', {
+    templateUrl: '/template/login.html',
+    controller: 'Login'
   }).otherwise({
-    redirectTo: '/torrents'
+    redirectTo: '/login'
   })
 }])
 
