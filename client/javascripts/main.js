@@ -8,5 +8,6 @@ require('./torrents.js')(app)
 require('./tracker.js')(app)
 require('./create.js')(app, torrent)
 require('./login.js')(app)
+require('./users.js')(app)
 
 require('./app.css')

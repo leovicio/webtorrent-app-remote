@@ -24,8 +24,14 @@ app.run(['$rootScope', '$location', function ($rootScope, $location) {
   })
 }])
 
-app.factory('webSocket', function ($rootScope) {
-  return io.connect('http://62.75.213.174:3001/')
+app.factory('webSocket', function ($rootScope, $location) {
+  var socket = io.connect('http://62.75.213.174:3001/')
+  socket.on('loggedout', function () {
+    setTimeout(function(){
+      $location.path('/login')
+    }, 100)
+  })
+  return socket
 })
 
 app.filter('status', function () {
@@ -52,6 +58,9 @@ app.config(['$routeProvider', function ($routeProvider) {
   }).when('/login', {
     templateUrl: '/template/login.html',
     controller: 'Login'
+  }).when('/users', {
+    templateUrl: '/template/users.html',
+    controller: 'Users'
   }).otherwise({
     redirectTo: '/login'
   })

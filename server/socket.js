@@ -23,6 +23,10 @@ module.exports = function (io, Torrent, System, tracker, user) {
     })
 
     var sendTorrents = function () {
+      if (!crons[socket.id]) {
+        socket.emit('loggedout')
+        return false
+      }
       Torrent.getTorrents(function (torrents) {
         io.to(socket.id).emit('torrents', {
           data: torrents
@@ -55,6 +59,7 @@ module.exports = function (io, Torrent, System, tracker, user) {
 
     socket.on('torrent:download', function (data) {
       if (!crons[socket.id]) {
+        socket.emit('loggedout')
         return false
       }
       Torrent.addTorrent(data.torrent, function () {
@@ -68,6 +73,7 @@ module.exports = function (io, Torrent, System, tracker, user) {
 
     socket.on('torrent:remove', function (data) {
       if (!crons[socket.id]) {
+        socket.emit('loggedout')
         return false
       }
       Torrent.remove(data.infoHash, function () {
@@ -79,6 +85,7 @@ module.exports = function (io, Torrent, System, tracker, user) {
 
     socket.on('torrent:remove_all', function (data) {
       if (!crons[socket.id]) {
+        socket.emit('loggedout')
         return false
       }
       Torrent.removeAll(function () {
@@ -92,6 +99,7 @@ module.exports = function (io, Torrent, System, tracker, user) {
 
     socket.on('torrent:get_info', function (data) {
       if (!crons[socket.id]) {
+        socket.emit('loggedout')
         return false
       }
       Torrent.getTorrent(data.infoHash, function (torrent) {
@@ -103,6 +111,7 @@ module.exports = function (io, Torrent, System, tracker, user) {
 
     socket.on('tracker:getOptions', function () {
       if (!crons[socket.id]) {
+        socket.emit('loggedout')
         return false
       }
       tracker.getOptions(function (options) {
@@ -114,6 +123,7 @@ module.exports = function (io, Torrent, System, tracker, user) {
 
     socket.on('tracker:saveOptions', function (options) {
       if (!crons[socket.id]) {
+        socket.emit('loggedout')
         return false
       }
       tracker.saveOptions(options, function (res) {
@@ -125,6 +135,7 @@ module.exports = function (io, Torrent, System, tracker, user) {
 
     socket.on('tracker:getTracker', function (data) {
       if (!crons[socket.id]) {
+        socket.emit('loggedout')
         return false
       }
       tracker.getTracker(function (details) {
@@ -134,13 +145,34 @@ module.exports = function (io, Torrent, System, tracker, user) {
       })
     })
 
+    socket.on('users:list', function (data) {
+      if (!crons[socket.id]) {
+        socket.emit('loggedout')
+        return false
+      }
+      user.list(function (users) {
+        io.to(socket.id).emit('users:listed', {
+          users: users
+        })
+      })
+    })
+
+    socket.on('users:save', function (data) {
+      if (!crons[socket.id]) {
+        socket.emit('loggedout')
+        return false
+      }
+      user.signup(data, function (users) {
+        io.to(socket.id).emit('users:saved')
+      })
+    })
+
     socket.on('disconnect', function () {
       if (crons[socket.id]) {
         clearInterval(crons[socket.id]['server'])
         clearInterval(crons[socket.id]['torrent'])
       }
       delete clients[socket.id]
-      console.info('Client gone (id=' + socket.id + ').')
     })
   })
 }

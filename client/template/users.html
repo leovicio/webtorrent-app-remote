@@ -1,0 +1,84 @@
+<div class="row">
+    <div class="span2">
+        <ul class="nav nav-pills nav-stacked nav-list">
+            <li ng-class="{'active': tab == 'list'}">
+                <a ng-click="setTab($event, 'list')" href="#">
+                    <i class="icon-minus pull-right hide remove-group" rel="tooltip" title="User list"></i> List
+                </a>
+            </li>
+            <li ng-class="{'active': tab == 'create'}">
+                <a ng-click="setTab($event, 'create')" href="#">
+                    <i class="icon-minus pull-right hide remove-group" rel="tooltip" title="Add new user"></i> Create
+                </a>
+
+            </li>
+        </ul>
+    </div>
+    <div class="span10" ng-if="tab == 'list'">
+        <table class="table table-condensed table-hover">
+          <tr class="torrent-row unselectable" style="width:100%;" ng-repeat="user in users">
+            <td>
+              <table class="no-table torrent-info" style="width:100%;">
+                <tr>
+                  <td colspan="4">
+                    <h5 class="torrent-title pull-left">
+            				  {{::user.name}} - ({{user.user}})
+                    </h5>
+                  </td>
+                  <td style="width:15%;">
+                    <form action="/" method="post" class="no-margin pull-left">
+                      <div class="btn-group pull-right">
+                        <button type="submit" class="btn btn-mini" name="edit" value="edit"><i class="icon-edit"></i></button>
+                        <button type="submit" class="btn btn-mini" name="remove" value="remove"><i class="icon-trash"></i></button>
+                      </div>
+                    </form>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="4">
+                    <h5><small>E-mail: {{::user.email}}</h5>
+                    <div class="clearfix"></div>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="4">
+                    <h5><small>Total torrents: {{::user.numTorrents}}</h5>
+                    <div class="clearfix"></div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+    </div>
+    <div class="span10" ng-if="tab == 'create'">
+        <h4>{{(action == 'edit') ? 'Edit user' : 'Create new user'}}</h4>
+        <form ng-submit="saveUser($event)">
+            <div class="control-group">
+                <label for="control-label">Full Name: </label>
+                <div class="controls">
+                  <input ng-model="new_user.name" type="text" class="form-control">
+                </div>
+            </div>
+            <div class="control-group">
+                <label for="control-label">Login: </label>
+                <div class="controls">
+                  <input ng-model="new_user.user" type="text" class="form-control">
+                </div>
+            </div>
+            <div class="control-group">
+                <label for="control-label">Password: </label>
+                <div class="controls">
+                  <input ng-model="new_user.password" type="password" class="form-control">
+                </div>
+            </div>
+            <div class="control-group">
+                <label for="control-label">E-mail: </label>
+                <div class="controls">
+                  <input ng-model="new_user.email" type="email" class="form-control">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-default">Save <i class="icon-refresh refresh-animated pull-right" ng-if="loading"></i></button>
+        </form>
+    </div>
+</div>

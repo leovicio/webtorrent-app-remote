@@ -21,11 +21,9 @@ module.exports = function (app) {
         if (data.auth) {
           Notification.success('login successful')
           webSocket.emit('startCrons')
-          $timeout(function () {
-            $rootScope.nome = data.user.nome
-            $scope.loading = false
-            $location.path('torrents')
-          }, 2000)
+          $rootScope.nome = data.user.nome
+          $scope.loading = false
+          $location.path('torrents')
         } else {
           Notification.error('Invalid User / Password')
           $scope.loading = false

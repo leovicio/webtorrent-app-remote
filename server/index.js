@@ -6,12 +6,12 @@ var WebTorrent = require('webtorrent-hybrid/node_modules/webtorrent')
 var io = require('socket.io')
 var http = require('http')
 var NodeStatic = require('node-static')
-
+var loki = require('lokijs')
 /**
- * Initiate levelup database
+ * Initiate database
  */
-var levelup = require('levelup')
-var db = levelup(__dirname + '/settings/database')
+var db = new loki('./settings/users.json', {autosave: true})
+var users = db.addCollection('users')
 
 /**
  * Static file serve
@@ -56,8 +56,10 @@ System_info = new System_info()
 
 var User = require('../lib/user.js')
 User = new User()
-User.db = db
+User.db = users
 
+// The user will be an "default"
+User.signup({user: 'admin', pass: 'root', name: 'Administator', numTorrents: 0, email: 'admin@admin.com'}, function (err, user) {})
 /**
  * Now require Socket.js Events
  */
