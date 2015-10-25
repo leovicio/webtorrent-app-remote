@@ -197,12 +197,17 @@ module.exports = function (io, Torrent, System, tracker, user) {
       })
     })
 
-    socket.on('disconnect', function () {
+    var logout = function () {
       if (crons[socket.id]) {
         clearInterval(crons[socket.id]['server'])
         clearInterval(crons[socket.id]['torrent'])
       }
       delete clients[socket.id]
-    })
+      socket.emit('loggedout')
+    }
+
+    socket.on('users:loggout', logout)
+
+    socket.on('disconnect', logout)
   })
 }

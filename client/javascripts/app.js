@@ -17,7 +17,15 @@ var app = angular.module('webtorrent', [
   'ngFileUpload'
 ])
 
-app.run(['$rootScope', '$location', function ($rootScope, $location) {
+app.factory('webSocket', function ($rootScope, $location) {
+  var socket = io.connect('http://62.75.213.174:3001/')
+  socket.on('loggedout', function () {
+    $location.path('/login')
+  })
+  return socket
+})
+
+app.run(['$rootScope', '$location', function ($rootScope, $location, webSocket) {
   $rootScope.$on('$routeChangeSuccess', function (e, current, pre) {
     $rootScope.current_tab = $location.path()
     $rootScope.loaded = true
@@ -31,14 +39,6 @@ app.run(['$rootScope', '$location', function ($rootScope, $location) {
     }
   })
 }])
-
-app.factory('webSocket', function ($rootScope, $location) {
-  var socket = io.connect('http://62.75.213.174:3001/')
-  socket.on('loggedout', function () {
-    $location.path('/login')
-  })
-  return socket
-})
 
 app.filter('status', function () {
   return function (item) {
@@ -89,4 +89,12 @@ app.directive('filelistBind', function () {
   }
 })
 
+app.controller('HeaderController', ['$scope', 'webSocket', function ($scope, webSocket) {
+  $scope.loggout = function ($event) {
+    $event.preventDefault()
+    $event.stopPropagation()
+    $event.stopImmediatePropagation()
+    webSocket.emit('users:loggout')
+  }
+}])
 module.exports = app
