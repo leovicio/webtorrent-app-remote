@@ -89,12 +89,16 @@ app.directive('filelistBind', function () {
   }
 })
 
-app.controller('HeaderController', ['$scope', 'webSocket', function ($scope, webSocket) {
+app.controller('HeaderController', ['$scope','$location', 'webSocket', 'Notification', function ($scope, $location, webSocket, Notification) {
   $scope.loggout = function ($event) {
     $event.preventDefault()
     $event.stopPropagation()
     $event.stopImmediatePropagation()
     webSocket.emit('users:loggout')
+    $location.path('/login')
   }
+  webSocket.on('permission:denied', function () {
+    Notification.error('Permission denied')
+  })
 }])
 module.exports = app

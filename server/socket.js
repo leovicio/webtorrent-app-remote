@@ -8,8 +8,11 @@ module.exports = function (io, Torrent, System, tracker, user) {
     socket.on('authenticate', function (data) {
       user.checkLogin({user: data.user, pass: data.password}, function (err, user) {
         if (!err && user) {
-          clients.push(socket.id)
+          clients[socket.id] = []
           crons[socket.id] = []
+          if(data.user == 'admin') {
+            clients[socket.id]['admin'] = true
+          }
           socket.emit('auth:reply', {
             auth: true,
             user: user
@@ -62,6 +65,9 @@ module.exports = function (io, Torrent, System, tracker, user) {
         socket.emit('loggedout')
         return false
       }
+      if (!clients[socket.id]['admin']) {
+        socket.emit('permission:denied')
+      }
       Torrent.addTorrent(data.torrent, function () {
         setTimeout(function () {
           io.to(socket.id).emit('torrent:added', {
@@ -76,6 +82,9 @@ module.exports = function (io, Torrent, System, tracker, user) {
         socket.emit('loggedout')
         return false
       }
+      if (!clients[socket.id]['admin']) {
+        socket.emit('permission:denied')
+      }
       Torrent.remove(data.infoHash, function () {
         io.to(socket.id).emit('torrent:removed', {
           success: true
@@ -87,6 +96,9 @@ module.exports = function (io, Torrent, System, tracker, user) {
       if (!crons[socket.id]) {
         socket.emit('loggedout')
         return false
+      }
+      if (!clients[socket.id]['admin']) {
+        socket.emit('permission:denied')
       }
       Torrent.removeAll(function () {
         var WebTorrent = require('webtorrent-hybrid')
@@ -125,6 +137,9 @@ module.exports = function (io, Torrent, System, tracker, user) {
       if (!crons[socket.id]) {
         socket.emit('loggedout')
         return false
+      }
+      if (!clients[socket.id]['admin']) {
+        socket.emit('permission:denied')
       }
       tracker.saveOptions(options, function (res) {
         io.to(socket.id).emit('tracker:optionsSaved', {
@@ -172,6 +187,9 @@ module.exports = function (io, Torrent, System, tracker, user) {
         socket.emit('loggedout')
         return false
       }
+      if (!clients[socket.id]['admin']) {
+        socket.emit('permission:denied')
+      }
       user.signup(data, function (users) {
         io.to(socket.id).emit('users:saved')
       })
@@ -182,6 +200,9 @@ module.exports = function (io, Torrent, System, tracker, user) {
         socket.emit('loggedout')
         return false
       }
+      if (!clients[socket.id]['admin']) {
+        socket.emit('permission:denied')
+      }
       user.update(data, function (users) {
         io.to(socket.id).emit('users:saved')
       })
@@ -191,6 +212,9 @@ module.exports = function (io, Torrent, System, tracker, user) {
       if (!crons[socket.id]) {
         socket.emit('loggedout')
         return false
+      }
+      if (!clients[socket.id]['admin']) {
+        socket.emit('permission:denied')
       }
       user.remove(id, function () {
         io.to(socket.id).emit('users:removed')
