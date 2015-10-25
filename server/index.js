@@ -10,9 +10,11 @@ var Loki = require('lokijs')
 /**
  * Initiate database
  */
-var db = new Loki('./settings/users.json', {autosave: true})
+var db = new Loki('./server/settings/users.json', {autoload: true})
 var users = db.addCollection('users')
-
+setInterval(function () {
+  db.saveDatabase()
+}, 2000)
 /**
  * Static file serve
  */
