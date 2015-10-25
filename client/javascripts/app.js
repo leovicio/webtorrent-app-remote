@@ -30,11 +30,11 @@ app.run(['$rootScope', '$location', function ($rootScope, $location, webSocket) 
     $rootScope.current_tab = $location.path()
     $rootScope.loaded = true
   })
-  $rootScope.$on( "$routeChangeStart", function(event, next, current) {
+  $rootScope.$on('$routeChangeStart', function (event, next, current) {
     if ($rootScope.loggedInUser == null) {
       // no logged user, redirect to /login
-      if ( next.templateUrl !== "/template/login.html") {
-        $location.path("/login");
+      if (next.templateUrl !== '/template/login.html') {
+        $location.path('/login')
       }
     }
   })
@@ -89,7 +89,7 @@ app.directive('filelistBind', function () {
   }
 })
 
-app.controller('HeaderController', ['$scope','$location', 'webSocket', 'Notification', function ($scope, $location, webSocket, Notification) {
+app.controller('HeaderController', ['$scope', '$location', 'webSocket', 'Notification', function ($scope, $location, webSocket, Notification) {
   $scope.loggout = function ($event) {
     $event.preventDefault()
     $event.stopPropagation()

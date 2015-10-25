@@ -10,7 +10,7 @@ module.exports = function (io, Torrent, System, tracker, user) {
         if (!err && user) {
           clients[socket.id] = []
           crons[socket.id] = []
-          if(data.user == 'admin') {
+          if (data.user === 'admin') {
             clients[socket.id]['admin'] = true
           }
           socket.emit('auth:reply', {

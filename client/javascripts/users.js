@@ -96,7 +96,7 @@ module.exports = function (app) {
       }
 
       $scope.removeUser = function ($event, $user, $user_name) {
-        if (confirm('Are you sure you want remove the user ' + $user_name + '?')) {
+        if (window.confirm('Are you sure you want remove the user ' + $user_name + '?')) {
           webSocket.emit('users:remove', $user)
           $scope.loading_users = true
         }
