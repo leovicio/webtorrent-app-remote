@@ -48,6 +48,11 @@ module.exports = function (app) {
         $scope.loading_users = false
       }
 
+      Users.prototype._onUserRemoved = function () {
+        webSocket.emit('users:list')
+        Notification.success('User removed!')
+      }
+
       var users = new Users()
 
       // Call user lists
@@ -56,7 +61,7 @@ module.exports = function (app) {
       // Read events
       webSocket.on('users:listed', users._onUserList)
       webSocket.on('users:saved', users._onUserCreated)
-
+      webSocket.on('users:removed', users._onUserRemoved)
       /**
       * Set active tab (user list or add user)
       */
@@ -88,6 +93,13 @@ module.exports = function (app) {
         $scope.tab = 'list'
         $scope.action = 'create'
         $scope.loading_users = true
+      }
+
+      $scope.removeUser = function ($event, $user, $user_name) {
+        if (confirm('Are you sure you want remove the user ' + $user_name + '?')) {
+          webSocket.emit('users:remove', $user)
+          $scope.loading_users = true
+        }
       }
 
       /**

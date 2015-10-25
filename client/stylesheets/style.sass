@@ -2,12 +2,12 @@ html, body
   height: 100%
 
 
-body 
+body
   margin: 0px
   padding: 0px
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif
 
-a 
+a
   color: #00B7FF
 
 header, footer
@@ -19,7 +19,7 @@ header, footer
   background: -ms-linear-gradient(top, rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%)
   background: linear-gradient(to bottom, rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%)
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#cccccc',GradientType=0 )
-  
+
 header
   height: 120px
 
@@ -27,13 +27,13 @@ header
     margin: 40px
     max-width: 40px
     float: left
-  
+
   h2
     float: left
     line-height: 120px
     margin: 0px
-  
-  
+
+
 #buttons, #filter
   padding-left: 50px
   background-color: #BFBFBF
@@ -48,11 +48,11 @@ header
 #buttons
   .ratio
     margin: 8px
-    
+
 #filter
   form
     margin: 5px 0px
-  
+
 #content
   min-height: 100%
   margin-bottom: -75px
@@ -67,8 +67,8 @@ header
       border-bottom: 1px solid #000
     li.active
       background-color: yellow
-  
-  
+
+
 #content:after, #sidebar:after
   content: ""
   display: block
@@ -82,25 +82,25 @@ footer, #content:after
 
 footer
   border-top: 2px solid #B3B3B3
-  
+
   .footer_msg
     line-height: 75px
 
 
-#main-menu .nav a 
+#main-menu .nav a
   line-height: 41px
 
 #avatar
   height: 40px
   margin-top: -8px
 
-#footer 
+#footer
   margin-top: 40px
   width: 200px
   margin-left: auto
   margin-right: auto
 
-.unselectable 
+.unselectable
   -moz-user-select: -moz-none
   -khtml-user-select: none
   -webkit-user-select: none
@@ -109,17 +109,17 @@ footer
 
 .progress .bar
   line-height: 20px
-  
+
 small.tracker_warning
   float: left
   width: 70%
   left: 160px
   position: relative
-  
+
 .table th.noborder, .table td.noborder
   border-top: none !important
-  
-div[ngf-drop] 
+
+div[ngf-drop]
   border: 2px dashed #bbb
   border-radius: 5px
   text-align: center
@@ -133,7 +133,7 @@ div[ngf-drop].hover, div[ngf-drop]:hover
   opacity: 0.8
   background: #eee
 
-.refresh-animated 
+.refresh-animated
   animation: spin 1s infinite linear
   -webkit-animation: spin 1s infinite linear
 
@@ -143,8 +143,12 @@ div[ngf-drop].hover, div[ngf-drop]:hover
     transform: rotate(0deg)
   100%
     transform: rotate(360deg)
-    
+
 .form-signin
   max-width: 300px
   padding: 19px 29px 29px
   margin: 0 auto 20px
+
+.icon-loading
+  position: absolute
+  left: 50%

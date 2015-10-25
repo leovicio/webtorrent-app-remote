@@ -137,4 +137,8 @@ div[ngf-drop].hover, div[ngf-drop]:hover {
   padding: 19px 29px 29px;
   margin: 0 auto 20px; }
 
+.icon-loading {
+  position: absolute;
+  left: 50%; }
+
 /*# sourceMappingURL=style.css.map */

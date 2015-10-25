@@ -14,7 +14,7 @@
             </li>
         </ul>
     </div>
-    <i style="font-size: 30" ng-if="loading_users" class="icon-refresh refresh-animated pull-right"></i>
+    <span style="font-size: 30px" ng-if="loading_users" class="icon-refresh refresh-animated icon-loading"></span>
     <div class="span10" ng-if="tab == 'list'">
         <table class="table table-condensed table-hover">
           <tr class="torrent-row unselectable" style="width:100%;" ng-repeat="user in users">
@@ -27,12 +27,10 @@
                     </h5>
                   </td>
                   <td style="width:15%;">
-                    <form action="/" method="post" class="no-margin pull-left">
                       <div class="btn-group pull-right">
                         <a href="#/users/{{user.$loki}}"><button type="button" class="btn btn-mini" name="edit" value="edit"><i class="icon-edit"></i></button></a>
-                        <button type="submit" class="btn btn-mini" name="remove" value="remove"><i class="icon-trash"></i></button>
+                        <button type="submit" class="btn btn-mini" name="remove" ng-click="removeUser($event, user.$loki, user.name)" value="remove"><i class="icon-trash"></i></button>
                       </div>
-                    </form>
                   </td>
                 </tr>
                 <tr>
