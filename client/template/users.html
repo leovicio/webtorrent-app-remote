@@ -14,6 +14,7 @@
             </li>
         </ul>
     </div>
+    <i style="font-size: 30" ng-if="loading_users" class="icon-refresh refresh-animated pull-right"></i>
     <div class="span10" ng-if="tab == 'list'">
         <table class="table table-condensed table-hover">
           <tr class="torrent-row unselectable" style="width:100%;" ng-repeat="user in users">

@@ -16,6 +16,7 @@ module.exports = function (app) {
       $scope.user = {}
       $scope.form = {}
       $scope.user_form = {}
+      $scope.loading_users = true
 
       function Users () { }
 
@@ -24,6 +25,9 @@ module.exports = function (app) {
        */
       Users.prototype._onUserList = function (data) {
         $scope.users = data.users
+        $timeout(function () {
+          $scope.loading_users = false
+        })
       }
 
       /**
@@ -33,6 +37,7 @@ module.exports = function (app) {
         $scope.loading = false
         Notification.success('User saved!')
         webSocket.emit('users:list')
+        $scope.loading_users = true
       }
 
       /**
@@ -40,6 +45,7 @@ module.exports = function (app) {
        */
       Users.prototype._onUserInfo = function (data) {
         $scope.user_form = data.user
+        $scope.loading_users = false
       }
 
       var users = new Users()
@@ -81,6 +87,7 @@ module.exports = function (app) {
         $scope.user_form = 0
         $scope.tab = 'list'
         $scope.action = 'create'
+        $scope.loading_users = true
       }
 
       /**
