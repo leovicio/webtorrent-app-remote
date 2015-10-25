@@ -6,11 +6,11 @@ var WebTorrent = require('webtorrent-hybrid/node_modules/webtorrent')
 var io = require('socket.io')
 var http = require('http')
 var NodeStatic = require('node-static')
-var loki = require('lokijs')
+var Loki = require('lokijs')
 /**
  * Initiate database
  */
-var db = new loki('./settings/users.json', {autosave: true})
+var db = new Loki('./settings/users.json', {autosave: true})
 var users = db.addCollection('users')
 
 /**
@@ -59,7 +59,7 @@ User = new User()
 User.db = users
 
 // The user will be an "default"
-User.signup({user: 'admin', pass: 'root', name: 'Administator', numTorrents: 0, email: 'admin@admin.com'}, function (err, user) {})
+User.signup({user: 'admin', pass: 'root', name: 'Administator', numTorrents: 0, email: 'admin@admin.com'}, function () {})
 /**
  * Now require Socket.js Events
  */

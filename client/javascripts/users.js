@@ -4,16 +4,18 @@ module.exports = function (app) {
     '$rootScope',
     '$location',
     '$timeout',
+    '$route',
+    '$routeParams',
     'webSocket',
     '$window',
     'Notification',
-    function ($scope, $rootScope, $location, $timeout, webSocket, $window, Notification) {
+    function ($scope, $rootScope, $location, $timeout, $route, $routeParams, webSocket, $window, Notification) {
       $scope.tab = 'list'
       $scope.loading = false
       $scope.users = {}
       $scope.user = {}
       $scope.form = {}
-      $scope.new_user = {}
+      $scope.user_form = {}
 
       function Users () { }
 
@@ -21,7 +23,6 @@ module.exports = function (app) {
        * Called when server sent user list
        */
       Users.prototype._onUserList = function (data) {
-        console.log(data)
         $scope.users = data.users
       }
 
@@ -32,6 +33,13 @@ module.exports = function (app) {
         $scope.loading = false
         Notification.success('User saved!')
         webSocket.emit('users:list')
+      }
+
+      /**
+       * Called when server sent user info
+       */
+      Users.prototype._onUserInfo = function (data) {
+        $scope.user_form = data.user
       }
 
       var users = new Users()
@@ -60,9 +68,29 @@ module.exports = function (app) {
         $event.preventDefault()
         $event.stopPropagation()
         $event.stopImmediatePropagation()
-        $scope.new_user.numTorrents = 0
-        webSocket.emit('users:save', $scope.new_user)
+        if (!$scope.user_form.numTorrents) {
+          $scope.user_form.numTorrents = 0
+        }
+
+        if ($routeParams.id) {
+          webSocket.emit('users:update', $scope.user_form)
+        } else {
+          webSocket.emit('users:save', $scope.user_form)
+        }
         $scope.loading = true
+        $scope.user_form = 0
+        $scope.tab = 'list'
+        $scope.action = 'create'
+      }
+
+      /**
+      * If user id param, editing user
+      */
+      if ($routeParams.id) {
+        webSocket.emit('users:getInfo', $routeParams.id)
+        webSocket.on('users:info', users._onUserInfo)
+        $scope.tab = 'create'
+        $scope.action = 'edit'
       }
     }])
 }

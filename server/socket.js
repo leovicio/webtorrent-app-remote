@@ -157,12 +157,32 @@ module.exports = function (io, Torrent, System, tracker, user) {
       })
     })
 
+    socket.on('users:getInfo', function (id) {
+      if (!crons[socket.id]) {
+        socket.emit('loggedout')
+        return false
+      }
+      user.info(id, function (info) {
+        io.to(socket.id).emit('users:info', {user: info})
+      })
+    })
+
     socket.on('users:save', function (data) {
       if (!crons[socket.id]) {
         socket.emit('loggedout')
         return false
       }
       user.signup(data, function (users) {
+        io.to(socket.id).emit('users:saved')
+      })
+    })
+
+    socket.on('users:update', function (data) {
+      if (!crons[socket.id]) {
+        socket.emit('loggedout')
+        return false
+      }
+      user.update(data, function (users) {
         io.to(socket.id).emit('users:saved')
       })
     })
