@@ -24,6 +24,7 @@ module.exports = function (app) {
           $rootScope.nome = data.user.nome
           $scope.loading = false
           $location.path('torrents')
+          $rootScope.loggedInUser = true
         } else {
           Notification.error('Invalid User / Password')
           $scope.loading = false

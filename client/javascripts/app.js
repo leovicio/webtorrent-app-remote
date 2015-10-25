@@ -22,14 +22,20 @@ app.run(['$rootScope', '$location', function ($rootScope, $location) {
     $rootScope.current_tab = $location.path()
     $rootScope.loaded = true
   })
+  $rootScope.$on( "$routeChangeStart", function(event, next, current) {
+    if ($rootScope.loggedInUser == null) {
+      // no logged user, redirect to /login
+      if ( next.templateUrl !== "/template/login.html") {
+        $location.path("/login");
+      }
+    }
+  })
 }])
 
 app.factory('webSocket', function ($rootScope, $location) {
   var socket = io.connect('http://62.75.213.174:3001/')
   socket.on('loggedout', function () {
-    setTimeout(function () {
-      $location.path('/login')
-    }, 100)
+    $location.path('/login')
   })
   return socket
 })
