@@ -46,7 +46,7 @@
           <table class="no-table torrent-info" style="width:100%;">
           <tr>
             <td colspan="4">
-              <div ngf-drop ngf-select ng-model="files" class="drop-box" 
+              <div ngf-drop ngf-select ng-model="files" class="drop-box"
                     ngf-drag-over-class="hover" ngf-multiple="true" ngf-allow-dir="true">
                 <h5>Drag and drop .torrent files or click here to download</h5>
               </center>
@@ -84,9 +84,9 @@
                 <form action="/" method="post" class="no-margin pull-left">
                   <div class="btn-group pull-right">
                     <a ng-click="torrentInfo(torrent.infoHash)" class="btn btn-mini show-torrent-info"><i class="icon-info-sign"></i></a>
-                    <button type="submit" class="btn btn-mini" name="what" value="stop"><i class="icon-pause"></i></button>
-                    <button type="submit" class="btn btn-mini" name="what" value="start"><i class="icon-play"></i></button>
-                    <a ng-click="remove(torrent.infoHash)" class="btn btn-mini remove-torrent" href="#"><i class="icon-remove"></i></a>
+                    <!--<button type="submit" class="btn btn-mini" name="what" value="stop"><i class="icon-pause"></i></button>
+                    <button type="submit" class="btn btn-mini" name="what" value="start"><i class="icon-play"></i></button>-->
+                    <a ng-if="isAdmin" ng-click="remove(torrent.infoHash)" class="btn btn-mini remove-torrent" href="#"><i class="icon-remove"></i></a>
                   </div>
                 </form>
               </td>

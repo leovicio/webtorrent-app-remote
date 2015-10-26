@@ -22,6 +22,7 @@ module.exports = function (app) {
           Notification.success('login successful')
           webSocket.emit('startCrons')
           $rootScope.user_name = data.user[0].name
+          $rootScope.isAdmin = data.user[0].isAdmin
           $scope.loading = false
           $location.path('torrents')
           $rootScope.loggedInUser = true

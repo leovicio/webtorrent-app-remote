@@ -6,7 +6,7 @@
                     <i class="icon-minus pull-right hide remove-group" rel="tooltip" title="Details"></i> Details
                 </a>
             </li>
-            <li ng-class="{'active': tab == 'options'}">
+            <li ng-class="{'active': tab == 'options'}" ng-if="isAdmin">
                 <a ng-click="setTab($event, 'options')" href="#">
                     <i class="icon-minus pull-right hide remove-group" rel="tooltip" title="Options"></i> Options
                 </a>
@@ -36,7 +36,7 @@
                 </span>
                 <span ng-if="!tracker_opts.tracker_http">
                     disabled
-                </span>                
+                </span>
             </div>
             <div class="span12">
                 <strong>
@@ -51,7 +51,7 @@
             </div>
         </div>
     </div>
-    <div class="span10" ng-if="tab == 'options'">
+    <div class="span10" ng-if="tab == 'options'" ng-if="isAdmin">
         <h4>Tracker Options</h4>
         <form ng-submit="saveOptions($event)" class="form-inline">
             <div class="form-group row">
@@ -77,7 +77,7 @@
             <div class="form-group row">
                 <label for="span3">Port: </label>
                 <input ng-model="tracker_opts.port" type="text" class="form-control">
-            </div>            
+            </div>
             <button type="submit" class="btn btn-default">Save</button>
         </form>
     </div>

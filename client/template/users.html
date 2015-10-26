@@ -6,7 +6,7 @@
                     <i class="icon-minus pull-right hide remove-group" rel="tooltip" title="User list"></i> List
                 </a>
             </li>
-            <li ng-class="{'active': tab == 'create'}">
+            <li ng-class="{'active': tab == 'create'}" ng-if="isAdmin">
                 <a ng-click="setTab($event, 'create')" href="#">
                     <i class="icon-minus pull-right hide remove-group" rel="tooltip" title="Add new user"></i> Create
                 </a>
@@ -27,7 +27,7 @@
                     </h5>
                   </td>
                   <td style="width:15%;">
-                      <div class="btn-group pull-right">
+                      <div class="btn-group pull-right" ng-if="isAdmin">
                         <a href="#/users/{{user.$loki}}"><button type="button" class="btn btn-mini" name="edit" value="edit"><i class="icon-edit"></i></button></a>
                         <button type="submit" class="btn btn-mini" name="remove" ng-click="removeUser($event, user.$loki, user.name)" value="remove"><i class="icon-trash"></i></button>
                       </div>
@@ -50,7 +50,7 @@
           </tr>
         </table>
     </div>
-    <div class="span10" ng-if="tab == 'create'">
+    <div class="span10" ng-if="tab == 'create' && isAdmin">
         <h4>{{(action == 'edit') ? 'Edit user' : 'Create new user'}}</h4>
         <form ng-submit="saveUser($event)">
             <div class="control-group">
