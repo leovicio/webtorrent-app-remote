@@ -10,7 +10,7 @@ module.exports = function (io, Torrent, System, tracker, user) {
         if (!err && user) {
           clients[socket.id] = []
           crons[socket.id] = []
-          if (data.user === 'admin') {
+          if (data.user.isAdmin) {
             clients[socket.id]['admin'] = true
           }
           socket.emit('auth:reply', {
@@ -176,6 +176,9 @@ module.exports = function (io, Torrent, System, tracker, user) {
       if (!crons[socket.id]) {
         socket.emit('loggedout')
         return false
+      }
+      if (!clients[socket.id]['admin']) {
+        socket.emit('permission:denied')
       }
       user.info(id, function (info) {
         io.to(socket.id).emit('users:info', {user: info})

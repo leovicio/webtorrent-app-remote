@@ -60,8 +60,8 @@ var onloadDatabase = function () {
   User.db = users_db
 
   console.log('Database loaded')
-  // The user will be an "default"
-  User.signup({user: 'admin', pass: 'root', name: 'Administator', numTorrents: 0, email: 'admin@admin.com'}, function () {})
+  // The user will be an "default" user
+  User.signup({user: 'admin', pass: 'root', name: 'Administator', numTorrents: 0, email: 'admin@admin.com', isAdmin: true}, function () {})
   /**
   * Now require Socket.js Events
   */

@@ -44,7 +44,10 @@ module.exports = function (app) {
        * Called when server sent user info
        */
       Users.prototype._onUserInfo = function (data) {
-        $scope.user_form = data.user
+        $scope.$apply(function () {
+          data.user.pass = ''
+          $scope.user_form = data.user
+        })
         $scope.loading_users = false
       }
 
@@ -88,11 +91,7 @@ module.exports = function (app) {
         } else {
           webSocket.emit('users:save', $scope.user_form)
         }
-        $scope.loading = true
-        $scope.user_form = 0
-        $scope.tab = 'list'
-        $scope.action = 'create'
-        $scope.loading_users = true
+        $location.path('/list')
       }
 
       $scope.removeUser = function ($event, $user, $user_name) {
