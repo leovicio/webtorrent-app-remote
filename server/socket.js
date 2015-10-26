@@ -13,6 +13,7 @@ module.exports = function (io, Torrent, System, tracker, user) {
           if (data.user.isAdmin) {
             clients[socket.id]['admin'] = true
           }
+          clients[socket.id]['id'] = user.$loki
           socket.emit('auth:reply', {
             auth: true,
             user: user
@@ -177,9 +178,10 @@ module.exports = function (io, Torrent, System, tracker, user) {
         socket.emit('loggedout')
         return false
       }
-      if (!clients[socket.id]['admin']) {
+      if (!clients[socket.id]['admin'] && clients[socket.id]['id'] != id) {
         socket.emit('permission:denied')
       }
+      id = (id == 'me') ? clients[socket.id]['id'] : id
       user.info(id, function (info) {
         io.to(socket.id).emit('users:info', {user: info})
       })
@@ -190,7 +192,7 @@ module.exports = function (io, Torrent, System, tracker, user) {
         socket.emit('loggedout')
         return false
       }
-      if (!clients[socket.id]['admin']) {
+      if (!clients[socket.id]['admin'] && clients[socket.id]['id'] != data.$loki) {
         socket.emit('permission:denied')
       }
       user.signup(data, function (users) {

@@ -13,6 +13,7 @@
 							<li ng-class="{'active': current_tab == '/users'}"><a href="#/users">Users</a></li>
 					</ul>
         <ul class="nav pull-right">
+					<li ng-class="{'active': current_tab == '/users/me'}"><a href="#/users/me">My Account</a></li>
           <li><a ng-click="loggout($event)" href="/">Logout ({{::user_name}})</a></li>
         </ul>
       </div>
