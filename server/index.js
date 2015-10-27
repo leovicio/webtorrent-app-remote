@@ -53,9 +53,9 @@ var onloadDatabase = function () {
   var User = require('../lib/user.js')
   User = new User()
 
-  var users_db = db.getCollection('users');
+  var users_db = db.getCollection('users')
   if (users_db === null) {
-    users_db = db.addCollection('users');
+    users_db = db.addCollection('users')
   }
   User.db = users_db
 
@@ -75,7 +75,7 @@ var onloadDatabase = function () {
 console.log('Loading database')
 var db = new Loki('./server/settings/users.json', {
   autoload: true,
-  autoloadCallback : onloadDatabase,
+  autoloadCallback: onloadDatabase,
   autosave: true,
   autosaveInterval: 10000
 })
