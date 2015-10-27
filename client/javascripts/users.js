@@ -91,7 +91,7 @@ module.exports = function (app) {
         } else {
           webSocket.emit('users:save', $scope.user_form)
         }
-        $location.path('/list')
+        $location.path('users')
       }
 
       $scope.removeUser = function ($event, $user, $user_name) {
