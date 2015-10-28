@@ -6,14 +6,14 @@ module.exports = function (io, Torrent, System, tracker, user) {
     socket.auth = false
     socket.on('authenticate', function (data) {
       user.checkLogin({user: data.user, pass: data.password}, function (err, user) {
-        if (!err && user) {
+        if (!err && user.length) {
           clients[socket.id] = []
           clients[socket.id]['cron_torrents'] = false
           clients[socket.id]['cron_server'] = false
-          if (data.user.isAdmin) {
+          if (user[0].isAdmin) {
             clients[socket.id]['admin'] = true
           }
-          clients[socket.id]['id'] = user.$loki
+          clients[socket.id]['id'] = user[0].$loki
           socket.emit('auth:reply', {
             auth: true,
             user: user
@@ -35,7 +35,7 @@ module.exports = function (io, Torrent, System, tracker, user) {
         io.to(socket.id).emit('torrents', {
           data: torrents
         })
-      })
+      }, clients[socket.id]['id'])
     }
 
     var sendServerInfo = function () {
@@ -68,23 +68,25 @@ module.exports = function (io, Torrent, System, tracker, user) {
       }
       if (!clients[socket.id]['admin']) {
         socket.emit('permission:denied')
+        return false
       }
       Torrent.addTorrent(data.torrent, function () {
-        setTimeout(function () {
-          io.to(socket.id).emit('torrent:added', {
-            success: true
-          })
-        }, 3500)
-      })
+        io.to(socket.id).emit('torrent:added', {
+          success: true
+        })
+      }, clients[socket.id]['id'])
     })
 
     socket.on('torrent:remove', function (data) {
+      // @Todo: Check if torrent belongs to that user!
+      //
       if (!clients[socket.id]) {
         socket.emit('loggedout')
         return false
       }
       if (!clients[socket.id]['admin']) {
         socket.emit('permission:denied')
+        return false
       }
       Torrent.remove(data.infoHash, function () {
         io.to(socket.id).emit('torrent:removed', {
@@ -94,12 +96,14 @@ module.exports = function (io, Torrent, System, tracker, user) {
     })
 
     socket.on('torrent:remove_all', function (data) {
+      // @Todo: check if is adm
       if (!clients[socket.id]) {
         socket.emit('loggedout')
         return false
       }
       if (!clients[socket.id]['admin']) {
         socket.emit('permission:denied')
+        return false
       }
       Torrent.removeAll(function () {
         var WebTorrent = require('webtorrent-hybrid')
@@ -141,6 +145,7 @@ module.exports = function (io, Torrent, System, tracker, user) {
       }
       if (!clients[socket.id]['admin']) {
         socket.emit('permission:denied')
+        return false
       }
       tracker.saveOptions(options, function (res) {
         io.to(socket.id).emit('tracker:optionsSaved', {
@@ -180,6 +185,7 @@ module.exports = function (io, Torrent, System, tracker, user) {
       }
       if (!clients[socket.id]['admin'] && clients[socket.id]['id'] !== id) {
         socket.emit('permission:denied')
+        return false
       }
       id = (id === 'me') ? clients[socket.id]['id'] : id
       user.info(id, function (info) {
@@ -194,6 +200,7 @@ module.exports = function (io, Torrent, System, tracker, user) {
       }
       if (!clients[socket.id]['admin'] && clients[socket.id]['id'] !== data.$loki) {
         socket.emit('permission:denied')
+        return false
       }
       user.signup(data, function (users) {
         io.to(socket.id).emit('users:saved')
@@ -207,6 +214,7 @@ module.exports = function (io, Torrent, System, tracker, user) {
       }
       if (!clients[socket.id]['admin']) {
         socket.emit('permission:denied')
+        return false
       }
       user.update(data, function (users) {
         io.to(socket.id).emit('users:saved')
@@ -220,6 +228,7 @@ module.exports = function (io, Torrent, System, tracker, user) {
       }
       if (!clients[socket.id]['admin']) {
         socket.emit('permission:denied')
+        return false
       }
       user.remove(id, function () {
         io.to(socket.id).emit('users:removed')

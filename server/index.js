@@ -43,6 +43,12 @@ var onloadDatabase = function () {
   Torrent = new Torrent()
   Torrent.client = client
 
+  var torrent_db = db.getCollection('torrents')
+  if (torrent_db === null) {
+    torrent_db = db.addCollection('torrents')
+  }
+  Torrent.torrent_db = torrent_db
+
   var Tracker = require('../lib/tracker.js')
   Tracker = new Tracker()
   Tracker.check_settings()
@@ -60,8 +66,6 @@ var onloadDatabase = function () {
   User.db = users_db
 
   console.log('Database loaded')
-  // The user will be an "default" user
-  User.signup({user: 'admin', pass: 'root', name: 'Administator', numTorrents: 0, email: 'admin@admin.com', isAdmin: true}, function () {})
   /**
   * Now require Socket.js Events
   */
@@ -73,7 +77,7 @@ var onloadDatabase = function () {
  */
 
 console.log('Loading database')
-var db = new Loki('./server/settings/users.json', {
+var db = new Loki('./server/settings/db.json', {
   autoload: true,
   autoloadCallback: onloadDatabase,
   autosave: true,
