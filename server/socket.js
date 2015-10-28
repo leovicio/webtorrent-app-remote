@@ -14,12 +14,12 @@ module.exports = function (io, Torrent, System, tracker, user) {
             clients[socket.id]['admin'] = true
           }
           clients[socket.id]['id'] = user[0].$loki
-          socket.emit('auth:reply', {
+          io.to(socket.id).emit('auth:reply', {
             auth: true,
             user: user
           })
         } else {
-          socket.emit('auth:reply', {
+          io.to(socket.id).emit('auth:reply', {
             auth: false
           })
         }
@@ -28,7 +28,7 @@ module.exports = function (io, Torrent, System, tracker, user) {
 
     var sendTorrents = function () {
       if (!clients[socket.id]) {
-        socket.emit('loggedout')
+        io.to(socket.id).emit('loggedout')
         return false
       }
       Torrent.getTorrents(function (torrents) {
@@ -63,11 +63,11 @@ module.exports = function (io, Torrent, System, tracker, user) {
 
     socket.on('torrent:download', function (data) {
       if (!clients[socket.id]) {
-        socket.emit('loggedout')
+        io.to(socket.id).emit('loggedout')
         return false
       }
       if (!clients[socket.id]['admin']) {
-        socket.emit('permission:denied')
+        io.to(socket.id).emit('permission:denied')
         return false
       }
       Torrent.addTorrent(data.torrent, function () {
@@ -81,14 +81,14 @@ module.exports = function (io, Torrent, System, tracker, user) {
       // @Todo: Check if torrent belongs to that user!
       //
       if (!clients[socket.id]) {
-        socket.emit('loggedout')
+        io.to(socket.id).emit('loggedout')
         return false
       }
       if (!clients[socket.id]['admin']) {
-        socket.emit('permission:denied')
+        io.to(socket.id).emit('permission:denied')
         return false
       }
-      Torrent.remove(data.infoHash, function () {
+      Torrent.remove(data.infoHash, clients[socket.id]['id'], function () {
         io.to(socket.id).emit('torrent:removed', {
           success: true
         })
@@ -98,11 +98,11 @@ module.exports = function (io, Torrent, System, tracker, user) {
     socket.on('torrent:remove_all', function (data) {
       // @Todo: check if is adm
       if (!clients[socket.id]) {
-        socket.emit('loggedout')
+        io.to(socket.id).emit('loggedout')
         return false
       }
       if (!clients[socket.id]['admin']) {
-        socket.emit('permission:denied')
+        io.to(socket.id).emit('permission:denied')
         return false
       }
       Torrent.removeAll(function () {
@@ -116,7 +116,7 @@ module.exports = function (io, Torrent, System, tracker, user) {
 
     socket.on('torrent:get_info', function (data) {
       if (!clients[socket.id]) {
-        socket.emit('loggedout')
+        io.to(socket.id).emit('loggedout')
         return false
       }
       Torrent.getTorrent(data.infoHash, function (torrent) {
@@ -128,7 +128,7 @@ module.exports = function (io, Torrent, System, tracker, user) {
 
     socket.on('tracker:getOptions', function () {
       if (!clients[socket.id]) {
-        socket.emit('loggedout')
+        io.to(socket.id).emit('loggedout')
         return false
       }
       tracker.getOptions(function (options) {
@@ -140,11 +140,11 @@ module.exports = function (io, Torrent, System, tracker, user) {
 
     socket.on('tracker:saveOptions', function (options) {
       if (!clients[socket.id]) {
-        socket.emit('loggedout')
+        io.to(socket.id).emit('loggedout')
         return false
       }
       if (!clients[socket.id]['admin']) {
-        socket.emit('permission:denied')
+        io.to(socket.id).emit('permission:denied')
         return false
       }
       tracker.saveOptions(options, function (res) {
@@ -156,7 +156,7 @@ module.exports = function (io, Torrent, System, tracker, user) {
 
     socket.on('tracker:getTracker', function (data) {
       if (!clients[socket.id]) {
-        socket.emit('loggedout')
+        io.to(socket.id).emit('loggedout')
         return false
       }
       tracker.getTracker(function (details) {
@@ -168,7 +168,7 @@ module.exports = function (io, Torrent, System, tracker, user) {
 
     socket.on('users:list', function (data) {
       if (!clients[socket.id]) {
-        socket.emit('loggedout')
+        io.to(socket.id).emit('loggedout')
         return false
       }
       user.list(function (users) {
@@ -180,11 +180,11 @@ module.exports = function (io, Torrent, System, tracker, user) {
 
     socket.on('users:getInfo', function (id) {
       if (!clients[socket.id]) {
-        socket.emit('loggedout')
+        io.to(socket.id).emit('loggedout')
         return false
       }
       if (!clients[socket.id]['admin'] && clients[socket.id]['id'] !== id) {
-        socket.emit('permission:denied')
+        io.to(socket.id).emit('permission:denied')
         return false
       }
       id = (id === 'me') ? clients[socket.id]['id'] : id
@@ -195,11 +195,11 @@ module.exports = function (io, Torrent, System, tracker, user) {
 
     socket.on('users:save', function (data) {
       if (!clients[socket.id]) {
-        socket.emit('loggedout')
+        io.to(socket.id).emit('loggedout')
         return false
       }
       if (!clients[socket.id]['admin'] && clients[socket.id]['id'] !== data.$loki) {
-        socket.emit('permission:denied')
+        io.to(socket.id).emit('permission:denied')
         return false
       }
       user.signup(data, function (users) {
@@ -209,11 +209,11 @@ module.exports = function (io, Torrent, System, tracker, user) {
 
     socket.on('users:update', function (data) {
       if (!clients[socket.id]) {
-        socket.emit('loggedout')
+        io.to(socket.id).emit('loggedout')
         return false
       }
       if (!clients[socket.id]['admin']) {
-        socket.emit('permission:denied')
+        io.to(socket.id).emit('permission:denied')
         return false
       }
       user.update(data, function (users) {
@@ -223,15 +223,19 @@ module.exports = function (io, Torrent, System, tracker, user) {
 
     socket.on('users:remove', function (id) {
       if (!clients[socket.id]) {
-        socket.emit('loggedout')
+        io.to(socket.id).emit('loggedout')
         return false
       }
       if (!clients[socket.id]['admin']) {
-        socket.emit('permission:denied')
+        io.to(socket.id).emit('permission:denied')
         return false
       }
-      user.remove(id, function () {
-        io.to(socket.id).emit('users:removed')
+      user.remove(id, function (err) {
+        if (err) {
+          io.to(socket.id).emit('permission:denied')
+        } else {
+          io.to(socket.id).emit('users:removed')
+        }
       })
     })
 
@@ -241,7 +245,7 @@ module.exports = function (io, Torrent, System, tracker, user) {
         clearInterval(clients[socket.id]['cron_torrent'])
       }
       delete clients[socket.id]
-      socket.emit('loggedout')
+      io.to(socket.id).emit('loggedout')
     }
 
     socket.on('users:loggout', logout)
