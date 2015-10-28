@@ -31,11 +31,12 @@ module.exports = function (io, Torrent, System, tracker, user) {
         io.to(socket.id).emit('loggedout')
         return false
       }
+      var currentUser = clients[socket.id]['admin'] ? false : clients[socket.id]['id']
       Torrent.getTorrents(function (torrents) {
         io.to(socket.id).emit('torrents', {
           data: torrents
         })
-      }, clients[socket.id]['id'])
+      }, currentUser)
     }
 
     var sendServerInfo = function () {
@@ -97,7 +98,6 @@ module.exports = function (io, Torrent, System, tracker, user) {
     })
 
     socket.on('torrent:remove_all', function (data) {
-      // @Todo: check if is adm
       if (!clients[socket.id]) {
         io.to(socket.id).emit('loggedout')
         return false
