@@ -88,7 +88,8 @@ module.exports = function (io, Torrent, System, tracker, user) {
         io.to(socket.id).emit('permission:denied')
         return false
       }
-      Torrent.remove(data.infoHash, clients[socket.id]['id'], function () {
+      var currentUser = clients[socket.id]['admin'] ? false : clients[socket.id]['id']
+      Torrent.remove(data.infoHash, currentUser, function () {
         io.to(socket.id).emit('torrent:removed', {
           success: true
         })
