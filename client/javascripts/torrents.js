@@ -29,6 +29,9 @@ module.exports = function (app) {
         if (!message.data || !message.data.torrents) {
           return
         }
+        console.log(message.data.torrents)
+        console.log(message.data.length)
+        console.log(message.data.torrents.length)
         $scope.safeApply(function () {
           $scope.$root.$broadcast('dialogs.wait.complete')
           $scope.torrents = message.data.torrents
@@ -60,7 +63,7 @@ module.exports = function (app) {
       * Called after torrent is removed
       */
       Torrent.prototype._onTorretRemoved = function () {
-        dialogs.notify('Torrent Removed')
+        dialogs.notify('Success', 'Torrent Removed!')
         $scope.$root.$broadcast('dialogs.wait.complete')
       }
 
@@ -68,7 +71,7 @@ module.exports = function (app) {
       * Called after All torrents are removed
       */
       Torrent.prototype._onTorretAllRemoved = function () {
-        dialogs.notify('Torrents Removed')
+        dialogs.notify('Success', 'Torrents Removed!')
         $scope.$root.$broadcast('dialogs.wait.complete')
       }
 
