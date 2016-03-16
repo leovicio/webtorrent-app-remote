@@ -33,7 +33,7 @@ module.exports = function (io, Torrent, System, tracker, user) {
         io.to(socket.id).emit('loggedout')
         return false
       }
-      var currentUser = clients[socket.id]['admin'] ? false : clients[socket.id]['id']
+      var currentUser = clients[socket.id]['admin'] ? 1 : clients[socket.id]['id']
       Torrent.getTorrents(function (torrents) {
         io.to(socket.id).emit('torrents', {
           data: torrents

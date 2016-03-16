@@ -4,9 +4,9 @@
 
 /** Since 1.0 Webtorrent Hybrid now requires an screen, since electron expects one*/
 
-var Xvfb = require('xvfb');
-var xvfb = new Xvfb();
-xvfb.startSync();
+var Xvfb = require('xvfb')
+var xvfb = new Xvfb()
+xvfb.startSync()
 
 var WebTorrent = require('webtorrent-hybrid')
 var io = require('socket.io')
