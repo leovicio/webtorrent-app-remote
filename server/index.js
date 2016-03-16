@@ -80,6 +80,10 @@ var onloadDatabase = function () {
   * Now require Socket.js Events
   */
   require('./socket.js')(io, Torrent, System_info, Tracker, User)
+
+  /* Since webtorrent doesn't keep any track of the torrents,
+  we need add all torrents from database again, so we can access it later*/
+  Torrent.reloadTorrents()
 }
 
 /**
