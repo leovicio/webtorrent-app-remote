@@ -9,6 +9,24 @@ In this way you can share files to users from your server to your client on brow
 
 This app gives you the hability to downloads files on the remote server by passing a .torrent file or magnet uris.
 
+## Install
+To install and run it, setup node and npm.
+Clone this repo with:
+git clone https://github.com/Stiveknx/webtorrent-app-remote
+
+Go to directory:
+cd webtorrent-app-remote/
+
+Install deps:
+npm install
+
+You also must install Xvfb in case you're runing without a screen.
+This can be done with:
+sudo apt-get install Xvfb for ubuntu / debian
+Or 
+sudo yum install xorg-x11-server-Xvfb for rhel/centos
+
+
 
 Layout was based on [openseedbox](https://github.com/erindru/openseedbox/) by [erindru](https://github.com/erindru)
 
