@@ -1,7 +1,7 @@
 var angular = require('angular')
 require('angular-route/angular-route.min.js')
-require('angular-bootstrap/ui-bootstrap-tpls.min.js')
-require('angular-dialog-service/dialogs.min.js')
+require('angular-bootstrap-npm')
+require('angular-dialog-service/dist/dialogs.min.js')
 require('angular-sanitize/angular-sanitize.min.js')
 require('angular-socket-io/socket.min.js')
 require('ng-ui-notification/dist/angular-ui-notification.min.js')
@@ -14,7 +14,7 @@ var io = require('socket.io-client')
 var app = angular.module('webtorrent', [
   'btford.socket-io',
   'ui.bootstrap',
-  'dialogs',
+  'dialogs.main',
   'ui-notification',
   'ngRoute',
   'ngFileUpload'

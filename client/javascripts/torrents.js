@@ -4,10 +4,10 @@ module.exports = function (app) {
     '$scope',
     '$rootScope',
     'webSocket',
-    '$dialogs',
+    'dialogs',
     '$window',
     'Notification',
-    function ($scope, $rootScope, webSocket, $dialogs, $window, Notification) {
+    function ($scope, $rootScope, webSocket, dialogs, $window, Notification) {
       $scope.filter = {}
 
       // @TODO: Should I move this to a specific service / factory?
@@ -60,7 +60,7 @@ module.exports = function (app) {
       * Called after torrent is removed
       */
       Torrent.prototype._onTorretRemoved = function () {
-        $dialogs.notify('Torrent Removed')
+        dialogs.notify('Torrent Removed')
         $scope.$root.$broadcast('dialogs.wait.complete')
       }
 
@@ -68,7 +68,7 @@ module.exports = function (app) {
       * Called after All torrents are removed
       */
       Torrent.prototype._onTorretAllRemoved = function () {
-        $dialogs.notify('Torrents Removed')
+        dialogs.notify('Torrents Removed')
         $scope.$root.$broadcast('dialogs.wait.complete')
       }
 
@@ -77,7 +77,7 @@ module.exports = function (app) {
       */
       Torrent.prototype._addTorrentDialog = function (type) {
         if (torrent.dlg) return
-        torrent.dlg = $dialogs.create('/dialogs/add_torrent.html',
+        torrent.dlg = dialogs.create('/dialogs/add_torrent.html',
           'AddTorrentCtrl',
           {
             new_torrent_type: type
@@ -93,7 +93,7 @@ module.exports = function (app) {
       */
       Torrent.prototype._addTorrentCallbackSuccess = function (torrents) {
         if (torrents) {
-          $dialogs.wait('Adding torrent')
+          dialogs.wait('Adding torrent')
           //  Check if is magnets or a single file
           _(torrents).forEach(function (v, k) {
             webSocket.emit('torrent:download', {
@@ -109,7 +109,7 @@ module.exports = function (app) {
       * Called when user closes add torrent callback with error
       */
       Torrent.prototype._addTorrentCallbackError = function () {
-        $dialogs.error('Not a valid torrent')
+        dialogs.error('Not a valid torrent')
         torrent.dlg = false
       }
 
@@ -120,12 +120,12 @@ module.exports = function (app) {
       */
       Torrent.prototype._RemoveTorrentDialog = function (torrentHash) {
         if (!torrentHash) {
-          $dialogs.error('Please select a torrent from the list')
+          dialogs.error('Please select a torrent from the list')
           return false
         }
-        var dlg = $dialogs.confirm('Remove torrent?')
+        var dlg = dialogs.confirm('Remove torrent?')
         dlg.result.then(function (btn) {
-          $dialogs.wait('Removing torrent')
+          dialogs.wait('Removing torrent')
           webSocket.emit('torrent:remove', {
             infoHash: torrentHash
           })
@@ -138,7 +138,7 @@ module.exports = function (app) {
       Torrent.prototype._RemoveAllTorrentDialog = function () {
         // @Todo: Fancy UI confirm dialog
         if (window.confirm('Remove All Torrents?')) {
-          $dialogs.wait('Removing torrent')
+          dialogs.wait('Removing torrent')
           webSocket.emit('torrent:remove_all', {})
         }
       }
@@ -147,7 +147,7 @@ module.exports = function (app) {
       * Calls torrent Info dialog
       */
       Torrent.prototype._TorrentInfoDialog = function (torrentInfoHash) {
-        $dialogs.create('/dialogs/torrent_info.html', 'TorrentInfoCtrl', {
+        dialogs.create('/dialogs/torrent_info.html', 'TorrentInfoCtrl', {
           hash: torrentInfoHash
         }, torrent._dialogDefaults)
       }
@@ -275,8 +275,8 @@ module.exports = function (app) {
   /**
   * Controller for add torrent modal
   */
-  app.controller('AddTorrentCtrl', ['$scope', '$modalInstance', '$dialogs', 'data',
-    function ($scope, $modalInstance, $dialogs, data) {
+  app.controller('AddTorrentCtrl', ['$scope', '$modalInstance', 'dialogs', 'data',
+    function ($scope, $modalInstance, dialogs, data) {
       $scope.torrent = []
       $scope.files = []
       $scope.new_torrent_type = data.new_torrent_type
@@ -299,14 +299,14 @@ module.exports = function (app) {
             if (v.match('magnet:?')) {
               $valid = true
             }
-            if (v.match('.torrent') && v.match(/http(s)/i)) {
+            if (v.match('.torrent') && v.match(/http(s)?/i)) {
               $valid = true
             }
           })
           if ($valid) {
             $modalInstance.close(magnets)
           } else {
-            $dialogs.error('Error', 'Not a valid magnet uri / or url file')
+            dialogs.error('Error', 'Not a valid magnet uri / or url file')
           }
         } else if ($scope.files) {
           _($scope.files).forEach(function (v, k) {

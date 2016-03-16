@@ -3,10 +3,10 @@ module.exports = function (app, Torrent) {
   app.controller('CreateTorrent', [
     '$scope',
     'webSocket',
-    '$dialogs',
+    'dialogs',
     '$window',
     '$interval',
-    function ($scope, webSocket, $dialogs, $window, $interval) {
+    function ($scope, webSocket, dialogs, $window, $interval) {
       global.WEBTORRENT_ANNOUNCE = []
       webSocket.emit('tracker:getOptions')
 
@@ -37,7 +37,7 @@ module.exports = function (app, Torrent) {
       $scope.create = function () {
         if (dlg) return
 
-        dlg = $dialogs.create('/dialogs/create_torrent.html', 'CreateTorrentModal')
+        dlg = dialogs.create('/dialogs/create_torrent.html', 'CreateTorrentModal')
           .result.then(function ($result) {
             var files = $result.files
             var trackers = $result.trackers
@@ -46,9 +46,9 @@ module.exports = function (app, Torrent) {
               return false
             }
             global.WEBTORRENT_ANNOUNCE = trackers.split('\n')
-            $dialogs.wait('Creating Torrent')
+            dialogs.wait('Creating Torrent')
             client.seed(files, function (torrent) {
-              $dialogs.notify('Torrent Added', 'MagnetURI: <br />' + torrent.magnetURI)
+              dialogs.notify('Torrent Added', 'MagnetURI: <br />' + torrent.magnetURI)
               webSocket.emit('torrent:download', {
                 torrent: torrent.magnetURI
               })
@@ -76,9 +76,9 @@ module.exports = function (app, Torrent) {
   app.controller('CreateTorrentModal', [
     '$scope',
     '$modalInstance',
-    '$dialogs',
+    'dialogs',
     'data',
-    function ($scope, $modalInstance, $dialogs, data) {
+    function ($scope, $modalInstance, dialogs, data) {
       if ($scope.$root.files) {
         $scope.files = $scope.$root.files
       }
