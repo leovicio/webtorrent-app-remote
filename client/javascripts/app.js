@@ -6,6 +6,9 @@ require('angular-sanitize/angular-sanitize.min.js')
 require('angular-socket-io/socket.min.js')
 require('ng-ui-notification/dist/angular-ui-notification.min.js')
 require('ng-file-upload/dist/ng-file-upload-all.min.js')
+// var loki = require('lokijs/src/lokijs.js')
+// require('lokijs/src/loki-angular.js')(angular, loki)
+
 var io = require('socket.io-client')
 
 var app = angular.module('webtorrent', [
@@ -14,7 +17,8 @@ var app = angular.module('webtorrent', [
   'dialogs',
   'ui-notification',
   'ngRoute',
-  'ngFileUpload'
+  'ngFileUpload',
+// 'lokijs'
 ])
 
 app.factory('webSocket', function ($rootScope, $location) {

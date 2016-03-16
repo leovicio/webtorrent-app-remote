@@ -1,7 +1,7 @@
 /**
  * Module dependecies
  */
-var WebTorrent = require('webtorrent-hybrid/node_modules/webtorrent')
+var WebTorrent = require('webtorrent-hybrid')
 // var debug = require('debug')('webtorrentapp:server')
 var io = require('socket.io')
 var http = require('http')

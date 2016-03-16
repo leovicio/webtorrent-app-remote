@@ -28,7 +28,7 @@ if (supportsWebSockets) {
       src: '/javascripts/lib/webtorrent.min.js'
     },
     {
-      id: '4',
+      id: '5',
       src: '/javascripts/build/bundle.min.js'
     }
   ])
