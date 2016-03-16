@@ -18,6 +18,8 @@ module.exports = function (io, Torrent, System, tracker, user) {
             auth: true,
             user: user
           })
+          sendTorrents()
+          sendServerInfo()
         } else {
           io.to(socket.id).emit('auth:reply', {
             auth: false
