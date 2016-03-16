@@ -2,7 +2,6 @@
  * Module dependecies
  */
 var WebTorrent = require('webtorrent-hybrid')
-// var debug = require('debug')('webtorrentapp:server')
 var io = require('socket.io')
 var http = require('http')
 var NodeStatic = require('node-static')
@@ -12,6 +11,7 @@ var onloadDatabase = function () {
   /**
    * Static file serve
    */
+   console.log('aq');
   var file = new NodeStatic.Server('./client', {
     cache: 0,
     gzip: true
@@ -76,7 +76,8 @@ var onloadDatabase = function () {
  * Initiate database
  */
 
-console.log('Loading database')
+console.log('Loading database');
+
 var db = new Loki('./server/settings/db.json', {
   autoload: true,
   autoloadCallback: onloadDatabase,
