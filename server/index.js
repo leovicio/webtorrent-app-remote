@@ -1,6 +1,13 @@
 /**
  * Module dependecies
  */
+
+/** Since 1.0 Webtorrent Hybrid now requires an screen, since electron expects one*/
+
+var Xvfb = require('xvfb');
+var xvfb = new Xvfb();
+xvfb.startSync();
+
 var WebTorrent = require('webtorrent-hybrid')
 var io = require('socket.io')
 var http = require('http')
@@ -11,25 +18,25 @@ var onloadDatabase = function () {
   /**
    * Static file serve
    */
-   console.log('aq');
+
   var file = new NodeStatic.Server('./client', {
     cache: 0,
     gzip: true
   })
-
-  var port = process.env.PORT || '3001'
+  
+  var port = process.env.PORT || '8080'
   var server = http.createServer(function (request, response) {
     request.addListener('end', function () {
       file.serve(request, response)
     }).resume()
   })
-
-  server.listen(port)
+  server.listen(port, '0.0.0.0')
 
   /**
    * Socket IO Server
    */
   io = io.listen(server)
+
 
   /**
    * Start webTorrent Client

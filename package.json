@@ -30,6 +30,7 @@
     "standard": "^6.0.8",
     "storage-device-info": "^1.2.0",
     "underscore": "^1.8.3",
-    "webtorrent-hybrid": "^1.0.0"
+    "webtorrent-hybrid": "^1.0.0",
+    "xvfb": "^0.2.3"
   }
 }
