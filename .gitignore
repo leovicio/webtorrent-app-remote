@@ -29,3 +29,5 @@ node_modules
 
 client/stylesheets/.sass-cache/
 .sass-cache/
+
+server/settings/db.json
