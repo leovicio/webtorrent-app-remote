@@ -26,7 +26,8 @@ sudo apt-get install Xvfb for ubuntu / debian
 Or 
 sudo yum install xorg-x11-server-Xvfb for rhel/centos
 
-
+## Run
+Just run npm start
 
 Layout was based on [openseedbox](https://github.com/erindru/openseedbox/) by [erindru](https://github.com/erindru)
 
