@@ -1,4 +1,4 @@
-/**
+0/**
  * Module dependecies
  */
 
@@ -23,23 +23,22 @@ var onloadDatabase = function () {
     cache: 0,
     gzip: true
   })
-  
+
   var port = process.env.PORT || '3001'
   var server = http.createServer(function (request, response) {
     request.addListener('end', function () {
       file.serve(request, response)
     }).resume()
   })
-  server.listen(port, '0.0.0.0', function(){
+  server.listen(port, '0.0.0.0', function () {
     console.log('Server Runing in:')
-    console.log( server.address().address + ':' + server.address().port );
+    console.log(server.address().address + ':' + server.address().port)
   })
 
   /**
    * Socket IO Server
    */
   io = io.listen(server)
-
 
   /**
    * Start webTorrent Client
@@ -87,7 +86,7 @@ var onloadDatabase = function () {
  * Initiate database
  */
 
-console.log('Loading database');
+console.log('Loading database')
 
 var db = new Loki('./server/settings/db.json', {
   autoload: true,
