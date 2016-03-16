@@ -17,7 +17,7 @@ var app = angular.module('webtorrent', [
   'dialogs',
   'ui-notification',
   'ngRoute',
-  'ngFileUpload',
+  'ngFileUpload'
 // 'lokijs'
 ])
 

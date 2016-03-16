@@ -30,7 +30,7 @@ module.exports = function (app, Torrent) {
       $interval(function () {
         Torrent.getTorrents(function (message) {
           $scope.self_torrents = message.torrents
-        }, localStorage.getItem('user_id'))
+        }, window.localStorage.getItem('user_id'))
       }, 2500)
 
       var dlg = false
