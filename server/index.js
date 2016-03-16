@@ -24,13 +24,16 @@ var onloadDatabase = function () {
     gzip: true
   })
   
-  var port = process.env.PORT || '8080'
+  var port = process.env.PORT || '3001'
   var server = http.createServer(function (request, response) {
     request.addListener('end', function () {
       file.serve(request, response)
     }).resume()
   })
-  server.listen(port, '0.0.0.0')
+  server.listen(port, '0.0.0.0', function(){
+    console.log('Server Runing in:')
+    console.log( server.address().address + ':' + server.address().port );
+  })
 
   /**
    * Socket IO Server
@@ -73,6 +76,7 @@ var onloadDatabase = function () {
   User.db = users_db
 
   console.log('Database loaded')
+
   /**
   * Now require Socket.js Events
   */
