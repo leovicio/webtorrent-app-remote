@@ -21,7 +21,7 @@
     "lokijs": "^1.3.16",
     "mocha": "^2.4.5",
     "moment": "^2.12.0",
-    "ng-file-upload": "git+https://github.com/danialfarid/ng-file-upload.git",
+    "ng-file-upload": "^12.2.12",
     "ng-ui-notification": "^1.0.1",
     "node-static": "^0.7.7",
     "pretty-bytes": "^3.0.1",
