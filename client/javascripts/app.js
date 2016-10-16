@@ -1,4 +1,5 @@
 var angular = require('angular')
+var ip = require('ip');
 require('angular-route/angular-route.min.js')
 require('angular-bootstrap-npm')
 require('angular-dialog-service/dist/dialogs.min.js')
@@ -22,7 +23,7 @@ var app = angular.module('webtorrent', [
 ])
 
 app.factory('webSocket', function ($rootScope, $location) {
-  var socket = io.connect('http://62.75.213.174:3001/')
+  var socket = io.connect('http://'+ip.address()+':3001/')
   socket.on('loggedout', function () {
     $location.path('/login')
   })
