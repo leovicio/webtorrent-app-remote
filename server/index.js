@@ -3,7 +3,7 @@
  */
 
 /** Since 1.0 Webtorrent Hybrid now requires an screen, since electron expects one*/
-require('events').EventEmitter.prototype._maxListeners = 0;
+require('events').EventEmitter.prototype._maxListeners = 200;
 var Xvfb = require('xvfb')
 var xvfb = new Xvfb()
 xvfb.startSync()
